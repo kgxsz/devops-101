@@ -94,7 +94,6 @@ Great, you've got an internet gateway! But it's still not doing anything, you ne
 - select the route table you previously created
 - go to routes in the tabs on the information section at the bottom of the page
 - edit and add a destination of 0.0.0.0/0 with the target as the internet gateway id noted earlier
--  
 
 
 ### Locking down your VPC
