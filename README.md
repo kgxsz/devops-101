@@ -4,6 +4,8 @@ Devops 101
 
 ## Part 1: Provisioning a Cloud Server
 
+![alt text](https://github.com/kgxsz/Devops-101/blob/master/goal.png "Logo Title Text 1")
+
 ### Register for AWS
 
 Register for an AWS account. I'd recommend using your full name for the account name.
