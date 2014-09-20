@@ -4,7 +4,7 @@ Devops 101
 
 ## Part 1: Provisioning a Cloud Server
 
-![alt text](https://github.com/kgxsz/Devops-101/part-one/img/blob/master/goal.png "goal")
+![alt text](https://github.com/kgxsz/Devops-101/blob/master/part-one/img/goal.png "goal")
 
 ### Register for AWS
 
