@@ -184,3 +184,18 @@ Also, to prepare for part two, you need to clean up after yourself. Delete the f
 That's it.
 
 
+## Part 2: Infrastructure as code
+
+### Infrastructure as code
+So you've created a Virtual Private Cloud, and you now have a running instance in there, and you're able to ssh to it.
+That's great, but have you noticed how fiddly it is to do all this through the console. Imagine having tens or even hundreds of instances, hundreds of Security Groups and ACLs to manage. It wouldn't be ideal.
+
+One of the goals of good devops is to be able to define your infrastructure as code, and have that in source control. Having the state of your infrastructure defined as code and source controlled is extremely useful for disaster recovery. It's dead easy to recreate your infrastructure from scratch (although it'd probably be a lengthy procedure).
+
+- get the cli
+- set up your creds
+- 
+
+
+
+
