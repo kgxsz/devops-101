@@ -2,10 +2,10 @@
 
 ##Introduction
 
-#### What is DevOps?
+##### What is DevOps?
 DevOps is about collaboration and integeration between developers and operations. We do DevOps so that we can have faster and more reliable development and deployment cycles.
 
-### What's it to me?
+##### What's it to me?
 As a graduate developer, DevOps will mostly be a foreign concept to you. Going into your first few projects, you may feel that you don't need to understand the DevOps side of the project. Perhaps you will find it daunting, or perhaps you will think that DevOps should be left to the "DevOpsy people" on the team. 
 
 Whilst a lot of projects will have people dedicated to some sort of DevOps role, DevOps *should* be the responsibility of the entire team. As such, it is the responsibility of those "DevOpsy people" to share the DevOps knowledge amongst the team, and it is the responsibility of the entire team to be open to acquiring such knowledge.
@@ -28,13 +28,13 @@ We'll be concentrating on two major tools in these workshops:
 You'll encounter other cloud and CI tools in the wild, but getting to know these two to start with will give you a good base of knowledge to build upon.
 
 ## Caveats
-#### Target Audience
+##### Target Audience
 This is a beginners course. It's aimed at graduate developers. You may or may not get much out of these depending on your experience level.
 
-#### Money Money Money
+##### Money Money Money
 We'll be provisioning AWS EC2 instances. We can take advantage of the free tier, but there will be a point where we'll be paying. It won't be much (no more than a few dozen cents) so long as you **don't forget to tear them down when you're done with the workshop**. Don't worry, I'll be pretty clear about this, but I take no responsibility if you do end up losing your monthly coffee allowance.
 
-#### Practice vs Theory
+##### Practice vs Theory
 These workshops will lean heavily toward practice rather than theory. We'll cover some basic theory along the way, but I would recommend further reading to gain deeper insight into the concepts we'll be covering.
 
 
