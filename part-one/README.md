@@ -145,7 +145,7 @@ Whilst Network ACLs act as the border guards for an entire subnet, you can think
 
 Now you've got a completely locked down security group.
 
-A note on security: network ACLs and security groups only make up two layers of security. In the wild, you'll be configuring security for the instance itself as well. Security is a deep and complex subject. Keep in mind that just these two layers alone shouldn't make up your entire security check list!
+A note on security: network ACLs and security groups only make up two layers of security. In the wild, you'll be configuring security for the instance itself as well. Security is a deep and complex subject. Keep in mind that just these two layers alone shouldn't make up your entire security check list! [Further reading](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Security.html) for the keen ones.
 
 ### Provisioning an EC2 instance
 Alright, so we're now at a point where we've set up our environment and are ready to launch an EC2 instance.
@@ -172,7 +172,6 @@ Your instance should now be launching. You'll probably have to wait a little bit
 So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
 
 **Wrong!**
-
 
 When you launch your EC2 instance you'll notice that it only has a private IP address. You use the private IP for communication between your instances in your VPC. You need a *public IP* to allow your instance to communicate to the outside world through your internet gateway.
 
