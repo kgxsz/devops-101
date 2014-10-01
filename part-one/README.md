@@ -148,7 +148,10 @@ Now you've got a completely locked down security group.
 A note on security: network ACLs and security groups only make up two layers of security. In the wild, you'll be configuring security for the instance itself as well. Security is a deep and complex subject. Keep in mind that just these two layers alone shouldn't make up your entire security check list!
 
 ### Provisioning an EC2 instance
-You now have your own Virtual Provate Cloud, with a locked down subnet. Let's go ahead and provision an EC2 instance.
+Alright, so we're now at a point where we've set up our environment and are ready to launch an EC2 instance.
+
+
+You're doing so well, don't give up!
 
 - go to EC2 in the services tab
 - go to the 'Instances' section in the left hand pane
@@ -166,60 +169,64 @@ You now have your own Virtual Provate Cloud, with a locked down subnet. Let's go
 Your instance should now be launching. You'll probably have to wait a little bit. 
 
 ### Connecting to your EC2 instance
-So now let's ssh to our instance. We have the private key so we should be able to ssh to it right? Wrong!
-You need to associate a public IP to the instance so that we can hit it from the outside:
+So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
+
+**Wrong!**
+
+
+When you launch your EC2 instance you'll notice that it only has a private IP address. You use the private IP for communication between your instances in your VPC. You need a *public IP* to allow your instance to communicate to the outside world through your internet gateway.
 
 - go to EC2 in the services tab
 - go to the 'Elastic IPs' section in the left hand pane
 - allocate new address
 - associate address to your new instance
 
-Open a terminal and try: `ssh ubuntu@{ELASTIC_IP_ADDRESS} -i ~/.ssh/main.pem`
-But nothing much happens, the connection will most likely time out. That's because we've locked the environment down.
-
 ### Allow SSH connections to your EC2 instance
-A completely locked down instance isn't much use, let's open up what we need:
+Now you can talk to your instance from the outside world. You could now try to ssh to your instance, but it still wouldn't work, because we've completely locked down traffic to and from the instance. A completely locked down instance isn't much use, let's open up what we need:
 
 - go to VPC in the services tab
 - go to the 'Network ACL' section in the left hand pane
 - go to the 'inbound rules' tab
-- add rule 100, type ssh, source 0.0.0.0/0
+- add a rule to let ssh traffic into your subnet
+
+	|rule|type|source|
+	|-|:-:|-:|
+	|100|ssh|0.0.0.0/0|
+
 - go to the 'outbound rules' tab
-- add rule 100, type custom TCP rule, port range 1024-65535, source 0.0.0.0/0
+- add rule to let traffic out of your subnet to respond to the ssh traffic
 
+	|rule|type|port range|source|
+	|-|:-:|-:|
+	|100|custom TCP rule|1024-65535|0.0.0.0/0|
 
-That's your first line of defence, now you need to tweak your security group for the instance
+That opens up your subnet, now you need to tweak your security group for the instance
 
 - go to the 'Security Group' section in the left hand pane
 - go to the 'inbound rules' tab
-- add type SSH and source 0.0.0.0/0
+- add a rule to allow ssh traffic into the instance
 
-Now try this again: `ssh ubuntu@{ELASTIC_IP_ADDRESS} -i ~/.ssh/main.pem`
+	|type|source|
+	|-|:-:|-:|
+	|SSH|0.0.0.0/0|
 
-You're in.
+Why didn't we change the outbound rules for security groups tou ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
+
+
+Now try to ssh to the instance: `ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem`
+
+You're in. Take a moment to bask in the glory of what you've just achieved.
 
 
 ### Cleaning up
 It's always good to clean up. Infrastructure quickly becomes messy.
 Also, to prepare for part two, you need to clean up after yourself. Delete the following, in the following order:
+
 - terminate the instance
 - release the elastic IP
 - delete the VPC
 
-That's it.
-
-
-## Part 2: Infrastructure as code
-
-### Infrastructure as code
-So you've created a Virtual Private Cloud, and you now have a running instance in there, and you're able to ssh to it.
-That's great, but have you noticed how fiddly it is to do all this through the console. Imagine having tens or even hundreds of instances, hundreds of Security Groups and ACLs to manage. It wouldn't be ideal.
-
-One of the goals of good devops is to be able to define your infrastructure as code, and have that in source control. Having the state of your infrastructure defined as code and source controlled is extremely useful for disaster recovery. It's dead easy to recreate your infrastructure from scratch (although it'd probably be a lengthy procedure).
-
-- get the cli
-- set up your creds
-- 
+That's it. 
 
 
 
