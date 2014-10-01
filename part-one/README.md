@@ -1,14 +1,25 @@
-## Part 1: Provisioning a Cloud Server
+## Part 1: Provisioning an EC2 instance in AWS
+
+####**Goal: deploy a cloud server and ssh to it.**
+
+In order to achieve this goal we'll have to touch on several concepts. Don't worry if you don't completely understand some of the points we'll cover. At this stage it's enough to have a shallow understanding of these concepts, and how they contribute to us achieving our goal.
+
+What you see below is a naive representation of what we'll be building. Notice that the three main components are the Virtual Private Cloud, the subnet, and the EC2 instance.
+
+![alt text](https://github.com/kgxsz/DevOps-101/blob/master/part-one/img/goal.png "part-one-goal")
 
 ### Register for AWS
 
-Register for an AWS account. I'd recommend using your full name for the account name.
+In order to do any of this, you'll need an AWS account. So go ahead and register for an AWS account. I'd recommend using your full name for the account name. 
+
+You'll be given root access credentials, sign in to AWS and have a poke around, when you're ready, move on to the next step.
 
 ### Create an IAM group and user
 
-The root access keys given to you in the previous step provide unrestricted access to the account, AWS recommends creating a user and make use of those credentials instead for day to day AWS tasks
+The root access credentials given to you in the previous step provide unrestricted access to the account. AWS recommends that you not use these root credentials for day to day task. So we'll be using AWS' user management tool IAM to create a user for day to day tasks and put them in an administration group.
 
 #####Create a group
+- go to IAM in the services tab
 - create a new group
 - call it administrators
 - give it administrator rights
@@ -18,27 +29,36 @@ The root access keys given to you in the previous step provide unrestricted acce
 - give it your first name (to distinguish it from your root account name)
 - download the access key and secret key, you'll use this later for CLI stuff
 - in the user's control panel, set a password and download it
+- go to your IAM dashboard, you can take note of the 'IAM user sign in link'. 
 
-If you now go to your IAM dashboard, you can take note of the 'IAM user sign in link'. Sign out and sign in through that link with the IAM user name and password you just created. You should use these credentials in favour of the root credentials from this point forward.
+Sign out and go through the link you just took note of to sign in with the IAM user name and password you just created. You should use these credentials instead of the root credentials from this point forward.
 	
 ### Create a key pair
-AWS generates key pairs for you, we'll use this to ssh into our EC2 instances later.
+Before going any further, it's worth mentioning a common point of confusion with AWS' user interface. You'll see a region name in the top right, next to the help tab. Make sure that you're in Ireland or wherever else is closest to you. Whenever you create resources in a certain region, they will only be visible within that region, so make sure you create your keys in the region you intend on creating the rest of your infrastructre in.
+
+Let's move on.
+
+AWS provides an easy way for generating a public private key pair. When you create them, AWS holds the public key for future use and gives you the private counterpart. we'll be using these keys to ssh into our EC2 instance later.
 		
-- Go to EC2 in the services tab
-- Select key pairs in the side bar
+- go to EC2 in the services tab
+- select key pairs in the side bar
 - create a key pair, call it 'main'
-- Your browser should have donwloaded a 'pem' file, this is the private key.
-- Place your private key in the `~/.ssh` directory
+- your browser should have downloaded a file (or you may be promted to do so), this is the private key.
+- place your private key in the `~/.ssh` directory
 - set the correct permissions on the key: `chmod 400 ~/.ssh/main.pem` 
 		
 		
 ### Create a virtual private cloud
-A virtual Private Cloud is a virtual network dedicated to your AWS account, and isolated from all other virtual networks in the AWS cloud. This is your starting point.
+Now let's start building something. 
 
-Ensure that your AWS region is set to Ireland (in the top right corner of the web console). If you go to VPC in the services tab and have a poke around the resources on the left hand pane, you'll see that there are several pre-made default resources.
+The first thing you need is a virtual private cloud (VPC). A VPC is a virtual network dedicated to your AWS account and isolated from all other virtual networks in the AWS cloud. The things we build from here on out will belong to, or be attatched to our VPC. 
+
+On some projects I've been on, we've used VPCs to separate resources/environments. A common setup is to use a VPC for CI resources, a VPC for Dev, another for QA, another for Production, and so on.
+
+Once again, ensure that your AWS region is set to Ireland. Then go to VPC in the services tab, this is where you'll be managing your VPCs. You'll notice that on the left hand pane there are several pre-existing default resources.
 There's a default VPC, a couple of subnets, a route table, internet gateway, and so on.
 
-In order to work with a clean slate, and to unclutter your understanding of what is going on, I would recommend removing the default VPC (causing all it's associated resources to also be removed). Don't panic, if you want a default VPC again later down the track, you can contact AWS support.
+In order to work with a clean slate, and to unclutter your understanding of what is going on, I would recommend removing the default VPC (causing all it's associated resources to also be removed). Don't panic, if you want a default VPC again later down the track, you can contact AWS support. 
 
 Have a look and ensure that there are no longer any resources lying around (except a DHCP option set).
 Now we'll be creating our VPC and associated resources:
@@ -49,10 +69,13 @@ Now we'll be creating our VPC and associated resources:
 - name your VPC devops-part-one
 - give it a cidr block of 10.0.0.0/16
 
-Now have a poke around and you'll see that your new VPC was created, along with a route table, a network ACL, and security group. In the interest of learning, we won't be using those additional resources, just the VPC.
+Now you'll see that your new VPC was created, along with a default route table, network ACL, and security group. In the interest of learning, we won't be using those default resources, we'll be creating our own.
+
+It's worth understanding a little about what the cidr block is doing. The cidr block defines a set of IP addresses for the VPC. The 16 means that the first 16 bits of the address space are fixed and the last 16 are varying. So the addresses from 10.0.0.0 to 10.0.255.255 refer to our VPC. See [this](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
+article to get a deeper understanding.
 
 ### Create a public subnet
-A VPC can be subdivided into subnets. We'll be creating a single subnet:
+A VPC can be divided into several subnets. You can think of subnets subsets of the VPCs IP address space. Subnets are useful
 
 - go to VPC in the services tab
 - go to the 'Subnets' section in the left hand pane
