@@ -67,25 +67,28 @@ Now we'll be creating our VPC and associated resources:
 - go to the 'your VPCs' section in the left hand pane
 - create VPC
 - name your VPC devops-part-one
-- give it a cidr block of 10.0.0.0/16
+- give it a cidr block of `10.0.0.0/16`
 
 Now you'll see that your new VPC was created, along with a default route table, network ACL, and security group. In the interest of learning, we won't be using those default resources, we'll be creating our own.
 
-It's worth understanding a little about what the cidr block is doing. The cidr block defines a set of IP addresses for the VPC. The 16 means that the first 16 bits of the address space are fixed and the last 16 are varying. So the addresses from 10.0.0.0 to 10.0.255.255 refer to our VPC. See [this](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
+It's worth understanding a little about what the cidr block is doing. The cidr block defines a set of IP addresses for the VPC. The 16 means that the first 16 bits of the address space are fixed and the last 16 are varying. So the addresses from `10.0.0.0` to `10.0.255.255` refer to our VPC. See [this](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
 article to get a deeper understanding.
 
 ### Create a public subnet
-A VPC can be divided into several subnets. You can think of subnets subsets of the VPCs IP address space. Subnets are useful
+A VPC can be divided into several subnets. You can think of subnets as as a subdivision of the VPC's IP address space. We're going to use a single subnet, and wire it up so that traffic can get to the outside world.
 
 - go to VPC in the services tab
 - go to the 'Subnets' section in the left hand pane
 - create subnet
 - name your subnet devops-part-one
 - ensure that the VPC option points to your devops-part-one VPC 
-- make the cidr block 10.0.0.0/24
+- make the cidr block `10.0.0.0/24`
+
+Here you'll notice that the cidr block looks similar to the VPC's cidr block, but with a trailing 24 instead of 16. This means that the first 24 bits of the address space are fixed and the last 8 are varying. So the addresses from `10.0.0.0` to `10.0.0.255` refer to this subnet in our VPC.
+
 
 ### Create a route table and association
-Traffic originating in subnets are insulated from the outside world and therefore need to be routed. Let's create a route table to do that:
+Each subnet you create needs to be told how to route traffic originating from within it. We're going to create a route table and associate it to our subnet.
 
 - go to VPC in the services tab
 - go to the 'Route Tables' section in the left hand pane
@@ -95,10 +98,10 @@ Traffic originating in subnets are insulated from the outside world and therefor
 - go to the 'Subnet Associations' tab
 - edit it, and associate your devops-part-one subnet
 
-You now have a route table associated with your subnet. If you look at the 'Routes' tab you'll see that any traffic originating in our subnet within the range 10.0.0.0/16 will be routed locally.
+You now have a route table associated with your subnet. If you look at the 'Routes' tab you'll see that any traffic originating in our subnet within the range `10.0.0.0/16` will be routed locally, which means that traffic targetting our VPC will be routed back into our VPC.
 
 ### Create an internet gateway
-So you've got a route table routing trafic from your subnet. But it's still not getting anywhere useful. We want the subnet to be able to talk to the outside world, so let's make an internet gateway:
+So you've got a route table routing trafic from your subnet. But it's still not getting anywhere useful. We want the subnet to be able to talk to the outside world, so let's make an internet gateway and attach it with our VPC.
 
 - go to VPC in the services tab
 - go to the 'Internet Gateway' section in the left hand pane
@@ -106,17 +109,18 @@ So you've got a route table routing trafic from your subnet. But it's still not 
 - name it devops-part-one
 - now attach it to your VPC
 
-Great, you've got an internet gateway! But it's still not doing anything, you need to route traffic from your subnet to the internet gateway:
+Great, you've got an internet gateway! Look at you! But it's still not doing anything, you need to route internet destined traffic from your subnet to the internet gateway:
 
-- take note of the internet gateway id (something like igw-xxxxxxx)
+- take note of the internet gateway id (something like `igw-xxxxxxx`)
 - go to the 'Route Tables' section in the left hand pane
 - select the route table you previously created
 - go to routes in the tabs on the information section at the bottom of the page
-- edit and add a destination of 0.0.0.0/0 with the target as the internet gateway id noted earlier
+- edit and add a destination of `0.0.0.0/0` with the target as the internet gateway id noted earlier
 
+The `0.0.0.0/0` here is saying "Hey, absolutely all traffic from our subnet should be routed to our internet gateway" but there's also the `10.0.0.0/16` in there saying "Hey, this rule is a little more specific, so make sure that addresses in this range get routed to our VPC and not to the internet gateway".
 
 ### Locking down your VPC
-Network ACLs are used to choose what traffic is allowed in and out of our subnet. Let's create our own network ACL and lock it down.
+Network Access control lists (network ACLs) are a layer of security that act as a firewall for controlling traffic in and out of a subnet. Each subnet must be associated with a Network ACLs. Let's make one.
 
 - go to VPC in the services tab
 - go to the 'Network ACL' section in the left hand pane
@@ -140,6 +144,8 @@ Whilst Network ACLs act as the border guards for an entire subnet, you can think
 - remove the default all outbound rule
 
 Now you've got a completely locked down security group.
+
+A note on security: network ACLs and security groups only make up two layers of security. In the wild, you'll be configuring security for the instance itself as well. Security is a deep and complex subject. Keep in mind that just these two layers alone shouldn't make up your entire security check list!
 
 ### Provisioning an EC2 instance
 You now have your own Virtual Provate Cloud, with a locked down subnet. Let's go ahead and provision an EC2 instance.
