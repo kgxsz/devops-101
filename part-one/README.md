@@ -1,4 +1,4 @@
-## Part 1: Provisioning an EC2 instance in AWS
+## Part 1: Provision an EC2 instance in AWS
 
 ####**Goal: deploy a cloud server and ssh to it.**
 
@@ -119,7 +119,7 @@ Great, you've got an internet gateway! Look at you! But it's still not doing any
 
 The `0.0.0.0/0` here is saying "Hey, absolutely all traffic from our subnet should be routed to our internet gateway" but there's also the `10.0.0.0/16` in there saying "Hey, this rule is a little more specific, so make sure that addresses in this range get routed to our VPC and not to the internet gateway".
 
-### Locking down your VPC
+### Lock down your VPC
 Network Access control lists (network ACLs) are a layer of security that act as a firewall for controlling traffic in and out of a subnet. Each subnet must be associated with a Network ACLs. Let's make one.
 
 - go to VPC in the services tab
@@ -132,7 +132,7 @@ Network Access control lists (network ACLs) are a layer of security that act as 
 
 You'll see in the details panel under inbound and outbound rules that all traffic in and out is being denied. Total lock down!
 
-### Security group
+### Create security groups
 Whilst Network ACLs act as the border guards for an entire subnet, you can think of security groups as the security boundary around individual EC2 instances. Let's make one and lock it down completely.
 
 - go to VPC in the services tab
@@ -147,7 +147,7 @@ Now you've got a completely locked down security group.
 
 A note on security: network ACLs and security groups only make up two layers of security. In the wild, you'll be configuring security for the instance itself as well. Security is a deep and complex subject. Keep in mind that just these two layers alone shouldn't make up your entire security check list! [Further reading](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Security.html) for the keen ones.
 
-### Provisioning an EC2 instance
+### Provision an EC2 instance
 Alright, so we're now at a point where we've set up our environment and are ready to launch an EC2 instance.
 
 
@@ -168,7 +168,7 @@ You're doing so well, don't give up!
 
 Your instance should now be launching. You'll probably have to wait a little bit. 
 
-### Connecting to your EC2 instance
+### Connect to your EC2 instance
 So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
 
 **Wrong!**
@@ -217,7 +217,7 @@ Now try to ssh to the instance: `ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/ma
 You're in. Take a moment to bask in the glory of what you've just achieved.
 
 
-### Cleaning up
+### Clean up
 It's always good to clean up. Infrastructure quickly becomes messy.
 Also, to prepare for part two, you need to clean up after yourself. Delete the following, in the following order:
 
