@@ -63,7 +63,63 @@ You're ready to describe your first stack!
 ### Create your first stack
 We're going to be using the cloudformation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use cloudformation.
 
-In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the cloudformation module and it will go and create that stack of resources in your AWS account. Let's start simple though.
+In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the cloudformation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
+
+Now, if you haven't already done so, pull down this repository and open `part-two/templates/template-one.json`. You should see the following:
+
+```
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description" : "devops-part-two, template one",
+  "Resources" : {
+    "VPC" : {
+      "Type" : "AWS::EC2::VPC",
+      "Properties" : {
+        "CidrBlock" : "10.0.0.0/16",
+        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-two"} ]
+      }
+    }
+  }
+}
+```
+
+This is pretty straight forward:
+
+- the first line defines the format of the file, don't change that date
+- the second line let's us describe what the stack is all about
+- the third line is the meat, it opens up the resources section where we desribe our *stack* of resources
+- here, we only have one resource, it's a VPC, and we've named it "devops-part-two" in the tags
+
+There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) and examples available to help you describe the resources you need in a template file.
+
+Let's create this stack!
+
+- go to the templates directory: `cd part-two/templates`
+- create the stack: `aws cloudformation create-stack --stack-name template-one --template-body "file://./template-one.json"`
+- check out how the stack's status: `aws cloudformation describe-stacks` you should see something about `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
+- go to the AWS web console and look at cloudformation in the services tab, you should see the template-one stack
+- wait for the stack to complete (refresh the page to update it's status)
+- go to VPC in the services tab
+- you should now see the 'devops-part-two' VPC
+
+Congratulations! You've just created your first stack with cloudformation!
+
+Now let's tear that stack down: `aws cloudformation delete-stack --stack-name template-one`
+Again, you can check the stack status to see how the delete is going, or you can check on the web console.
+
+Once it's deleted, that VPC should no longer exist, the cloudformation section on the web console should be empty, and the `aws cloudformation describe-stacks` command should yield absolutely nothing.
+
+
+How easy was that?
+
+
+
+
+
+
+
+
+
 
 
 
