@@ -46,6 +46,7 @@ In order to use the AWS cli with your account, it needs to know your AWS account
 - open `credentials.csv` and take note of the `access key id` and the `secret access key`
 - create an aws directory `mkdir ~/.aws` and create a config file in there `touch ~/.aws/config`
 - open the file in your favourite editor and put the following in:
+
 	```
 	[default]
 	output = text
