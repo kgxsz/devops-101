@@ -10,7 +10,7 @@ As a graduate developer, DevOps will mostly be a foreign concept to you. Going i
 
 Whilst a lot of projects will have people dedicated to some sort of DevOps role, DevOps *should* be the responsibility of the entire team. As such, it is the responsibility of those "DevOpsy people" to share the DevOps knowledge amongst the team, and it is the responsibility of the entire team to be open to acquiring such knowledge.
 
-The most valuable team members are those who can swing from tweaking the source code to tweaking configuration scripts at a moment's notice. Be that team member.
+The most valuable team members are those who can swing from tweaking the source code to tweaking configuration scripts at a moment's notice. **Be that team member**.
 
 ## Motivation
 The DevOps tasks that you'll encounter on your first few projects will most likely be related to the building and management of cloud infrastructure and CI pipelines. These tasks are not trivial, and as a graduate developer, I found it difficult to grasp many of the concepts I was encountering. 
