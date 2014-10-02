@@ -45,7 +45,11 @@ AWS provides an easy way for generating a public private key pair. When you crea
 - create a key pair, call it 'main'
 - your browser should have downloaded a file (or you may be promted to do so), this is the private key.
 - place your private key in the `~/.ssh` directory
-- set the correct permissions on the key: `chmod 400 ~/.ssh/main.pem` 
+- set the correct permissions on the key:
+
+        chmod 400 ~/.ssh/main.pem
+	
+	
 		
 		
 ### Create a virtual private cloud
@@ -212,7 +216,9 @@ That opens up your subnet, now you need to tweak your security group for the ins
 Why didn't we change the outbound rules for security groups tou ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
 
 
-Now try to ssh to the instance: `ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem`
+Now try to ssh to the instance: 
+
+    ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
 You're in. Take a moment to bask in the glory of what you've just achieved.
 

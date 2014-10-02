@@ -94,11 +94,15 @@ There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudForm
 
 Let's create this stack!
 
-- go to the templates directory: `cd part-two/templates`
+- go to the templates directory (`part-two/templates`)
 - create the stack: 
 
-        `aws cloudformation create-stack --stack-name template-one --template-body "file://./template-one.json"`
-- check out the stack's status with: `aws cloudformation describe-stacks` you should see something about `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
+        aws cloudformation create-stack --stack-name template-one --template-body "file://./template-one.json"
+- check out the stack's status with: 
+
+
+        aws cloudformation describe-stacks 
+  you should see something like `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
 - go to the AWS web console and look at cloudformation in the services tab, you should see the template-one stack
 - wait for the stack to complete (refresh the page to update it's status)
 - go to VPC in the services tab
@@ -111,10 +115,12 @@ Now let's tear that stack down:
     `aws cloudformation delete-stack --stack-name template-one`
 Again, you can check the stack status to see how the delete is going, or you can check on the web console.
 
-Once it's deleted, that VPC should no longer exist, the cloudformation section on the web console should be empty, and the `aws cloudformation describe-stacks` command should yield absolutely nothing.
+Once it's deleted, that VPC should no longer exist, the cloudformation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
 
 
 How easy was that?
+
+
 
 
 
