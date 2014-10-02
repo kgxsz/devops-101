@@ -172,7 +172,7 @@ You're doing so well, don't give up!
 
 Your instance should now be launching. You'll probably have to wait a little bit. 
 
-### Connect to your EC2 instance
+### Create an Elactic IP to connect to your EC2 instance
 So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
 
 **Wrong!**
