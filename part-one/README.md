@@ -200,7 +200,7 @@ Now you can talk to your instance from the outside world. You could now try to s
 - add rule to let traffic out of your subnet to respond to the ssh traffic
 
 	|rule|type|port range|source|
-	|:--:|:--:|:--:|
+	|:--:|:--:|:--:|:--:|
 	|100|custom TCP rule|1024-65535|0.0.0.0/0|
 
 That opens up your subnet, now you need to tweak your security group for the instance
