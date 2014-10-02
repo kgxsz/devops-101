@@ -134,7 +134,7 @@ Do you remember all the resources you created in part one? Here's a list to remi
 
 
 |Resource|Description|
-|:-|:-|
+|:--|:--|
 |VPC|our virtual network, home to our resources|
 |Subnet|a subdivion of our VPC, home to our EC2 instance|
 |Route table|a list of rules on how to route traffic to/from a subnet|
@@ -157,7 +157,7 @@ We've kept the template as simple as possible here, there's a lot more you can d
 You may have noticed that there are some resources declared in the template that you haven't seen before. Let's go over these briefly:
 
 |Resource|Description|
-|:-|:-|
+|:--|:--|
 |SubnetRouteTableAssociation| This is used to associate the subnet resource to the route table resource|
 |VPCGatewayAttachment|This is used to attach the internet gateway resource to the VPC resource|
 |Route|When we declare the route table resource we don't actually describe any routes, this resource describes the routes for that route table|
