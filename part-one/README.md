@@ -193,14 +193,14 @@ Now you can talk to your instance from the outside world. You could now try to s
 - add a rule to let ssh traffic into your subnet
 
 	|rule|type|source|
-	|-|:-:|-:|
+	|:--:|:--:|:--:|
 	|100|ssh|0.0.0.0/0|
 
 - go to the 'outbound rules' tab
 - add rule to let traffic out of your subnet to respond to the ssh traffic
 
 	|rule|type|port range|source|
-	|-|:-:|-:|
+	|:--:|:--:|:--:|
 	|100|custom TCP rule|1024-65535|0.0.0.0/0|
 
 That opens up your subnet, now you need to tweak your security group for the instance
@@ -210,7 +210,7 @@ That opens up your subnet, now you need to tweak your security group for the ins
 - add a rule to allow ssh traffic into the instance
 
 	|type|source|
-	|-|:-:|-:|
+	|:--:|:--:|:--:|
 	|SSH|0.0.0.0/0|
 
 Why didn't we change the outbound rules for security groups tou ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
