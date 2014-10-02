@@ -67,7 +67,7 @@ In order to create a stack, we'll need to create a **template** to describe a se
 
 Now, if you haven't already done so, pull down this repository and open `part-two/templates/template-one.json`. You should see the following:
 
-```
+```javascript
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description" : "devops-part-two, template one",
