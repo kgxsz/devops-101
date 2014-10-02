@@ -97,9 +97,8 @@ Let's create this stack!
 - go to the templates directory (`part-two/templates`)
 - create the stack: 
 
-        aws cloudformation create-stack --stack-name template-one --template-body "file://./template-one.json"
+        aws cloudformation create-stack --stack-name stack-one --template-body "file://./template-one.json"
 - check out the stack's status with: 
-
 
         aws cloudformation describe-stacks 
   you should see something like `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
@@ -112,7 +111,7 @@ Congratulations! You've just created your first stack with cloudformation!
 
 Now let's tear that stack down: 
         
-    `aws cloudformation delete-stack --stack-name template-one`
+    `aws cloudformation delete-stack --stack-name stack-one`
 Again, you can check the stack status to see how the delete is going, or you can check on the web console.
 
 Once it's deleted, that VPC should no longer exist, the cloudformation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
@@ -121,8 +120,74 @@ Once it's deleted, that VPC should no longer exist, the cloudformation section o
 How easy was that?
 
 
+### Create a bigger stack
+
+##### Understand the template
+
+Do you remember all the resources you created in part one? Here's a list to remind you:
+
+|Resource|Description|
+|:-|:-|
+|VPC|our virtual network, home to our resources|
+|Subnet|a subdivion of our VPC, home to our EC2 instance|
+|Route table|a list of rules on how to route traffic to/from a subnet|
+|Internet gateway|the thing you route traffic to so that you can talk to the internet|
+|Network ACL|security at the subnet level, filters traffic in and out of a subnet|
+|Security group|security at the EC2 instance level, filters traffic in and out of an EC2 instance|
+|Elastic IP|the IP you associate with your EC2 instance so that you can talk to it from the outside world|
+|EC2 instance|your instance in the cloud|
+
+What we want now is to describe a stack of these resources in a single template file (in the wild you probably won't want to put it all in a single file, but for now this is fine).
+
+- go to the templates directory (`part-two/templates`)
+- open `template-two`
+- have a look around and try to identify each of the above resources in the template file, you'll notice that the resources are defined exactly as we did in the first workshop
+
+Once again, check out the [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) for each resource if you want to know more about the resource properties, or if you are having trouble understanding the syntax.
+
+We've kept the template as simple as possible here, there's a lot more you can do with templates, such as parameters, mappings, and conditions - see the template [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) for more information.
+
+You may have noticed that there are some resources declared in the template that you haven't seen before. Let's go over these briefly:
+
+|Resource|Description|
+|:-|:-|
+|SubnetRouteTableAssociation| This is used to associate the subnet resource to the route table resource|
+|VPCGatewayAttachment|This is used to attach the internet gateway resource to the VPC resource|
+|Route|When we declare the route table resource we don't actually describe any routes, this resource describes the routes for that route table|
+|NetworkACLEntry|We describe a netwrok ACL resource, and this resource allocates entries to it|
+|SubnetNetworkAclAssociation|This resource lets you associate the network ACL resource with the subnet resource|
+
+Note that if you are **not** using Ireland as your location, you will need to edit the file to change the `availibilityZone` and `ImageId` values to your specific region.
+
+##### Build the infrastructure
+
+Now let's feed this template to cloudformation and watch it build our infrastructure!
+
+From the `part-two/templates` directory:
+
+    aws cloudformation create-stack --stack-name template-two --template-body "file://./template-two.json"
+
+check out the stack's status with: 
+
+    aws cloudformation describe-stacks 
+    
+
+This should take a little while to complete, but when it is, you can have a look through your resources on the AWS web console and you'll see that all is in place.
+
+Now, ssh to your newly created instance once it's finished initializing:
+   
+    ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
 
+##### Tear down the infrastructure
+
+So you want clean down your infrastracture when you're done:
+
+    aws cloudformation delete-stack --stack-name template-two
+    
+### Wrapping up
+
+Let's take a moment to think about what you just did. You were able to build and tear down your infrastructure at the press of a button. You have a file describing your entire infrastructure that you can keep in source control. You're in a good place because you can always rebuild your infrastructure from nothing. Doesn't it feel nice?
 
 
 
