@@ -109,7 +109,7 @@
     "SecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "Allow ssh",
+        "GroupDescription" : "allow ssh",
         "VpcId" : {"Ref" : "VPC"},
         "SecurityGroupIngress" : [{
           "IpProtocol" : "tcp",
