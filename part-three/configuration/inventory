@@ -1,0 +1,8 @@
+[ci-master]
+PUT_IP_HERE
+
+[ci-slave]
+PUT_IP_HERE
+
+[ci-slave:vars]
+ci_master_private_ip=PUT_IP_HERE
