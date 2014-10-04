@@ -43,6 +43,7 @@
   - name: ensure that the go server deb has been installed
     raw: sudo dpkg --force-confold -i /tmp/go-server.deb
 
+
 - hosts: ci-slave
 
   tasks:
@@ -62,7 +63,7 @@
     raw: sudo dpkg --force-confold -i /tmp/go-agent.deb
 
   - name: ensure that the go agent knows where to find the go server
-    lineinfile: dest=/etc/default/go-agent regexp='^GO_SERVER=' line='GO_SERVER={{ ci_master_private_ip }}'
+    lineinfile: dest=/etc/default/go-agent regexp='^GO_SERVER=' line="GO_SERVER={{ ci_master_private_ip }}"
     notify: restart the go agent
     sudo: true
 

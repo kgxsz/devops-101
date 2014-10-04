@@ -7,20 +7,20 @@ So far, you've learnt how to provision a cloud environment with cloudformation, 
 - A CI slave running a Go agent
 
 #####A bit about Ansible
-If you were really keen, you could use cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly install the things you need by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
+If you were really keen, you could use cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
-Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and ge thte job done.
+Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and ge the job done.
 
-#####Be careful
-What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many considerations and improvements you would need to make to build real world infrastructure.
+#####Disclaimer
+What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many more considerations and improvements you would need to make in the wild.
 
 #####Tear down your infrastructure when you're done
-Don't forget to tear this down when you're done otherwise it will cost you 18 cents an hour.
-
-
-Anyway, let's get started.
+Don't forget to tear down your infrastructure when you're done otherwise it will cost you 18 cents an hour.
 
 ### Create the Infrastructure
+
+Get Ansible.
+
 
 You will find a template describing our entire infratructure in `templates/infratructure.json`
 
