@@ -14,7 +14,8 @@ Enter Ansible. Ansible is a configuration tool that you run locally, you tell it
 #####Be careful
 What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many considerations and improvements you would need to make to build real world infrastructure.
 
-**Tear this down when you're done otherwise it will cost you 18 cents an hour**
+#####Tear down your infrastructure when you're done
+Don't forget to tear this down when you're done otherwise it will cost you 18 cents an hour.
 
 
 Anyway, let's get started.
@@ -24,7 +25,7 @@ Anyway, let's get started.
 You will find a template describing our entire infratructure in `templates/infratructure.json`
 
 
-TODO WORKFLOW:
+**WORK IN PROGRESS:**
 
 - In templates: 
 
