@@ -13,7 +13,7 @@ It's not ideal, what we really want is to be able to describe the infrastructure
 
 Cloudformation is an AWS tool that lets us describe a set of resources in a file called a template. Those resources make up our infrastructure. When we feed a template file to Cloudformation, it goes away and builds out the "stack" of resources that you described in that template. That template is simply a file, so it can be kept in source control, so that we can rebuild our infrastructure from scratch if needed.
 
-![alt text](https://github.com/kgxsz/DevOps-101/blob/master/part-two/img/goal.png "part-two-goal")
+![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-two-goal.png "part-two-goal")
 
 ### Getting set up with the AWS command line interface
 

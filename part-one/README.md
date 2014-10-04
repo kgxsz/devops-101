@@ -6,7 +6,7 @@ In order to achieve this goal we'll have to touch on several concepts. Don't wor
 
 What you see below is a naive representation of what we'll be building. Notice that the three main components are the Virtual Private Cloud, the subnet, and the EC2 instance. We'll be wiring things up so as to have an EC2 instance sitting in a subnet, sitting in a VPC. We'll be routing things such that we can ssh to our EC2 instance. We'll also be touching on some security concepts.
 
-![alt text](https://github.com/kgxsz/DevOps-101/blob/master/part-one/img/goal.png "part-one-goal")
+![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-one-goal.png "part-one-goal")
 
 ### Register for AWS
 
