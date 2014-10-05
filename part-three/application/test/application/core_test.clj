@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [application.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest dummy-function-test
+  (testing "dummy-function"
+    (is (= 1 (dummy-function 0)))
+    (is (= 5 (dummy-function 4)))))

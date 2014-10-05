@@ -19,7 +19,15 @@ Don't forget to tear down your infrastructure when you're done otherwise it will
 
 ### Create the Infrastructure
 
-Get Ansible.
+- Get Ansible.
+- build the infrastructure
+- configure ci master and ci slave
+- configure Go to test and uberjar the application
+- see if the produced uberjar runs locally?
+
+
+deal with backups, dnsing, ruby scripting, blue greening at a later date
+
 
 
 You will find a template describing our entire infratructure in `templates/infratructure.json`

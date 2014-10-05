@@ -1,0 +1,25 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: auto;
+}
+
+body {
+  background-color: #3a3f41;
+}
+
+div#title {
+  position: relative;
+  top: 50%;
+  margin-top: -40px;
+  height: 80px;
+  text-align: center;
+  color: white;
+}
+
+h1 {
+  margin: 0;
+  font-family: arial;
+  font-weight: normal;
+  font-size: 4.0em;
+}
