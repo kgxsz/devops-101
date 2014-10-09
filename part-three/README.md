@@ -6,6 +6,9 @@ So far, you've learnt how to provision a cloud environment with Cloudformation, 
 - A CI master running the Go server
 - A CI slave running a Go agent
 
+![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-three-goal.png "part-three-goal")
+
+
 #####A bit about Ansible
 If you were really keen, you could use Cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
