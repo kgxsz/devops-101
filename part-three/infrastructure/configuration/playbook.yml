@@ -12,6 +12,13 @@
     apt: upgrade=dist
     sudo: true
 
+  - name: reboot if required
+    command: /sbin/reboot -t now removes=/var/run/reboot-required
+    sudo: true
+
+  - name: wait for host in case reboot occured
+    local_action: wait_for host={{ inventory_hostname }} port=22
+
   - name: ensure that java is installed
     apt: name=openjdk-7-jdk state=present
     sudo: true

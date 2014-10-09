@@ -1,13 +1,13 @@
 ## Part 3: Provision and Configure a CI Environment
-####**Goal: build out your CI environment in the cloud using Ansible.**
+####**Goal: create your CI environment in the cloud using Ansible.**
 
-So far, you've learnt how to provision a cloud environment with cloudformation, but it's all for naught if you don't configure your EC2 instances to do as you wish. So in this workshop we're going to use Ansible to configure a CI environment. Specifically, we're going to configure two EC2 instances:
+So far, you've learnt how to provision a cloud environment with Cloudformation, but it's all for naught if you don't configure your EC2 instances to do as you wish. So in this workshop we're going to use Ansible to configure a CI environment. Specifically, we're going to configure two EC2 instances:
 
 - A CI master running the Go server
 - A CI slave running a Go agent
 
 #####A bit about Ansible
-If you were really keen, you could use cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
+If you were really keen, you could use Cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
 Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and ge the job done.
 
@@ -15,36 +15,37 @@ Enter Ansible. Ansible is a configuration tool that you run locally, you tell it
 What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many more considerations and improvements you would need to make in the wild.
 
 #####Tear down your infrastructure when you're done
-Don't forget to tear down your infrastructure when you're done otherwise it will cost you 18 cents an hour.
+We'll be provisioning two medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
-### Create the Infrastructure
+### Get Setup with Ansible
+To get going, you'll need Ansible.
 
-You will find a template describing our entire infratructure in `templates/infratructure.json`
+- get it with homebrew (`brew install ansible`)
+- or get it [here](http://docs.ansible.com/intro_installation.html)
+
+I'll assume that you've done part one and two so you already have an AWS account and the CLI ready to go.
+ 
+### Provision the Infrastructure
+We'll be provisioning the infrastructure with AWS Cloudformation like we did in part two. You will find a template describing our entire infratructure in `part-three/infrastructure/provisioning/`.
+
+Have a look at the template, notice that it's not much different from the template in part two, but we've added an extra EC2 instance and EIP, some additions to the security group and some network ACL entries. The two EC2 instances are:
+
+1. CI master: where we'll be running the Go server
+2. CI slave: where we'll be running the Go agent
 
 
-**THE FOLLOWING IS IN PROGRESS:**
+We've also added a new section called outputs. We're using outputs to obtain information that only exists *after* our infrastructure stack has ben created. In particular, we're interested in the public and private IPs of the CI master and slave, but these values are assigned dynamically by AWS and not known upfront. Outputs let's us get at that information easily.
 
-- In templates: 
+Let's get to it.
 
-        aws cloudformation create-stack --stack-name infrastructure --template-body "file://./infrastructure-template.json"`
+- go to the `part-three/infrastructure/provisioning/` directory
+- provision the infratructure:
 
-- Check `aws cloudformation describe-stacks` until the infrastructure is complete
-- Again, check the outputs from `aws cloudformation describe-stacks`, pull out the values and put them in `configuration/inventory`
+        aws cloudformation create-stack --stack-name infrastructure --template-body "file://./infrastructure-template.json"
+        
+- take a look at the AWS web console, after a little while you should see two EC2 instances being created
+- check the status on the Cloudformation task with:
 
-    ```
-    [ci-master]
-    YOUR_CI_MASTER_PUBLIC_IP
-
-    [ci-slave]
-    YOUR_CI_SLAVE_PUBLIC_IP
-
-    [ci-slave:vars]
-    ci_master_private_ip=YOUR_CI_MASTER_PRIVATE_IP
-    ```
-
-- in `configuration/`, do `ansible-playbook playbook.yml -u ubuntu -i inventory --private-key="~/.ssh/main.pem"`
-- connect with `ssh -L 8153:localhost:8153 ubuntu@YOUR_CI_MASTER_PUBLIC_IP -i ~/.ssh/main.pem`
-- open `http://localhost:8153/`
         aws cloudformation describe-stacks
         
     When Cloudformation has created the infrastructure stack, we can view the outputs with the above command. You should see something like this:
@@ -75,7 +76,7 @@ Given that Ansible runs from your local machine and configures target instances 
 
     [ci-slave:vars]
     ci_master_private_ip=YOUR_CI_MASTER_PRIVATE_IP
-    ```
+    ````
             
     The first four lines associate a name to an IP address.
     The last two lines are a little different, they are setting up a variable that will be used by one of our Ansible tasks.
@@ -109,7 +110,7 @@ Now that we have a basic understanding of the inventory and playbook, let's use 
         ansible-playbook playbook.yml -u ubuntu -i inventory --private-key="~/.ssh/main.pem"
   Here, we're telling ansible which playbook and inventory file to use, as well as what user and private key to use for ssh. You will be prompted, say yes to both, and then watch as Ansible configures your instances
   
-That's it. Once Ansible has finished, try running it again, you'll notice that it's a lot faster and the tasks are reporting as `ok`, that's idempotency in action.
+That's it. Once Ansible has finished, try running it again, you'll notice that it's a lot faster and the tasks are reporting as `ok` or `skipped`, that's idempotency in action.
 
 #####Organising Ansible
 For this workshop it's sufficient to have a single playbook and an inventory file with a variable defined within it. For real world projects, however, you will need to separate tasks out into 'roles', and variables should live in their own files, not in the inventory file.
