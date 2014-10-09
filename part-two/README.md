@@ -15,11 +15,11 @@ Cloudformation is an AWS tool that lets us describe a set of resources in a file
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-two-goal.png "part-two-goal")
 
-### Getting set up with the AWS command line interface
+### Get set up with the AWS command line interface
 
 We're going to be doing this workshop through the command line rather than through the AWS web console. So you're going to need the AWS cli.
 
-- get it with homebrew: `brew install awscli`
+- get it with homebrew (`brew install awscli`)
 - or get it [here](https://aws.amazon.com/cli/)
 
 If you're doing this workshop right after the last one, you may have noticed that a file was downloaded by your browser when you created an IAM user. The file is called something like `credentials.csv`. It might still be in your downloads directory. If it is, great! You can skip to the 'configure your AWS cli' section. If not, no biggie - we'll create it now.
@@ -67,9 +67,9 @@ Now, from your command line, try `aws help`, you should see a manual for using t
 You're ready to create your first stack!
 
 ### Create your first stack
-We're going to be using the cloudformation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use cloudformation.
+We're going to be using the Cloudformation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use Cloudformation.
 
-In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the cloudformation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
+In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the Cloudformation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
 
 Now, if you haven't already done so, pull down this repository and open `part-two/templates/template-one.json`. You should see the following:
 
@@ -96,7 +96,7 @@ This is pretty straight forward:
 - the third line is the meat, it opens up the resources section where we desribe our *stack* of resources
 - here, we only have one resource, it's a VPC, and we've named it "devops-part-two" in the tags
 
-There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) and examples available to help you describe the resources you need in a template file.
+There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/aws-template-resource-type-ref.html) and examples available to help you describe the resources you need in a template file.
 
 Let's create this stack!
 
@@ -108,19 +108,19 @@ Let's create this stack!
 
         aws cloudformation describe-stacks 
   you should see something like `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
-- go to the AWS web console and look at cloudformation in the services tab, you should see the template-one stack
+- go to the AWS web console and look at Cloudformation in the services tab, you should see the template-one stack
 - wait for the stack to complete (refresh the page to update it's status)
 - go to VPC in the services tab
 - you should now see the 'devops-part-two' VPC
 
-Congratulations! You've just created your first stack with cloudformation!
+Congratulations! You've just created your first stack with Cloudformation!
 
 Now let's tear that stack down: 
         
     `aws cloudformation delete-stack --stack-name stack-one`
 Again, you can check the stack status to see how the delete is going, or you can check on the web console.
 
-Once it's deleted, that VPC should no longer exist, the cloudformation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
+Once it's deleted, that VPC should no longer exist, the Cloudformation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
 
 
 How easy was that?
@@ -146,13 +146,13 @@ Do you remember all the resources you created in part one? Here's a list to remi
 
 What we want now is to describe a stack of these resources in a single template file (in the wild you probably won't want to put it all in a single file, but for now this is fine).
 
-- go to the templates directory (`part-two/templates`)
+- go to the `part-two/templates` directory
 - open `template-two`
 - have a look around and try to identify each of the above resources in the template file, you'll notice that the resources are defined exactly as we did in the first workshop
 
-Once again, check out the [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) for each resource if you want to know more about the resource properties, or if you are having trouble understanding the syntax.
+Once again, check out the [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/aws-template-resource-type-ref.html) for each resource if you want to know more about the resource properties, or if you are having trouble understanding the syntax.
 
-We've kept the template as simple as possible here, there's a lot more you can do with templates, such as parameters, mappings, and conditions - see the template [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html) for more information.
+We've kept the template as simple as possible here, there's a lot more you can do with templates, such as parameters, mappings, and conditions - see the template [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/template-anatomy.html) for more information.
 
 You may have noticed that there are some resources declared in the template that you haven't seen before. Let's go over these briefly:
 
@@ -168,7 +168,7 @@ Note that if you are **not** using Ireland as your location, you will need to ed
 
 ##### Build the infrastructure
 
-Now let's feed this template to cloudformation and watch it build our infrastructure!
+Now let's feed this template to Cloudformation and watch it build our infrastructure!
 
 From the `part-two/templates` directory:
 
@@ -192,7 +192,7 @@ So you want clean down your infrastracture when you're done:
 
     aws cloudformation delete-stack --stack-name template-two
     
-### Wrapping up
+### Wrap up
 
 Let's take a moment to think about what you just did. You were able to build and tear down your infrastructure at the press of a button. You have a file describing your entire infrastructure that you can keep in source control. You're in a good place because you can always rebuild your infrastructure from nothing. Doesn't it feel nice?
 
