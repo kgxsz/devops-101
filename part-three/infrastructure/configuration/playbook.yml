@@ -50,8 +50,8 @@
 
   - name: ensure that git is installed
     apt: name=git state=present
-    sudo: true  
-
+    sudo: true
+    
   - name: ensure that the go server deb has been downloaded
     get_url: url=http://download.go.cd/gocd-deb/go-server-14.2.0-377.deb dest=/tmp/go-server.deb
 
