@@ -1,8 +1,8 @@
 [ci-master]
-PUT_IP_HERE
+YOUR_CI_MASTER_PUBLIC_IP
 
 [ci-slave]
-PUT_IP_HERE
+YOUR_CI_SLAVE_PUBLIC_IP
 
 [ci-slave:vars]
-ci_master_private_ip=PUT_IP_HERE
+ci_master_private_ip=YOUR_CI_MASTER_PRIVATE_IP
