@@ -95,7 +95,7 @@ The tasks are pretty self explanatory, the name of the task tell us what we're d
 
 Also worth mentioning is the `handlers` section. Handlers are like tasks but are only carried out at the end of a playbook *if they have been notified by a regular task*. Take a look at the second last task, theres a `notify` option, which says "if I just updated the `/etc/default/go-agent` file, then notify that handler to restart the go agent". It may seem odd to you that we might notify the handler on some occasions, and not on others. To understand this, we need to understand Ansible's idempotent nature.
 
-Idempotency in Ansible simply means that you can run a playbook over and over again, and Ansible will only make the changes it needs to make in order to achieve the end state. Ansible reports a task as `changed` if configuration had to be done to achieve the end state, otherwise it reports the task as `ok` or `skipped` if the end state has already been achieved.
+Idempotency in Ansible simply means that you can run a playbook over and over again, and Ansible will only make the changes it needs to make in order to achieve the end state. Ansible reports a task as `changed` if configuration had to be done to achieve the end state, otherwise it reports the task as `ok` or `skipping` if the end state has already been achieved.
 
 So in this particular example, we have a task that adds a line to a go agent configuration file on the CI slave instance. If the line doesn't exist, Ansible adds it, and then notifies the handler to restart the go agent at the end of the playbook. If the line exists, Ansible doesn't do anything and the handler is not notified. All this will make more sense as you start to use Ansible.
 
@@ -110,7 +110,7 @@ Now that we have a basic understanding of the inventory and playbook, let's use 
         ansible-playbook playbook.yml -u ubuntu -i inventory --private-key="~/.ssh/main.pem"
   Here, we're telling ansible which playbook and inventory file to use, as well as what user and private key to use for ssh. You will be prompted, say yes to both, and then watch as Ansible configures your instances
   
-That's it. Once Ansible has finished, try running it again, you'll notice that it's a lot faster and the tasks are reporting as `ok` or `skipped`, that's idempotency in action.
+That's it. Once Ansible has finished, try running it again, you'll notice that it's a lot faster and the tasks are reporting as `ok` or `skipping`, that's idempotency in action.
 
 #####Organising Ansible
 For this workshop it's sufficient to have a single playbook and an inventory file with a variable defined within it. For real world projects, however, you will need to separate tasks out into 'roles', and variables should live in their own files, not in the inventory file.
