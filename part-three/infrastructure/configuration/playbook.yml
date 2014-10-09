@@ -16,13 +16,17 @@
     apt: name=openjdk-7-jdk state=present
     sudo: true
 
-  - name: ensure that git is installed
-    apt: name=git state=present
-    sudo: true
-
   - name: ensure that unzip is installed
     apt: name=unzip update_cache=yes state=present
     sudo: true
+
+  - name: reboot if required
+    command: /sbin/reboot removes=/var/run/reboot-required
+    sudo: true
+
+  - name: wait for host in case reboot occured
+    local_action: wait_for host={{ inventory_hostname }} port=22
+
 
 
 - hosts: ci-master
@@ -37,11 +41,19 @@
     lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 localhost' line="127.0.0.1 localhost ci-master"
     sudo: true
 
+  - name: ensure that git is installed
+    apt: name=git state=present
+    sudo: true  
+
   - name: ensure that the go server deb has been downloaded
     get_url: url=http://download.go.cd/gocd-deb/go-server-14.2.0-377.deb dest=/tmp/go-server.deb
 
   - name: ensure that the go server deb has been installed
     raw: sudo dpkg --force-confold -i /tmp/go-server.deb
+
+  - name: ensure that the go server is running
+    service: name=go-server state=started
+    sudo: true
 
 
 - hosts: ci-slave
@@ -61,6 +73,10 @@
 
   - name: ensure that the go agent deb has been installed
     raw: sudo dpkg --force-confold -i /tmp/go-agent.deb
+
+  - name: ensure that the go agent is running
+    service: name=go-agent state=started
+    sudo: true
 
   - name: ensure that the go agent knows where to find the go server
     lineinfile: dest=/etc/default/go-agent regexp='^GO_SERVER=' line="GO_SERVER={{ ci_master_private_ip }}"
