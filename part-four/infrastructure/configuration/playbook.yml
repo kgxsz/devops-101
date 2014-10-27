@@ -1,0 +1,90 @@
+---
+
+- hosts: all
+
+  tasks:
+
+  - name: ensure apt cache is up to date
+    apt: update_cache=yes
+    sudo: true
+
+  - name: ensure all packages are up to date
+    apt: upgrade=dist
+    sudo: true
+
+  - name: ensure that java is installed
+    apt: name=openjdk-7-jdk state=present
+    sudo: true
+
+  - name: ensure that unzip is installed
+    apt: name=unzip update_cache=yes state=present
+    sudo: true
+
+  - name: reboot if required
+    command: /sbin/reboot removes=/var/run/reboot-required
+    sudo: true
+
+  - name: wait for host in case reboot occured
+    local_action: wait_for host={{ inventory_hostname }} port=22
+
+
+- hosts: ci-master
+
+  tasks:
+
+  - name: ensure the instance hostname is set to ci-master
+    hostname: name=ci-master
+    sudo: true
+
+  - name: ensure that the hosts file has the hostname ci-master
+    lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 localhost' line="127.0.0.1 localhost ci-master"
+    sudo: true
+
+  - name: ensure that git is installed
+    apt: name=git state=present
+    sudo: true
+
+  - name: ensure that the go server deb has been downloaded
+    get_url: url=http://download.go.cd/gocd-deb/go-server-14.2.0-377.deb dest=/tmp/go-server.deb
+
+  - name: ensure that the go server deb has been installed
+    raw: sudo dpkg --force-confold -i /tmp/go-server.deb
+
+  - name: ensure that the go server is running
+    service: name=go-server state=started
+    sudo: true
+
+
+- hosts: ci-slave
+
+  tasks:
+
+  - name: ensure the instance hostname is set to ci-slave
+    hostname: name=ci-slave
+    sudo: true
+
+  - name: ensure that the hosts file has the hostname ci-slave
+    lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 localhost' line="127.0.0.1 localhost ci-slave"
+    sudo: true
+
+  - name: ensure that the go agent deb has been downloaded
+    get_url: url=http://download.go.cd/gocd-deb/go-agent-14.2.0-377.deb dest=/tmp/go-agent.deb
+
+  - name: ensure that the go agent deb has been installed
+    raw: sudo dpkg --force-confold -i /tmp/go-agent.deb
+
+  - name: ensure that the go agent is running
+    service: name=go-agent state=started
+    sudo: true
+
+  - name: ensure that the go agent knows where to find the go server
+    lineinfile: dest=/etc/default/go-agent regexp='^GO_SERVER=' line="GO_SERVER={{ ci_master_private_ip }}"
+    notify: restart the go agent
+    sudo: true
+
+
+  handlers:
+
+  - name: restart the go agent
+    service: name=go-agent state=restarted
+    sudo: true
