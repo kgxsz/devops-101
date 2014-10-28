@@ -86,6 +86,14 @@
     get_url: url=https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein dest=/usr/local/bin/lein mode=755
     sudo: true
 
+  - name: ensure that pip is installed
+    apt: name=python-pip state=present
+    sudo: true
+
+  - name: ensure that the aws cli is installed
+    pip: name=awscli
+
+
   handlers:
 
   - name: restart the go agent
