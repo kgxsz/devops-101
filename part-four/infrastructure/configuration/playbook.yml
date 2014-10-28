@@ -47,7 +47,7 @@
   - name: ensure that the go server deb has been downloaded
     get_url: url=http://download.go.cd/gocd-deb/go-server-14.2.0-377.deb dest=/tmp/go-server.deb
 
-  - name: ensure that the go server deb has been installed
+  - name: ensure that the go server deb is installed
     raw: sudo dpkg --force-confold -i /tmp/go-server.deb
 
   - name: ensure that the go server is running
@@ -70,7 +70,7 @@
   - name: ensure that the go agent deb has been downloaded
     get_url: url=http://download.go.cd/gocd-deb/go-agent-14.2.0-377.deb dest=/tmp/go-agent.deb
 
-  - name: ensure that the go agent deb has been installed
+  - name: ensure that the go agent deb is installed
     raw: sudo dpkg --force-confold -i /tmp/go-agent.deb
 
   - name: ensure that the go agent is running
@@ -81,6 +81,13 @@
     lineinfile: dest=/etc/default/go-agent regexp='^GO_SERVER=' line="GO_SERVER={{ ci_master_private_ip }}"
     notify: restart the go agent
     sudo: true
+
+  - name: ensure that the leiningen bootstrap script has been downloaded
+    get_url: url=https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein dest=/usr/local/bin/lein mode=755
+    sudo: true
+
+  - name: ensure that leiningen is installed
+    command: lein creates=/home/ubuntu/.lein
 
 
   handlers:
