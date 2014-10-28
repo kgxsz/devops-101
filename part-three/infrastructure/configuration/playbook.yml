@@ -40,10 +40,6 @@
     lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 localhost' line="127.0.0.1 localhost ci-master"
     sudo: true
 
-  - name: ensure that git is installed
-    apt: name=git state=present
-    sudo: true
-
   - name: ensure that the go server deb has been downloaded
     get_url: url=http://download.go.cd/gocd-deb/go-server-14.2.0-377.deb dest=/tmp/go-server.deb
 
