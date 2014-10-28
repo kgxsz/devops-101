@@ -136,7 +136,7 @@ Your Go server and agent should now be up and running. The Go server is listenin
 You now have a Go server running with an agent attached ready to configure a pipeline to do your bidding.
 
 ### Clean Up
-That's it! You've created your CI environment. You're in a good place now, you can tear down and rebuild this CI environment at the press of a button. The next step is to configure a CI pipeline and deploy a dummy webapp, but we're not going to do that in this workshop. So, we'll be ending it here. But before you go, do not forget to tear down the infrastructure:
+That's it! You've created your CI environment. You're in a good place now, you can tear down and rebuild this CI environment at the press of a button. The next step is to configure a CI pipeline and deploy a dummy application, but we're not going to do that in this workshop. So, we'll be ending it here. But before you go, do not forget to tear down the infrastructure:
 
         aws cloudformation delete-stack --stack-name infrastructure
 
