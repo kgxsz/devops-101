@@ -192,6 +192,7 @@
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "Subnet" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroup" } ],
+        "IamInstanceProfile" : { "Ref" : "InstanceProfile" },
         "Tags" : [ { "Key" : "Name", "Value" : "CI slave" } ]
       }
     },
@@ -226,6 +227,14 @@
             } ]
           }
         } ]
+      }
+    },
+
+    "InstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [ { "Ref": "Role" } ]
       }
     }
   },
