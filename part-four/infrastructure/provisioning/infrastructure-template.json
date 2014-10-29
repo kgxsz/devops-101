@@ -8,7 +8,7 @@
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : "10.0.0.0/16",
-        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-three"} ]
+        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-four"} ]
       }
     },
 
@@ -19,14 +19,14 @@
         "VpcId" : { "Ref" : "VPC" },
         "CidrBlock" : "10.0.0.0/24",
         "AvailabilityZone" : "eu-west-1a",
-        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-three"} ]
+        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-four"} ]
       }
     },
 
     "InternetGateway" : {
       "Type" : "AWS::EC2::InternetGateway",
       "Properties" : {
-        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-three"}]
+        "Tags" : [ {"Key" : "Name", "Value" : "devops-part-four"}]
       }
     },
 
@@ -42,7 +42,7 @@
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
         "VpcId" : { "Ref" : "VPC" },
-        "Tags" : [ { "Key" : "Name", "Value" : "devops-part-three"} ]
+        "Tags" : [ { "Key" : "Name", "Value" : "devops-part-four"} ]
       }
     },
 
@@ -68,7 +68,7 @@
       "Type" : "AWS::EC2::NetworkAcl",
       "Properties" : {
         "VpcId" : { "Ref" : "VPC" },
-        "Tags" : [ { "Key" : "Name", "Value" : "devops-part-three" } ]
+        "Tags" : [ { "Key" : "Name", "Value" : "devops-part-four" } ]
       }
     },
 
@@ -154,7 +154,7 @@
           {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0"},
           {"IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/24"}
         ],
-        "Tags" : [ { "Key" : "Name", "Value" : "devops-part-three" } ]
+        "Tags" : [ { "Key" : "Name", "Value" : "devops-part-four" } ]
       }
     },
 
