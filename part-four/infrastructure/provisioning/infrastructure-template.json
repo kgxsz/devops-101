@@ -148,7 +148,7 @@
     "SecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "allow ssh",
+        "GroupDescription" : "main security group",
         "VpcId" : {"Ref" : "VPC"},
         "SecurityGroupIngress" : [
           {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0"},
@@ -192,7 +192,7 @@
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "Subnet" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroup" } ],
-        "IamInstanceProfile" : { "Ref" : "InstanceProfile" },
+        "IamInstanceProfile" : { "Ref" : "InstanceProfileForCISlave" },
         "Tags" : [ { "Key" : "Name", "Value" : "CI slave" } ]
       }
     },
@@ -204,37 +204,42 @@
       }
     },
 
-    "Role": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
+    "RoleForS3Access" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
         "AssumeRolePolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [ {
-            "Effect": "Allow",
-            "Principal": { "Service": [ "ec2.amazonaws.com" ] },
-            "Action": [ "sts:AssumeRole" ]
+            "Effect" : "Allow",
+            "Principal" : { "Service" : [ "ec2.amazonaws.com" ] },
+            "Action" : [ "sts:AssumeRole" ]
           } ]
         },
-        "Path": "/",
-        "Policies": [ {
-          "PolicyName": "ReadWriteToS3",
-          "PolicyDocument": {
-            "Version" : "2012-10-17",
-            "Statement": [ {
-              "Effect": "Allow",
-              "Action": [ "s3:GetObject", "s3:PutObject"],
-              "Resource": [ "arn:aws:s3:::devops-part-four" ]
-            } ]
-          }
-        } ]
+        "Path" : "/"
       }
     },
 
-    "InstanceProfile": {
+    "PolicyForS3AccessRole": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "S3Access",
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ {
+            "Effect": "Allow",
+            "Action": [ "s3:GetObject", "s3:PutObject"],
+            "Resource": [ "arn:aws:s3:::devops-part-one" ]
+          } ]
+        },
+        "Roles": [ { "Ref": "RoleForS3Access" } ]
+      }
+    },
+
+    "InstanceProfileForCISlave": {
       "Type": "AWS::IAM::InstanceProfile",
       "Properties": {
         "Path": "/",
-        "Roles": [ { "Ref": "Role" } ]
+        "Roles": [ { "Ref": "RoleForS3Access" } ]
       }
     }
   },
