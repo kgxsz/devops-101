@@ -92,6 +92,7 @@
 
   - name: ensure that the aws cli is installed
     pip: name=awscli
+    sudo: true
 
 
   handlers:
