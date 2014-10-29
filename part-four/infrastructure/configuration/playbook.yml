@@ -16,6 +16,10 @@
     apt: name=openjdk-7-jdk state=present
     sudo: true
 
+  - name: ensure that git is installed
+    apt: name=git state=present
+    sudo: true
+
   - name: ensure that unzip is installed
     apt: name=unzip update_cache=yes state=present
     sudo: true
@@ -76,10 +80,6 @@
   - name: ensure that the go agent knows where to find the go server
     lineinfile: dest=/etc/default/go-agent regexp='^GO_SERVER=' line="GO_SERVER={{ ci_master_private_ip }}"
     notify: restart the go agent
-    sudo: true
-
-  - name: ensure that git is installed
-    apt: name=git state=present
     sudo: true
 
   - name: ensure that the leiningen bootstrap script has been downloaded
