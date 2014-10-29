@@ -225,11 +225,7 @@
         "PolicyName": "S3Access",
         "PolicyDocument": {
           "Version" : "2012-10-17",
-          "Statement": [ {
-            "Effect": "Allow",
-            "Action": [ "s3:GetObject", "s3:PutObject"],
-            "Resource": [ "arn:aws:s3:::devops-part-one" ]
-          } ]
+          "Statement": [ { "Effect": "Allow", "Action": "s3:*", "Resource": "*" } ]
         },
         "Roles": [ { "Ref": "RoleForS3Access" } ]
       }
