@@ -152,7 +152,7 @@ What we want now is to describe a stack of these resources in a single template 
 
 Once again, check out the [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/aws-template-resource-type-ref.html) for each resource if you want to know more about the resource properties, or if you are having trouble understanding the syntax.
 
-We've kept the template as simple as possible here, there's a lot more you can do with templates, such as parameters, mappings, and conditions - see the template [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/template-anatomy.html) for more information.
+We've kept the template as simple as possible here, there's a lot more you can do with templates, such as parameters, mappings, and conditions - see the template [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) for more information.
 
 You may have noticed that there are some resources declared in the template that you haven't seen before. Let's go over these briefly:
 
