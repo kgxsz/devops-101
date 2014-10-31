@@ -180,7 +180,7 @@
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "Subnet" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroup" } ],
-        "Tags" : [ { "Key" : "Name", "Value" : "CI master" } ]
+        "Tags" : [ { "Key" : "Name", "Value" : "CI Master" } ]
       }
     },
 
@@ -193,7 +193,7 @@
         "SubnetId" : { "Ref" : "Subnet" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroup" } ],
         "IamInstanceProfile" : { "Ref" : "InstanceProfileForCISlave" },
-        "Tags" : [ { "Key" : "Name", "Value" : "CI slave" } ]
+        "Tags" : [ { "Key" : "Name", "Value" : "CI Slave" } ]
       }
     },
 
@@ -227,10 +227,10 @@
       }
     },
 
-    "PolicyForS3Access": {
+    "PolicyForS3FullAccess": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "S3Access",
+        "PolicyName": "S3FullAccess",
         "PolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [ { "Effect": "Allow", "Action": "s3:*", "Resource": "*" } ]
@@ -239,10 +239,10 @@
       }
     },
 
-    "PolicyForCloudformationAccess": {
+    "PolicyForCloudformationFullAccess": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "CloudformationAccess",
+        "PolicyName": "CloudformationFullAccess",
         "PolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [ { "Effect": "Allow", "Action": "cloudformation:*", "Resource": "*" } ]
@@ -251,10 +251,10 @@
       }
     },
 
-    "PolicyForEC2Access": {
+    "PolicyForEC2FullAccess": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "EC2Access",
+        "PolicyName": "EC2FullAccess",
         "PolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [ { "Effect": "Allow", "Action": "ec2:*", "Resource": "*" } ]
