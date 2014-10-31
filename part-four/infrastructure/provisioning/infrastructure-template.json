@@ -249,6 +249,18 @@
         },
         "Roles": [ { "Ref": "RoleForCISlave" } ]
       }
+    },
+
+    "PolicyForEC2Access": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "EC2Access",
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ { "Effect": "Allow", "Action": "ec2:*", "Resource": "*" } ]
+        },
+        "Roles": [ { "Ref": "RoleForCISlave" } ]
+      }
     }
   },
 
@@ -258,12 +270,21 @@
       "Value" : { "Fn::GetAtt" : [ "EC2InstanceCIMaster", "PublicIp" ] }
     },
 
+    "CISlavePublicIp" : {
+      "Value" : { "Fn::GetAtt" : [ "EC2InstanceCISlave", "PublicIp" ] }
+    },
+
     "CIMasterPrivateIp" : {
       "Value" : { "Fn::GetAtt" : [ "EC2InstanceCIMaster", "PrivateIp" ] }
     },
 
-    "CISlavePublicIp" : {
-      "Value" : { "Fn::GetAtt" : [ "EC2InstanceCISlave", "PublicIp" ] }
+    "SubnetId" : {
+      "Value" : { "Ref" : "Subnet" }
+    },
+
+    "SecurityGroupId" : {
+      "Value" : { "Ref" : "SecurityGroup" }
     }
+
   }
 }

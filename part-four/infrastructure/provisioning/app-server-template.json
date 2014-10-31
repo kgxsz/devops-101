@@ -2,6 +2,11 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description" : "devops-part-four, app-server",
 
+  "Parameters" : {
+    "SubnetId" : { "Type" : "String" },
+    "SecurityGroupId" : { "Type" : "String" }
+  },
+
   "Resources" : {
 
     "EIPAppServer" : {
@@ -17,8 +22,8 @@
         "ImageId" : "ami-25865252",
         "InstanceType" : "m1.medium",
         "KeyName" : "main",
-        "SubnetId" : { "Ref" : "Subnet" },
-        "SecurityGroupIds" : [ { "Ref" : "SecurityGroup" } ],
+        "SubnetId" : { "Ref" : "SubnetId" },
+        "SecurityGroupIds" : [ { "Ref" : "SecurityGroupId" } ],
         "Tags" : [ { "Key" : "Name", "Value" : "App Server" } ]
       }
     }
