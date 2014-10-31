@@ -1,0 +1,26 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description" : "devops-part-four, app-server",
+
+  "Resources" : {
+
+    "EIPAppServer" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+        "InstanceId" : { "Ref" : "EC2InstanceAppServer" }
+      }
+    },
+
+    "EC2InstanceAppServer" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId" : "ami-25865252",
+        "InstanceType" : "m1.medium",
+        "KeyName" : "main",
+        "SubnetId" : { "Ref" : "Subnet" },
+        "SecurityGroupIds" : [ { "Ref" : "SecurityGroup" } ],
+        "Tags" : [ { "Key" : "Name", "Value" : "App Server" } ]
+      }
+    }
+  }
+}
