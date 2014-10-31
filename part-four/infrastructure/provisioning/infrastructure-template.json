@@ -197,6 +197,14 @@
       }
     },
 
+    "InstanceProfileForCISlave": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [ { "Ref": "RoleForCISlave" } ]
+      }
+    },
+
     "S3Bucket" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
@@ -204,7 +212,7 @@
       }
     },
 
-    "RoleForS3Access" : {
+    "RoleForCISlave" : {
       "Type" : "AWS::IAM::Role",
       "Properties" : {
         "AssumeRolePolicyDocument": {
@@ -219,7 +227,7 @@
       }
     },
 
-    "PolicyForS3AccessRole": {
+    "PolicyForS3Access": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "S3Access",
@@ -227,15 +235,19 @@
           "Version" : "2012-10-17",
           "Statement": [ { "Effect": "Allow", "Action": "s3:*", "Resource": "*" } ]
         },
-        "Roles": [ { "Ref": "RoleForS3Access" } ]
+        "Roles": [ { "Ref": "RoleForCISlave" } ]
       }
     },
 
-    "InstanceProfileForCISlave": {
-      "Type": "AWS::IAM::InstanceProfile",
+    "PolicyForCloudformationAccess": {
+      "Type": "AWS::IAM::Policy",
       "Properties": {
-        "Path": "/",
-        "Roles": [ { "Ref": "RoleForS3Access" } ]
+        "PolicyName": "CloudformationAccess",
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ { "Effect": "Allow", "Action": "cloudformation:*", "Resource": "*" } ]
+        },
+        "Roles": [ { "Ref": "RoleForCISlave" } ]
       }
     }
   },
