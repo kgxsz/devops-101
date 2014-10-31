@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "deploying for build number $GO_PIPELINE_COUNTER"
+echo "deploying app server for build number $GO_PIPELINE_COUNTER"
 
 # extract the subnet and security group ids, this is brittle, but it'll do the job
 RELEVANT_OUTPUTS=`aws cloudformation describe-stacks --region eu-west-1 --output text | egrep "SubnetId|SecurityGroupId"`
@@ -17,5 +17,3 @@ SECURITY_GROUP_ID=`echo $RELEVANT_OUTPUTS | awk '{ print $6 }'`
 ParameterKey=SubnetId,ParameterValue=$SUBNET_ID \
 ParameterKey=SecurityGroupId,ParameterValue=$SECURITY_GROUP_ID \
 ParameterKey=BuildNumber,ParameterValue=${GO_PIPELINE_COUNTER}`
-
-exit $?
