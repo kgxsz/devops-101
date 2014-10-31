@@ -18,4 +18,4 @@ ParameterKey=SubnetId,ParameterValue=$SUBNET_ID \
 ParameterKey=SecurityGroupId,ParameterValue=$SECURITY_GROUP_ID \
 ParameterKey=BuildNumber,ParameterValue=${GO_PIPELINE_COUNTER}`
 
-return $?
+exit $?
