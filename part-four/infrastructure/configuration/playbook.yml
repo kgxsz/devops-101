@@ -94,6 +94,10 @@
     pip: name=awscli
     sudo: true
 
+  - name: ensure that ruby is installed
+    apt: name=ruby state=present
+    sudo: true
+
 
   handlers:
 
