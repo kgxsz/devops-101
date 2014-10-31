@@ -25,7 +25,7 @@
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "SubnetId" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroupId" } ],
-        "Tags" : [ { "Key" : "Name", "Value" : { "Fn::Join" : ["App Server - Build ", { "Ref": "BuildNumber" } ] } } ]
+        "Tags" : [ { "Key" : "Name", "Value" : { "Fn::Join" : ["", ["App Server - Build ", { "Ref": "BuildNumber" } ] ] } } ]
       }
     }
   }
