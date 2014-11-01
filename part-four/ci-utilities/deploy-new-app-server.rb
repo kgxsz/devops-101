@@ -19,7 +19,7 @@ puts "Extracted security group id: #{security_group_id}"
 # launch the app server stack
 build_number = ENV['GO_PIPELINE_COUNTER']
 
-puts "Launching the app server stack for build #{build_number}"
+puts "Commencing creation of stack: app-server-build-#{build_number}"
 
 `aws cloudformation create-stack \
 --stack-name app-server-build-#{build_number} \
@@ -36,9 +36,10 @@ sleep(30)
 loop do
   filtered_stacks = JSON.parse(`aws cloudformation describe-stacks --stack-name app-server-build-#{build_number} --output json --region eu-west-1 --output json`)
   stack_status = filtered_stacks["Stacks"].first["StackStatus"]
-  puts "Stack creation status: #{stack_status}"
+  puts "Awaiting creation of app-server-build-#{build_number} with status of #{stack_status}"
 
   if stack_status == "CREATE_COMPLETE"
+    puts "Stack creation complete"
     exit 0
   elsif stack_status != "CREATE_IN_PROGRESS"
     exit 1

@@ -24,7 +24,7 @@ if stacks_to_be_deleted.length == 0
 end
 
 stacks_to_be_deleted.each do |stack_name|
-  puts "Deleting stack: #{stack_name}"
+  puts "Commencing deletion of stack: #{stack_name}"
   `aws cloudformation delete-stack --stack-name #{stack_name} --region eu-west-1`
 end
 
