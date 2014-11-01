@@ -276,15 +276,6 @@
 
     "CIMasterPrivateIp" : {
       "Value" : { "Fn::GetAtt" : [ "EC2InstanceCIMaster", "PrivateIp" ] }
-    },
-
-    "SubnetId" : {
-      "Value" : { "Ref" : "Subnet" }
-    },
-
-    "SecurityGroupId" : {
-      "Value" : { "Ref" : "SecurityGroup" }
     }
-
   }
 }
