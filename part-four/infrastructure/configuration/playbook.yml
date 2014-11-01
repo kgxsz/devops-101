@@ -95,7 +95,7 @@
     sudo: true
 
   - name: ensure that ruby is installed
-    apt: name=ruby state=present
+    apt: name=ruby1.9.1 state=present
     sudo: true
 
 
