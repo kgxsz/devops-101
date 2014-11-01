@@ -34,7 +34,7 @@ ParameterKey=BuildNumber,ParameterValue=#{build_number}`
 # wait for the stack to be created
 sleep(30)
 loop do
-  filtered_stacks = JSON.parse(`aws cloudformation describe-stacks --stack-name app-server-build-#{build_number} --region eu-west-1 --output json`)
+  filtered_stacks = JSON.parse(`aws cloudformation describe-stacks --stack-name app-server-build-#{build_number} --output json --region eu-west-1 --output json`)
   stack_status = filtered_stacks["Stacks"].first["StackStatus"]
   puts "Stack creation status: #{stack_status}"
 
