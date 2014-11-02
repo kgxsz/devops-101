@@ -7,8 +7,8 @@ require 'json'
 build_number = ENV['GO_PIPELINE_COUNTER']
 stacks_to_be_deleted = []
 
-filtered_stacks = JSON.parse(`aws cloudformation describe-stacks --region eu-west-1 --output json`)
-stacks = filtered_stacks["Stacks"]
+describe_stacks_cmd = "aws cloudformation describe-stacks --region eu-west-1 --output json"
+stacks = JSON.parse(`#{describe_stacks_cmd}`)["Stacks"]
 
 stacks.each do |stack|
   stack_name = stack["StackName"]
@@ -32,8 +32,7 @@ end
 sleep(30)
 loop do
   stacks_awaiting_deletion = []
-  filtered_stacks = JSON.parse(`aws cloudformation describe-stacks --region eu-west-1 --output json`)
-  stacks = filtered_stacks["Stacks"]
+  stacks = JSON.parse(`#{describe_stacks_cmd}`)["Stacks"]
 
   stacks.each do |stack|
     stack_name = stack["StackName"]
