@@ -25,37 +25,49 @@ def extract_security_group_id
   return security_group_id
 end
 
-subnet_id = extract_subnet_id
-security_group_id = extract_security_group_id
-
-# launch the app server stack
-build_number = ENV['GO_PIPELINE_COUNTER']
-
-puts "Commencing creation of stack: app-server-build-#{build_number}"
-
-`aws cloudformation create-stack \
---stack-name app-server-build-#{build_number} \
---template-body "file://../infrastructure/provisioning/app-server-template.json" \
---region eu-west-1 \
---output text \
---parameters \
-ParameterKey=SubnetId,ParameterValue=#{subnet_id} \
-ParameterKey=SecurityGroupId,ParameterValue=#{security_group_id} \
-ParameterKey=BuildNumber,ParameterValue=#{build_number}`
-
-# wait for the stack to be created
-sleep(30)
-loop do
-  filtered_stacks = JSON.parse(`aws cloudformation describe-stacks --stack-name app-server-build-#{build_number} --output json --region eu-west-1 --output json`)
-  stack_status = filtered_stacks["Stacks"].first["StackStatus"]
-  puts "Awaiting creation of app-server-build-#{build_number} with status of #{stack_status}"
-
-  if stack_status == "CREATE_COMPLETE"
-    puts "Stack creation complete"
-    exit 0
-  elsif stack_status != "CREATE_IN_PROGRESS"
-    exit 1
-  end
-
-  sleep(15)
+def launch_app_server_stack
+  puts "Commencing creation of stack: app-server-build-#{build_number}"
+  `aws cloudformation create-stack \
+  --stack-name app-server-build-#{build_number} \
+  --template-body "file://../infrastructure/provisioning/app-server-template.json" \
+  --region eu-west-1 \
+  --output text \
+  --parameters \
+  ParameterKey=SubnetId,ParameterValue=#{subnet_id} \
+  ParameterKey=SecurityGroupId,ParameterValue=#{security_group_id} \
+  ParameterKey=BuildNumber,ParameterValue=#{build_number}`
 end
+
+def wait_for_stack_to_be_created
+  loop do
+    describe_stacks_command = "aws cloudformation describe-stacks \
+                               --stack-name app-server-build-#{build_number} \
+                               --region eu-west-1 \
+                               --output json"
+    stacks = JSON.parse(`#{describe_stacks_command}`)["Stacks"]
+    stack_status = stacks.first["StackStatus"]
+
+    puts "Awaiting creation of app-server-build-#{build_number} with status of #{stack_status}"
+
+    if stack_status == "CREATE_COMPLETE"
+      puts "Stack creation complete"
+      exit 0
+    elsif stack_status != "CREATE_IN_PROGRESS"
+      exit 1
+    end
+
+    sleep(15)
+  end
+end
+
+def main
+  build_number = ENV['GO_PIPELINE_COUNTER']
+
+  subnet_id = extract_subnet_id
+  security_group_id = extract_security_group_id
+  launch_app_server_stack
+  sleep(30)
+  wait_for_stack_to_be_created
+end
+
+main
