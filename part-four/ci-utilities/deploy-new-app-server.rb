@@ -8,7 +8,7 @@ def extract_subnet_id
                               --filters Name=tag:aws:cloudformation:logical-id,Values=Subnet \
                               --region eu-west-1 \
                               --output json"
-  subnets = JSON.parse(`describe_subnets_command`)["Subnets"]
+  subnets = JSON.parse(`#{describe_subnets_command}`)["Subnets"]
   subnet_id = subnets.first["SubnetId"]
   puts "Extracted subnet id: #{subnet_id}"
   return subnet_id
@@ -19,7 +19,7 @@ def extract_security_group_id
                                       --filters Name=tag:aws:cloudformation:logical-id,Values=SecurityGroup \
                                       --region eu-west-1 \
                                       --output json"
-  security_groups = JSON.parse(`describe_security_groups_command`)["SecurityGroups"]
+  security_groups = JSON.parse(`#{describe_security_groups_command}`)["SecurityGroups"]
   security_group_id = security_groups.first["GroupId"]
   puts "Extracted security group id: #{security_group_id}"
   return security_group_id
