@@ -25,7 +25,7 @@ def extract_security_group_id
   return security_group_id
 end
 
-def launch_app_server_stack
+def launch_app_server_stack(build_number, subnet_id, security_group_id)
   puts "Commencing creation of stack: app-server-build-#{build_number}"
   `aws cloudformation create-stack \
   --stack-name app-server-build-#{build_number} \
@@ -38,7 +38,7 @@ def launch_app_server_stack
   ParameterKey=BuildNumber,ParameterValue=#{build_number}`
 end
 
-def wait_for_stack_to_be_created
+def wait_for_stack_to_be_created(build_number)
   loop do
     describe_stacks_command = "aws cloudformation describe-stacks \
                                --stack-name app-server-build-#{build_number} \
@@ -51,9 +51,9 @@ def wait_for_stack_to_be_created
 
     if stack_status == "CREATE_COMPLETE"
       puts "Stack creation complete"
-      exit 0
+      return true
     elsif stack_status != "CREATE_IN_PROGRESS"
-      exit 1
+      return false
     end
 
     sleep(15)
@@ -62,12 +62,15 @@ end
 
 def main
   build_number = ENV['GO_PIPELINE_COUNTER']
-
   subnet_id = extract_subnet_id
   security_group_id = extract_security_group_id
-  launch_app_server_stack
+  launch_app_server_stack(build_number, subnet_id, security_group_id)
   sleep(30)
-  wait_for_stack_to_be_created
+  if wait_for_stack_to_be_created(build_number)
+    exit 0
+  else
+    exit 1
+  end
 end
 
 main
