@@ -3,18 +3,8 @@
 require 'rubygems'
 require 'json'
 
-# extract subnet and security group ids
-subnet_logical_id = "Subnet"
-security_group_logical_id = "SecurityGroup"
-
-filtered_subnets = JSON.parse(`aws ec2 describe-subnets --filters Name=tag:aws:cloudformation:logical-id,Values=#{subnet_logical_id} --region eu-west-1 --output json`)
-filtered_security_groups = JSON.parse(`aws ec2 describe-security-groups --filters Name=tag:aws:cloudformation:logical-id,Values=#{security_group_logical_id} --region eu-west-1 --output json`)
-
-subnet_id = filtered_subnets["Subnets"].first["SubnetId"]
-security_group_id = filtered_security_groups["SecurityGroups"].first["GroupId"]
-
-puts "Extracted subnet id: #{subnet_id}"
-puts "Extracted security group id: #{security_group_id}"
+subnet_id = extract_subnet_id
+security_group_id = extract_security_group_id
 
 # launch the app server stack
 build_number = ENV['GO_PIPELINE_COUNTER']
@@ -46,4 +36,26 @@ loop do
   end
 
   sleep(15)
+end
+
+def extract_subnet_id
+  describe_subnets_command = "aws ec2 describe-subnets \
+                              --filters Name=tag:aws:cloudformation:logical-id,Values=Subnet \
+                              --region eu-west-1 \
+                              --output json"
+  subnets = JSON.parse(`describe_subnets_command`).["Subnets"]
+  subnet_id = subnets.first["SubnetId"]
+  puts "Extracted subnet id: #{subnet_id}"
+  return subnet_id
+end
+
+def extract_security_group_id
+  describe_security_groups_command = "aws ec2 describe-security-groups \
+                                      --filters Name=tag:aws:cloudformation:logical-id,Values=SecurityGroup \
+                                      --region eu-west-1 \
+                                      --output json"
+  security_groups = JSON.parse(`describe_security_groups_command`).["SecurityGroups"]
+  security_group_id = security_groups.first["GroupId"]
+  puts "Extracted security group id: #{security_group_id}"
+  return security_group_id
 end
