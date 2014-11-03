@@ -49,14 +49,20 @@ def wait_for_stack_to_be_created(build_number)
 
     puts "Awaiting creation of app-server-build-#{build_number} with status of #{stack_status}"
 
-    if stack_status == "CREATE_COMPLETE"
-      puts "Stack creation complete"
-      return true
-    elsif stack_status != "CREATE_IN_PROGRESS"
-      return false
+    if stack_status == "CREATE_COMPLETE" || stack_status != "CREATE_IN_PROGRESS"
+      return stack_status
     end
-
     sleep(15)
+  end
+end
+
+def handle_final_stack_status(final_stack_status)
+  if final_stack_status == "CREATE_COMPLETE"
+    puts "Stack creation complete"
+    exit 0
+  else
+    puts "Stack creation failed"
+    exit 1
   end
 end
 
@@ -66,11 +72,8 @@ def main
   security_group_id = extract_security_group_id
   launch_app_server_stack(build_number, subnet_id, security_group_id)
   sleep(30)
-  if wait_for_stack_to_be_created(build_number)
-    exit 0
-  else
-    exit 1
-  end
+  final_stack_status = wait_for_stack_to_be_created(build_number)
+  handle_final_stack_status(final_stack_status)
 end
 
 main
