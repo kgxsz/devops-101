@@ -28,7 +28,9 @@
         "Tags" : [ { "Key" : "Name", "Value" : { "Fn::Join" : ["", ["App Server - Build ", { "Ref": "BuildNumber" } ] ] } } ],
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/sh\n",
-          "sudo apt-get install -y openjdk-7-jdk "
+          "sudo apt-get update\n",
+          "apt-get upgrade -y"
+          "sudo apt-get install openjdk-7-jdk -y"
 		    ]]}}
       }
     }
