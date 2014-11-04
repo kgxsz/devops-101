@@ -26,6 +26,7 @@
         "SubnetId" : { "Ref" : "SubnetId" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroupId" } ],
         "Tags" : [ { "Key" : "Name", "Value" : { "Fn::Join" : ["", ["App Server - Build ", { "Ref": "BuildNumber" } ] ] } } ],
+        "IamInstanceProfile" : { "Ref" : "InstanceProfileForAppServer" },
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["\n", [
           "#!/bin/sh",
           "apt-get update",
@@ -33,6 +34,41 @@
           "apt-get install openjdk-7-jdk -y"
 		    ]]}}
       }
-    }
+    },
+
+    "InstanceProfileForAppServer": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [ { "Ref": "RoleForAppServer" } ]
+      }
+    },
+
+    "RoleForAppServer" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ {
+            "Effect" : "Allow",
+            "Principal" : { "Service" : [ "ec2.amazonaws.com" ] },
+            "Action" : [ "sts:AssumeRole" ]
+          } ]
+        },
+        "Path" : "/"
+      }
+    },
+
+    "PolicyForS3FullAccess": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "S3FullAccess",
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ { "Effect": "Allow", "Action": "s3:Get*", "Resource": "*" } ]
+        },
+        "Roles": [ { "Ref": "RoleForAppServer" } ]
+      }
+    },
   }
 }
