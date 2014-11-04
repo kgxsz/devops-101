@@ -38,7 +38,7 @@ def commence_creation_of_stack(build_number, subnet_id, security_group_id)
   ParameterKey=BuildNumber,ParameterValue=#{build_number}`
 end
 
-def check_that_the_stack_has_been_created
+def check_that_the_stack_has_been_created(build_number)
   describe_stacks_command = "aws cloudformation describe-stacks \
                              --stack-name app-server-build-#{build_number} \
                              --region eu-west-1 \

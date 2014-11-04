@@ -44,6 +44,7 @@ def check_that_stacks_have_been_deleted
     stack_status = stack["StackStatus"]
     puts "Awaiting deletion of #{stack_name} with status of #{stack_status}"
     if stack_status != "DELETE_IN_PROGRESS"
+      puts "Stack deletion failed"
       exit 1
     end
   end
