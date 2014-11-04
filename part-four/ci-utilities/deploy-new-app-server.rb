@@ -25,7 +25,7 @@ def extract_security_group_id
   return security_group_id
 end
 
-def launch_app_server_stack(build_number, subnet_id, security_group_id)
+def commence_creation_of_stack(build_number, subnet_id, security_group_id)
   puts "Commencing creation of stack: app-server-build-#{build_number}"
   `aws cloudformation create-stack \
   --stack-name app-server-build-#{build_number} \
@@ -38,29 +38,20 @@ def launch_app_server_stack(build_number, subnet_id, security_group_id)
   ParameterKey=BuildNumber,ParameterValue=#{build_number}`
 end
 
-def wait_for_stack_to_be_created(build_number)
-  loop do
-    describe_stacks_command = "aws cloudformation describe-stacks \
-                               --stack-name app-server-build-#{build_number} \
-                               --region eu-west-1 \
-                               --output json"
-    stacks = JSON.parse(`#{describe_stacks_command}`)["Stacks"]
-    stack_status = stacks.first["StackStatus"]
+def check_that_the_stack_has_been_created
+  describe_stacks_command = "aws cloudformation describe-stacks \
+                             --stack-name app-server-build-#{build_number} \
+                             --region eu-west-1 \
+                             --output json"
+  stacks = JSON.parse(`#{describe_stacks_command}`)["Stacks"]
+  stack_status = stacks.first["StackStatus"]
 
-    puts "Awaiting creation of app-server-build-#{build_number} with status of #{stack_status}"
+  puts "Awaiting creation of app-server-build-#{build_number} with status of #{stack_status}"
 
-    if stack_status == "CREATE_COMPLETE" || stack_status != "CREATE_IN_PROGRESS"
-      return stack_status
-    end
-    sleep(15)
-  end
-end
-
-def handle_final_stack_status(final_stack_status)
-  if final_stack_status == "CREATE_COMPLETE"
+  if stack_status == "CREATE_COMPLETE"
     puts "Stack creation complete"
     exit 0
-  else
+  elsif stack_status != "CREATE_IN_PROGRESS"
     puts "Stack creation failed"
     exit 1
   end
@@ -70,10 +61,11 @@ def main
   build_number = ENV['GO_PIPELINE_COUNTER']
   subnet_id = extract_subnet_id
   security_group_id = extract_security_group_id
-  launch_app_server_stack(build_number, subnet_id, security_group_id)
-  sleep(30)
-  final_stack_status = wait_for_stack_to_be_created(build_number)
-  handle_final_stack_status(final_stack_status)
+  commence_creation_of_stack(build_number, subnet_id, security_group_id)
+  loop do
+    check_that_the_stack_has_been_created(build_number)
+    sleep(15)
+  end
 end
 
 main
