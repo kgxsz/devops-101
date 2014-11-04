@@ -35,7 +35,8 @@ def commence_creation_of_stack(build_number, subnet_id, security_group_id)
   --parameters \
   ParameterKey=SubnetId,ParameterValue=#{subnet_id} \
   ParameterKey=SecurityGroupId,ParameterValue=#{security_group_id} \
-  ParameterKey=BuildNumber,ParameterValue=#{build_number}`
+  ParameterKey=BuildNumber,ParameterValue=#{build_number} \
+  --capabilities CAPABILITY_IAM`
 end
 
 def check_that_the_stack_has_been_created(build_number)
