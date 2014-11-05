@@ -261,6 +261,18 @@
         },
         "Roles": [ { "Ref": "RoleForCISlave" } ]
       }
+    },
+
+    "PolicyForIAMFullAccess": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "IAMFullAccess",
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [ { "Effect": "Allow", "Action": "iam:*", "Resource": "*" } ]
+        },
+        "Roles": [ { "Ref": "RoleForCISlave" } ]
+      }
     }
   },
 

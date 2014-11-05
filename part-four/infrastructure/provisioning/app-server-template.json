@@ -59,10 +59,10 @@
       }
     },
 
-    "PolicyForS3FullAccess": {
+    "PolicyForS3ReadAccess": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "S3FullAccess",
+        "PolicyName": "S3ReadAccess",
         "PolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [ { "Effect": "Allow", "Action": "s3:Get*", "Resource": "*" } ]
