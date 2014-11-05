@@ -21,7 +21,7 @@
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "ImageId" : "ami-25865252",
-        "InstanceType" : "m1.medium",
+        "InstanceType" : "t2.small",
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "SubnetId" },
         "SecurityGroupIds" : [ { "Ref" : "SecurityGroupId" } ],
