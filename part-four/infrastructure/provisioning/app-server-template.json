@@ -31,7 +31,10 @@
           "#!/bin/sh",
           "apt-get update",
           "apt-get upgrade -y",
-          "apt-get install openjdk-7-jdk -y"
+          "apt-get install openjdk-7-jdk -y",
+          "apt-get install python-pip -y",
+          "pip install awscli",
+          "aws s3 cp s3://devops-part-four/application-0.1.0-build:1-standalone.jar /tmp/"
 		    ]]}}
       }
     },
