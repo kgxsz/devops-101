@@ -34,7 +34,7 @@
           "apt-get install openjdk-7-jdk -y \n",
           "apt-get install python-pip -y \n",
           "pip install awscli \n",
-          "aws s3 cp s3://devops-part-four/ /tmp/ --exclude \"*\" --include \"application-*build:", { "Ref" : "BuildNumber" }, "-standalone.jar\" \n",
+          "aws s3 cp s3://devops-part-four/ /tmp/ --recursive --exclude \"*\" --include \"application-*build:", { "Ref" : "BuildNumber" }, "-standalone.jar\" \n",
           "java -jar /tmp/application-*build:*-standalone.jar"
 		    ]]}}
       }
