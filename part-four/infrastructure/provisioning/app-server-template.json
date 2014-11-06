@@ -33,7 +33,9 @@
           "apt-get upgrade -y \n",
           "apt-get install openjdk-7-jdk -y \n",
           "apt-get install python-pip -y \n",
-          "pip install awscli"
+          "pip install awscli \n",
+          "aws s3 cp s3://devops-part-four/ /tmp/ --exclude \"*\" --include \"application-*build:", { "Ref" : "BuildNumber" }, "-standalone.jar\" \n",
+          "java -jar /tmp/application-*build:*-standalone.jar"
 		    ]]}}
       }
     },
@@ -67,7 +69,7 @@
         "PolicyName": "S3ReadAccess",
         "PolicyDocument": {
           "Version" : "2012-10-17",
-          "Statement": [ { "Effect": "Allow", "Action": "s3:Get*", "Resource": "*" } ]
+          "Statement": [ { "Effect": "Allow", "Action": [ "s3:Get*", "s3:List*" ], "Resource": "*" } ]
         },
         "Roles": [ { "Ref": "RoleForAppServer" } ]
       }
