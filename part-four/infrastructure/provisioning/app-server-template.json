@@ -39,7 +39,7 @@
           "chown devops-user:devops-user /home/devops-user \n",
           "aws s3 cp s3://devops-part-four/ /home/devops-user --recursive --exclude \"*\" --include \"application-*-", { "Ref" : "BuildNumber" }, "-standalone.jar\" \n",
           "chown devops-user:devops-user /home/devops-user/application-*-standalone.jar \n",
-          "su - devops -c \"java -jar /home/devops/application-*-standalone.jar\""
+          "su - devops-user -c \"java -jar /home/devops-user/application-*-standalone.jar\""
 		    ]]}}
       }
     },
