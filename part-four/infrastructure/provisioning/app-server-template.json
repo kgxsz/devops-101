@@ -28,14 +28,17 @@
         "Tags" : [ { "Key" : "Name", "Value" : { "Fn::Join" : ["", ["App Server - Build ", { "Ref" : "BuildNumber" } ] ] } } ],
         "IamInstanceProfile" : { "Ref" : "InstanceProfileForAppServer" },
         "UserData" : { "Fn::Base64" : { "Fn::Join" : [ "", [
-          "#!/bin/sh -v \n",
+          "#!/bin/sh \n",
           "apt-get update \n",
           "apt-get upgrade -y \n",
           "apt-get install openjdk-7-jdk -y \n",
           "apt-get install python-pip -y \n",
           "pip install awscli \n",
-          "aws s3 cp s3://devops-part-four/ /tmp/ --recursive --exclude \"*\" --include \"application-*-", { "Ref" : "BuildNumber" }, "-standalone.jar\" \n",
-          "java -jar /tmp/application-*-standalone.jar"
+          "useradd devops-user \n",
+          "mkdir /home/devops-user \n",
+          "chown devops-user:devops-user /home/devops-user \n",
+          "aws s3 cp s3://devops-part-four/ /home/devops-user --recursive --exclude \"*\" --include \"application-*-", { "Ref" : "BuildNumber" }, "-standalone.jar\" \n",
+          "su - devops -c \"java -jar /home/devops/application-0.1.0-*-standalone.jar\""
 		    ]]}}
       }
     },
