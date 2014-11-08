@@ -1,6 +1,8 @@
-[%icons]
 = Part 4: Automating an Application Deployment
-==== **Goal: configure your CI environment to deploy a dummy application in a repeatable and reliable manner.**
+:icons:
+
+==== Goal: configure your CI environment to deploy a dummy application in a repeatable and reliable manner.
+
 In this workshop we'll be incrementally creating a CI pipeline to test, package, publish, and deploy a dummy application.
 To this end, the major concepts we'll be touching on are:
 
