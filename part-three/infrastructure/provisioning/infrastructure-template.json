@@ -203,12 +203,12 @@
       "Value" : { "Fn::GetAtt" : [ "EC2InstanceCIMaster", "PublicIp" ] }
     },
 
-    "CIMasterPrivateIp" : {
-      "Value" : { "Fn::GetAtt" : [ "EC2InstanceCIMaster", "PrivateIp" ] }
-    },
-
     "CISlavePublicIp" : {
       "Value" : { "Fn::GetAtt" : [ "EC2InstanceCISlave", "PublicIp" ] }
+    },
+
+    "CIMasterPrivateIp" : {
+      "Value" : { "Fn::GetAtt" : [ "EC2InstanceCIMaster", "PrivateIp" ] }
     }
   }
 }

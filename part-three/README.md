@@ -55,8 +55,9 @@ Let's get to it.
 
     ```    
     OUTPUTS	CIMasterPublicIp	XX.XX.XX.XX
-    OUTPUTS	CIMasterPrivateIp	XX.XX.XX.XX
     OUTPUTS	CISlavePublicIp	    XX.XX.XX.XX
+    OUTPUTS	CIMasterPrivateIp	XX.XX.XX.XX
+
     ```
     We'll use these outputs in just a second.
     
