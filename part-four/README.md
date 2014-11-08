@@ -1,6 +1,6 @@
-## Part 4: A CI Pipeline for Automated Deployments
+# Part 4: A CI Pipeline for Automated Deployments
 
-####**Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.**
+### **Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.**
 
 In this workshop we'll be buidling upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
 
@@ -11,15 +11,15 @@ In this workshop we'll be buidling upon the last workshop to create a CI pipelin
 
 I will discuss each of these when they become relevant.
 
-#####Disclaimer
+#### Disclaimer
 In the interest of building an end to end deployment pipeline in a single workshop, we're going to have to take some pretty serious shortcuts. What you will have built by the end of this workshop will _never_ suffice in the wild. However, it will be enough for you to grasp the essence of CI pipelining and automated deployments.
 
-#####Tear down your infrastructure when you're done
+#### Tear down your infrastructure when you're done
 We'll be provisioning three medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
 ---
 
-### Set Yourself Up
+## Set yourself up
 I'll assume that you've done the previous workshops and have Ansible and the AWS cli set up on your machine.
 
 You'll want a good overview of what you're doing throughout this workshop, so I would recommend opening the following AWS web concole services in seperate browser tabs so that you can move back and fourth easily:
@@ -31,7 +31,7 @@ You'll want a good overview of what you're doing throughout this workshop, so I 
 
 ---
 
-### Build your infrastructure
+## Build your infrastructure
 We'll be going down a similar route as the last workshop. We'll use Cloudformation to create a stack of resources, and then Ansible to configure a Go server and Go agent on two seperate EC2 instances. The following commands will require some time and patience, so execute them and read on while they complete.
 
 Let's get to it:
@@ -56,7 +56,7 @@ While Cloudformation creates your infrastructure, let's take a look at the stack
 
 We'll get to S3 and buckets a little later, what's most important here is the role resource, and it's supporting resources.
 
-##### IAM Roles
+#### Understanding IAM Roles
 Remember when we installed the AWS cli? Remember how we had to create that AWS config file with some AWS credentials so that we could access our AWS account from the command line and do fun things like Cloudformation? Well, those credentials - obviously - are what let us do everything we wish to do with AWS. 
 
 If you cast your mind way back, you'll recall that we've given ourselves full administration access. If you go to the IAM service tab and look at your user, you'll see that you're a part of the `Administrators` group. If you go to that group, you'll see that it has a policy called something like `AdministratorAccess-XXXXXXXXXX`. If you click `show` you'll see something like this:
@@ -86,7 +86,7 @@ Now that you have a basic understanding of roles, look closely at the template, 
 
 ---
 
-### Configure your CI environment
+## Configure your CI environment
 By now, your infrastructure stack should be built, like in the last workshop, we'll need to go through an irritating manual step.
 
 - check the outputs from your stack creation:
@@ -121,7 +121,7 @@ Now open `http://localhost:8153/` in your browser to access the Go server web co
 
 ---
 
-### Create your pipeline
+## Create your first pipeline
 Now we're ready to get to the meat of this workshop. We're going to build this pipeline out incrementally. But first, let's think about the overall picture of what we want to achieve:
 
 |Pipeline Stage|Description|
@@ -133,7 +133,7 @@ Now we're ready to get to the meat of this workshop. We're going to build this p
 |Deploy the application| We'll be creating a new app server and deploying the application to it every time we run the pipeline|
 
 
-##### Pull down the repository
+#### Pull down the repository
 There are a few steps involved in pulling the repository onto the CI slave:
 
 - firstly, on the Go server web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
@@ -144,7 +144,7 @@ There are a few steps involved in pulling the repository onto the CI slave:
 - now, back on the Go server web console, put that URL into the relevant field
 - check that the connection is working, and select `next`
 
-##### Create the test stage
+#### Create the test stage
 We're now ready to create the first stage. Fill in the fields as follows:
 
 |Field| Value|
@@ -169,7 +169,7 @@ Let's explore how Go organises the structure of a pipeline.
 
 Play around with Go and try to perceive this pipeline structure. when you're ready, lets run the pipeline for the first time.
 
-##### Run the thing
+#### Run the thing
 Before you can run the pipeline, you'll need to make sure that the agent is enabled:
 
 - go to the `AGENTS` tab, you should see the `ci-slave` agent
@@ -189,10 +189,10 @@ So what just happened?
 1. the Go server dispatched the stage to the Go agent running on the CI slave instance
 2. the Go agent pulled down the repository
 3. the Go agent began the `test` job
-4. the job passed, therefore the stage passed
+4. the job passed, therefore the stage passed, therefore the pipeline passed
 5. and the world rejoiced
 
-As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure. All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
+As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy applicationis writen in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
 
 
 
