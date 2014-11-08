@@ -82,7 +82,7 @@ Wrong.
 
 It's really not a good idea to be throwing credentials around like candy. What we really want is to be able to give an EC2 instance a temporary set of credentials that are easy to distribute, rotate, and revoke. This is where IAM roles come in. You assign a role to an instance, and you assign policies to that role, much like the policy above, but with much stricter permissions of course. Think of it a bit like this: an IAM role is to a machine what an IAM user is to a human. See [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/WorkingWithRoles.html) for a more in depth discussion on IAM roles and the problems it solves.
 
-Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI Slave instance. We're doing this because we want our CI slave to be able to use the AWS cli to carry out tasks that we will discuss soon enough.
+Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI slave instance. We're doing this because we want our CI slave to be able to use the AWS cli to carry out tasks that we will discuss soon enough.
 
 ---
 
@@ -103,13 +103,13 @@ By now, your infrastructure stack should be built, like in the last workshop, we
     
 - grab those values and put them in the `part-four/infrastructure/configuration/inventory` file
 - go to the `part-four/infrastructure/configuration/` directory
-- launch Ansible to configure your CI Master and CI Slave instances:
+- launch Ansible to configure your CI master and CI slave instances:
     
     ```
     ansible-playbook playbook.yml -u ubuntu -i inventory --private-key="~/.ssh/main.pem"
     ```
     
-This will take a little while. In the meantime, it's worth looking over `playbook.yml` to refresh your memory on what we're doing to get CI up and running. Not much has changed since the last workshop, with the exception of a few extra packages being installed on the CI Slave, like Leiningen, Ruby, and the AWS cli.
+This will take a little while. In the meantime, it's worth looking over `playbook.yml` to refresh your memory on what we're doing to get CI up and running. Not much has changed since the last workshop, with the exception of a few extra packages being installed on the CI slave, like Leiningen, Ruby, and the AWS cli.
 
 When Ansible has completed, ssh to it with port forwarding such that we can access the Go Server web console:
 
@@ -126,13 +126,76 @@ Now we're ready to get to the meat of this workshop. We're going to build this p
 
 |Pipeline Stage|Description|
 |:--|:--|
-|Pull down the repository| First and foremost, we'll be pulling code down from the github repository|
-|Test the application code| Test it doofus|
-|Package the application into a jar| We want to be able to run this as a standalone jar|
-|Publish the jar to S3| Has to be kept somewhere|
-|Deploy the application| Get it out there|
+|Pull down the repository| Although not technically a stage, we'll be pulling application code down from a github repository|
+|Test| Run the tests in the application code with Leiningen|
+|Package| Package the application as a standalone jar with Leiningen|
+|Publish| Publish the jar to S3 where we'll later fetch it to run it|
+|Deploy the application| We'll be creating a new app server and deploying the application to it every time we run the pipeline|
 
-**in progress**
+
+##### Pull down the repository
+There are a few steps involved in pulling the repository onto the CI slave:
+
+- firstly, on the Go server web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
+- use `dummyApplication` as the pipeline name, then select `Next`
+- select `git` as the `Material Type` 
+- fork this repository on github, and go to your version of it
+- on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the HTTPS URL, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
+- now, back on the Go server web console, put that URL into the relevant field
+- check that the connection is working, and select `next`
+
+##### Create the test stage
+We're now ready to create the first stage. Fill in the fields as follows:
+
+|Field| Value|
+|:--|:--|
+|Stage Name| test|
+|Job Name| test|
+|Task Type| more|
+|Command| lein|
+|Arguments| test|
+|Working Directory| part-four/application|
+
+Now press `Finish` and you'll see the beginnings of you pipeline. But we're not quite done. On the left you'll seen a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` - this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
+
+Let's explore how Go organises the structure of a pipeline.
+
+|Component| Description|
+|:--|:--|
+|Pipeline| This is the top level, in our case, our pipeline is called `dummyApplication`, a pipeline can have one or more stages|
+|Stages| Stages within a pipeline execute sequentially, a stage can have one or more jobs|
+|Jobs| Jobs within a stage execute in *parallel*, so be careful with these, each job can have one or more tasks|
+|Tasks| Tasks within a job execute sequentially, these are the bottom level guys|
+
+Play around with Go and try to perceive this pipeline structure. when you're ready, lets run the pipeline for the first time.
+
+##### Run the thing
+Before you can run the pipeline, you'll need to make sure that the agent is enabled:
+
+- go to the `AGENTS` tab, you should see the `ci-slave` agent
+- select it and hit `enable`
+
+Now go back to the `PIPELINES` tab and hit the pause button to unpause the pipeline. Within a few moments it should start to run:
+
+- click the yellow (or green if it's complete) bar
+- on the left hand panel you should see `test`, click on it
+- now click on the `Console` tab
+
+Within a minute or so you should see a bunch of output showing the jobs being carried out on the Go agent. Have a read through it and see if you can discern what's going on.
+
+
+So what just happened? 
+
+1. the Go server dispatched the stage to the Go agent running on the CI slave instance
+2. the Go agent pulled down the repository
+3. the Go agent began the `test` job
+4. the job passed, therefore the stage passed
+5. and the world rejoiced
+
+As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure. All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
+
+
+
 
 ---
 
