@@ -1,10 +1,9 @@
 ## Part 4: A CI Pipeline for Automated Deployments
 
----
-
 ####**Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.**
 
 ---
+
 
 In this workshop we'll be buidling upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
 
@@ -15,13 +14,16 @@ In this workshop we'll be buidling upon the last workshop to create a CI pipelin
 
 I will discuss each of these when they become relevant.
 
+
 #####Disclaimer
 In the interest of building an end to end deployment pipeline in a single workshop, we're going to have to take some pretty serious shortcuts. What you will have built by the end of this workshop will _never_ suffice in the wild. However, it will be enough for you to grasp the essence of CI pipelining and automated deployments.
+
 
 #####Tear down your infrastructure when you're done
 We'll be provisioning three medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
 ---
+
 
 ### Set Yourself Up
 I'll assume that you've done the previous workshops and have Ansible and the AWS cli set up on your machine.
