@@ -54,7 +54,7 @@ While Cloudformation creates your infrastructure, let's take a look at the stack
 
 We'll get to S3 and buckets a little later, what's most important here is the role resource, and it's supporting resources.
 
-#### Understanding IAM Roles
+#### Understanding IAM roles
 Remember when we installed the AWS cli? Remember how we had to create that AWS config file with some AWS credentials so that we could access our AWS account from the command line and do fun things like Cloudformation? Well, those credentials - obviously - are what let us do everything we wish to do with AWS. 
 
 If you cast your mind way back, you'll recall that we've given ourselves full administration access. If you go to the IAM service tab and look at your user, you'll see that you're a part of the `Administrators` group. If you go to that group, you'll see that it has a policy called something like `AdministratorAccess-XXXXXXXXXX`. If you click `show` you'll see something like this:
@@ -154,7 +154,7 @@ We're now ready to create the first stage. Fill in the fields as follows:
 
 Now press `Finish` and you'll see the beginnings of you pipeline. But we're not quite done. On the left you'll seen a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` - this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
 
-Let's explore how Go organises the structure of a pipeline.
+Let's explore how Go organises the structure of a pipeline:
 
 |Component| Description|
 |:--|:--|
@@ -189,6 +189,35 @@ So what just happened?
 5. and the world rejoiced
 
 As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy applicationis writen in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
+
+
+#### Create the package stage
+Now, let's create the second stage:
+
+- go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
+- go to the `Stages`
+- add a new stage
+- fill in the fields as follows:
+
+    |Field| Value|
+    |:--|:--|
+    |Stage Name| package|
+    |Job Name| package|
+    |Task Type| more|
+    |Command| lein|
+    |Arguments| uberjar|
+    |Working Directory| part-four/application|
+    
+- press `Save`
+- once again, go to the `Stage Settings` under the `package` stage and select `Clean Working Directory`
+- don't forget to `save`
+
+This stage is straight forward. We're packaging the application into a standalone "uberjar", Leiningen does a great job of this and places it in the `target/uberjar` directory on the CI slave's file system. This is all good and well, but that uberjar is isn't of much use just sitting there. What we really want is to "artifacterize" the uberjar.
+
+#### Dealing with artifacts
+When we specify an artifact in Go, we're telling the Go agent to grab the artifact and send it over to the Go server where it'll be kept safe until another stage requires it. In our case, we only have one agent, so we could argue that we should just leave the artifact on the CI slave's file system, but keep in mind that when you have multiple agents on multiple instances, any agent can be assigned a pipeline stage, so you're not guranteed that the agent that build the artifact will have access to it later. Besides, we're cleaning down our working directory each time we run a stage, so nothing gets left behind.
+
+
 
 
 
