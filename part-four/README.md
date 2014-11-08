@@ -82,12 +82,12 @@ Wrong.
 
 It's really not a good idea to be throwing credentials around like candy. What we really want is to be able to give an EC2 instance a temporary set of credentials that are easy to distribute, rotate, and revoke. This is where IAM roles come in. You assign a role to an instance, and you assign policies to that role, much like the policy above, but with much stricter permissions of course. Think of it a bit like this: an IAM role is to a machine what an IAM user is to a human. See [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/WorkingWithRoles.html) for a more in depth discussion on IAM roles and the problems it solves.
 
-So if you look closely at the template, you'll see that we've given a bunch of permissions to our CI Slave instance because we want our CI slave to be able to carry out tasks that we will discuss soon enough.
+Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI Slave instance. We're doing this because we want our CI slave to be able to use the AWS cli to carry out tasks that we will discuss soon enough.
 
 ---
 
 ### Configure your CI environment
-By now, your infrastructure stack should be built, like in the last workshop, we'll need to go through an annoying manual step.
+By now, your infrastructure stack should be built, like in the last workshop, we'll need to go through an irritating manual step.
 
 - check the outputs from your stack creation:
 
@@ -122,6 +122,15 @@ Now open `http://localhost:8153/` in your browser to access the Go server web co
 ---
 
 ### Create your pipeline
+Now we're ready to get to the meat of this workshop. We're going to build this pipeline out incrementally. But first, let's think about the overall picture of what we want to achieve:
+
+|Pipeline Stage|Description|
+|:--|:--|
+|Pull down the repository| First and foremost, we'll be pulling code down from the github repository|
+|Test the application code| Test it doofus|
+|Package the application into a jar| We want to be able to run this as a standalone jar|
+|Publish the jar to S3| Has to be kept somewhere|
+|Deploy the application| Get it out there|
 
 **in progress**
 
