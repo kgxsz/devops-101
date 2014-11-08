@@ -17,7 +17,6 @@ In the interest of building an end to end deployment pipeline in a single worksh
 #### Tear down your infrastructure when you're done
 We'll be provisioning three medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
----
 
 ## Set yourself up
 I'll assume that you've done the previous workshops and have Ansible and the AWS cli set up on your machine.
@@ -29,7 +28,6 @@ You'll want a good overview of what you're doing throughout this workshop, so I 
 - S3
 - IAM
 
----
 
 ## Build your infrastructure
 We'll be going down a similar route as the last workshop. We'll use Cloudformation to create a stack of resources, and then Ansible to configure a Go server and Go agent on two seperate EC2 instances. The following commands will require some time and patience, so execute them and read on while they complete.
@@ -84,7 +82,6 @@ It's really not a good idea to be throwing credentials around like candy. What w
 
 Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI slave instance. We're doing this because we want our CI slave to be able to use the AWS cli to carry out tasks that we will discuss soon enough.
 
----
 
 ## Configure your CI environment
 By now, your infrastructure stack should be built, like in the last workshop, we'll need to go through an irritating manual step.
@@ -119,7 +116,6 @@ ssh -L 8153:localhost:8153 ubuntu@YOUR_CI_MASTER_PUBLIC_IP -i ~/.ssh/main.pem
 
 Now open `http://localhost:8153/` in your browser to access the Go server web console.
 
----
 
 ## Create your first pipeline
 Now we're ready to get to the meat of this workshop. We're going to build this pipeline out incrementally. But first, let's think about the overall picture of what we want to achieve:
@@ -197,7 +193,6 @@ As a side note, the `test` job uses Leiningen, which is a project management too
 
 
 
----
 
 
 
