@@ -21,3 +21,15 @@ error: The requested operation returned error: 1954 Forbidden search for defensi
 absolutely fatal: operation initiation lost in the dodecahedron of doom
 would you like to die again? y/n
 ....
+
+[source,ruby]
+----
+require 'sinatra' // <1>
+
+get '/hi' do // <2>
+  "Hello World!" // <3>
+end
+----
+<1> Library import
+<2> URL mapping
+<3> Content for response
