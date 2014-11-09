@@ -31,7 +31,7 @@ You'll want a good overview of what you're doing throughout this workshop, so I 
 
 In the past few workshops, you've most likely been running configuration and provisioning from scripts in a local clone of this repository, for this workshop we need to change things up a little. If you haven't already done so, fork this repository into your own github account, then clone it locally. You'll be working from your cloned/forked directory here on out, and can remove the old one if you like.
 
-We're doing this because you're going to have to be able to push code up to github, and you don't have the permissions to push to my repository. Have a look at your remotes if you want to make sure that you're properly set up (`git remote -v`). You should see something like this:
+We're doing this because you're going to have to be able to push code up to github, and you don't have the permissions to push to my repository. Have a look at your remotes if you want to make sure that you're properly set up (`git remote -v` from within the repository you just cloned). You should see something like this:
     
     origin	git@github.com:YOUR_GITHUB_NAME/Devops-101.git (fetch)
     origin	git@github.com:YOUR_GITHUB_NAME/Devops-101.git (push)
@@ -119,13 +119,13 @@ By now, your infrastructure stack should be built. Like we did in the last works
     
 This will take a little while. In the meantime, it's worth looking over `playbook.yml` to refresh your memory on what we're doing to get CI up and running. Not much has changed since the last workshop, with the exception of a few extra packages being installed on the CI slave, like Leiningen, Ruby, and the AWS cli.
 
-When Ansible has completed, ssh to it with port forwarding such that we can access the Go Server web console:
+When Ansible has completed, ssh to it with port forwarding such that we can access the Go web console:
 
 ```
 ssh -L 8153:localhost:8153 ubuntu@YOUR_CI_MASTER_PUBLIC_IP -i ~/.ssh/main.pem
 ```
 
-Now open `http://localhost:8153/` in your browser to access the Go server web console.
+Now open `http://localhost:8153/` in your browser to access the Go web console.
 
 
 ## Create your first pipeline
@@ -143,11 +143,11 @@ Now we're ready to get to the meat of this workshop. We're going to build this p
 #### Pull down the repository
 There are a few steps involved in pulling the repository onto the CI slave:
 
-- firstly, on the Go server web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
+- firstly, on the Go web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
 - use `dummyApplication` as the pipeline name, then select `Next`
 - select `git` as the `Material Type` 
 - go to **your** version of this repository on github, and on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the HTTPS URL, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
-- now, back on the Go server web console, put that URL into the relevant field
+- now, back on the Go web console, put that URL into the relevant field
 - check that the connection is working, and select `next`
 
 #### Create the test stage
@@ -200,12 +200,17 @@ So what just happened?
 
 As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy applicationis writen in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
 
-#### Make it bleed
-Let's try out two things, first, seeing how commiting to our repository triggers the pipeline, and secondly, what happens when the tests fail.
+#### Fail fast
+Let's play waround with our pipeline a little. First, let's confirm that when we commit a change and push it up to github, the pipeline is triggered automatically. Secondly, let's commit a change that makes our tests fail so that we can confirm that the pipeline fails:
 
-...
+- open `part-four/application/test/application/core_test.clj` in your favourite editor
+- on line 7, change the 1 to a 2
+- commit and push the change
+
+In the Go web console, navigate to the `PIPELINES` tab and wait patiently for Go to pick up the changes to your repository. This can take up to a minute sometimes. You shouldn't have to trigger it manually.
 
 
+When it finally gets triggered, you'll see that it fails on test. This is what we wanted to confirm. Now go and fix that failing test, commit it, push it, and watch the pipeline go green again.
 
 #### Create the package stage
 Now, let's create the second stage:
