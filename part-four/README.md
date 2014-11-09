@@ -235,10 +235,25 @@ Now, let's create the second stage:
 - once again, go to the `Stage Settings` under the `package` stage and select `Clean Working Directory`
 - don't forget to `Save`
 
-This stage is straight forward. We're packaging the application into a standalone "uberjar", Leiningen does a great job of this and places it in the `target/uberjar` directory on the CI slave's file system. This is all good and well, but that uberjar is isn't of much use just sitting there. What we really want is to "artifacterize" the uberjar.
+This stage is straight forward. We're packaging the application into a standalone uberjar, Leiningen does a great job of this and places it in the `part-four/application/target/uberjar` directory on the CI slave's file system. This is all good and well, but that uberjar isn't of much use just sitting there. What we really want is to make this uberjar available to later stages.
 
 #### Dealing with artifacts
-When we specify an artifact in Go, we're telling the Go agent to grab the artifact and send it over to the Go server where it'll be kept safe until another stage requires it. In our case, we only have one agent, so we could argue that we should just leave the artifact on the CI slave's file system, but keep in mind that when you have multiple agents on multiple instances, any agent can be assigned a pipeline stage, so you're not guranteed that the agent that needs the artifact is the agen that built it. Besides, we're cleaning down our working directory each time we run a stage, so nothing gets left behind.
+Typically, you have several stages that need to be executed sequentially in a single pipeline run. If you have multiple Go agents, you have to keep in mind that any agent can be assigned the next stage, you're not guaranteed to have the same agent executing every stage in a single pipeline run. This means that when a stage produces some kind of output, and we require that output as input to the next stage, we need to take that output and throw it up to the Go server, such that it can orchestrate where it will be needed next. These outputs are called artifacts, and you'll see a lot of these going around.
+
+In our case it's simple:
+
+1. the `package` stage produces an uberjar artifact
+2. we want to send that artifact up to the Go server for safe keeping
+3. when we need it in a later stage, we can simply fetch the artifact from the Go server
+
+So let's do it:
+
+- go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
+- go to the `Stages` tab
+
+ ... specify the artifact
+
+
 
 
 
