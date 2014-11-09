@@ -2,12 +2,13 @@
 
 ### **Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.**
 
-In this workshop we'll be buidling upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
+We'll be buidling upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
 
 - IAM Roles
 - S3
 - Cloudinit
 - The Phoenix Server philosophy
+- Go CD pipelines
 
 I will discuss each of these when they become relevant.
 
@@ -27,6 +28,14 @@ You'll want a good overview of what you're doing throughout this workshop, so I 
 - EC2
 - S3
 - IAM
+
+In the past few workshops, you've most likely been running configuration and provisioning from scripts in a local clone of this repository, for this workshop we need to change things up a little. If you haven't already done so, fork this repository into your own github account, then clone it locally. You'll be working from your cloned/forked directory here on out, and can remove the old one if you like.
+
+We're doing this because you're going to have to be able to push code up to github, and you don't have the permissions to push to my repository. Have a look at your remotes if you want to make sure that you're properly set up (`git remote -v`). You should see something like this:
+    
+    origin	git@github.com:YOUR_GITHUB_NAME/Devops-101.git (fetch)
+    origin	git@github.com:YOUR_GITHUB_NAME/Devops-101.git (push)
+
 
 
 ## Build your infrastructure
@@ -78,13 +87,15 @@ Now, what if we want one of our EC2 instances to be able to do things like launc
 
 Wrong.
 
-It's really not a good idea to be throwing credentials around like candy. What we really want is to be able to give an EC2 instance a temporary set of credentials that are easy to distribute, rotate, and revoke. This is where IAM roles come in. You assign a role to an instance, and you assign policies to that role, much like the policy above, but with much stricter permissions of course. Think of it a bit like this: an IAM role is to a machine what an IAM user is to a human. See [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/WorkingWithRoles.html) for a more in depth discussion on IAM roles and the problems it solves.
+It's really not a good idea to be throwing credentials around like candy. What we really want is to be able to give an EC2 instance a temporary set of credentials that are easy to distribute, rotate, and revoke. This is where IAM roles come in. You assign a role to an instance, and you assign policies to that role, much like the policy above, but with much stricter permissions of course. 
+
+So you can think of it a bit like this: an IAM role is to a machine what an IAM user is to a human. See [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/WorkingWithRoles.html) for a more in depth discussion on IAM roles and the problems it solves.
 
 Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI slave instance. We're doing this because we want our CI slave to be able to use the AWS cli to carry out tasks that we will discuss soon enough.
 
 
 ## Configure your CI environment
-By now, your infrastructure stack should be built, like in the last workshop, we'll need to go through an irritating manual step.
+By now, your infrastructure stack should be built. Like we did in the last workshop, we'll need to go through an irritating manual step.
 
 - check the outputs from your stack creation:
 
@@ -135,8 +146,7 @@ There are a few steps involved in pulling the repository onto the CI slave:
 - firstly, on the Go server web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
 - use `dummyApplication` as the pipeline name, then select `Next`
 - select `git` as the `Material Type` 
-- fork this repository on github, and go to your version of it
-- on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the HTTPS URL, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
+- go to **your** version of this repository on github, and on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the HTTPS URL, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
 - now, back on the Go server web console, put that URL into the relevant field
 - check that the connection is working, and select `next`
 
@@ -190,14 +200,21 @@ So what just happened?
 
 As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy applicationis writen in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
 
+#### Make it bleed
+Let's try out two things, first, seeing how commiting to our repository triggers the pipeline, and secondly, what happens when the tests fail.
+
+...
+
+
 
 #### Create the package stage
 Now, let's create the second stage:
 
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
-- go to the `Stages`
+- go to the `Stages` tab
 - add a new stage
 - fill in the fields as follows:
+
 
     |Field| Value|
     |:--|:--|
@@ -208,14 +225,15 @@ Now, let's create the second stage:
     |Arguments| uberjar|
     |Working Directory| part-four/application|
     
+    
 - press `Save`
 - once again, go to the `Stage Settings` under the `package` stage and select `Clean Working Directory`
-- don't forget to `save`
+- don't forget to `Save`
 
 This stage is straight forward. We're packaging the application into a standalone "uberjar", Leiningen does a great job of this and places it in the `target/uberjar` directory on the CI slave's file system. This is all good and well, but that uberjar is isn't of much use just sitting there. What we really want is to "artifacterize" the uberjar.
 
 #### Dealing with artifacts
-When we specify an artifact in Go, we're telling the Go agent to grab the artifact and send it over to the Go server where it'll be kept safe until another stage requires it. In our case, we only have one agent, so we could argue that we should just leave the artifact on the CI slave's file system, but keep in mind that when you have multiple agents on multiple instances, any agent can be assigned a pipeline stage, so you're not guranteed that the agent that build the artifact will have access to it later. Besides, we're cleaning down our working directory each time we run a stage, so nothing gets left behind.
+When we specify an artifact in Go, we're telling the Go agent to grab the artifact and send it over to the Go server where it'll be kept safe until another stage requires it. In our case, we only have one agent, so we could argue that we should just leave the artifact on the CI slave's file system, but keep in mind that when you have multiple agents on multiple instances, any agent can be assigned a pipeline stage, so you're not guranteed that the agent that needs the artifact is the agen that built it. Besides, we're cleaning down our working directory each time we run a stage, so nothing gets left behind.
 
 
 
