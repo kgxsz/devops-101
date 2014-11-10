@@ -124,7 +124,7 @@ Your Go server and agent should now be up and running. The Go server is listenin
 
 - connect to the CI master and set up port forwarding with: 
         
-        ssh -L 8153:localhost:8153 ubuntu@YOUR_CI_MASTER_PUBLIC_IP -i ~/.ssh/main.pem`
+        ssh -L 8153:localhost:8153 ubuntu@YOUR_CI_MASTER_PUBLIC_IP -i ~/.ssh/main.pem
         
     Here, we've forwarded `localhost:8153`, which is the host and port of the Go server as seen from the CI master instance's perspective, to our local port 8153.
     
