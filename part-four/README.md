@@ -251,21 +251,40 @@ So let's do it:
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
 - go to the `Stages` tab
 
- ... specify the artifacts (mention the use of both)
+**TODO** specify the artifacts (mention the use of both)
  
-When the stage is ready, rerun the pipeline and verify that the artifacts were properly produced by navigating to `/var/go-server/pipeline/.../artifacts`. You should see both artifacts.
+**TODO** When the stage is ready, rerun the pipeline and verify that the artifacts were properly produced by navigating to `/var/go-server/pipeline/.../artifacts`. You should see both artifacts.
  
 #### Create the publish stage
-You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's publishing. Even though we send the artifacts to the Go server after the last stage, we cannot treat the Go server as an artifact repository. We need something a little more suited to the purpose. That's were S3 comes in. S3 is AWS' storage solution. We're going ton be using it to store every jar that's ever produced by our pipelines. You never know when you'll need to look up old artifacts, so it's always a good idea to archive the outputs from each build.
+You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's publishing. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need it. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
 
+
+That's were S3 comes in. S3 is AWS' general purpose file storage solution. Normally, there are better tools for hosting our artifacts, but for now, S3 will do. We're going to be using it to store every jar that's produced by our pipeline, both the regular jars and the standalone uberjars.
+
+**TODO**
 - fetching the artifact
 - S3
 - seeing the things up there
 
+**TODO** Now run the pipeline and wait for it to complete, if you go to the S3 tab in your browser you should be able to verify that the artifacts have indeed been published.
+
+
 #### Create the deploy stage
+We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
 
-- phoenix server pattern
+1. **Provision an EC2 instance:**    
+   **TODO** Ensure that it has access to S3 
+2. **Configure the EC2 instance:**
+   **TODO** Ensure that it has Java installed
+3. **Get the uberjar onto the Ec2 instance:** 
+   **TODO** You need the jar from S3
+4. **Run the application:** 
+   **TODO** Make a user and run the jar
 
+**TODO**
+- How IAM roles are being used here to orchestrate this
+- Why use the Phoenix server pattern
+- How Cloudinit is being used here
 
 
 
