@@ -184,8 +184,8 @@ Before you can run the pipeline, you'll need to make sure that the agent is enab
 Now go back to the `PIPELINES` tab and hit the pause button to unpause the pipeline. Within a few moments it should start to run:
 
 - click the yellow (or green if it's complete) bar
-- on the left hand panel you should see `test`, click on it
-- now click on the `Console` tab
+- on the left hand `JOBS` panel you should see `test`, click on it
+- now go to the `Console` tab if you're not already there
 
 Within a minute or so you should see a bunch of output showing the jobs being carried out on the Go agent. Have a read through it and see if you can discern what's going on.
 
@@ -204,7 +204,7 @@ As a side note, the `test` job uses Leiningen, which is a project management too
 Let's play waround with our pipeline a little. First, let's confirm that when we commit a change and push it up to github, the pipeline is triggered automatically. Secondly, let's commit a change that makes our tests fail so that we can confirm that the pipeline fails:
 
 - open `part-four/application/test/application/core_test.clj` in your favourite editor
-- on line 7, change the 1 to a 2
+- on line 7, change the 1 to a 2, this will make the test fail
 - commit and push the change
 
 In the Go web console, navigate to the `PIPELINES` tab and wait patiently for Go to pick up the changes to your repository. This can take up to a minute sometimes. You shouldn't have to trigger it manually.
@@ -217,7 +217,7 @@ Now, let's create the second stage:
 
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
 - go to the `Stages` tab
-- add a new stage
+- then `Add new stage`
 - fill in the fields as follows:
 
 
@@ -235,7 +235,7 @@ Now, let's create the second stage:
 - once again, go to the `Stage Settings` under the `package` stage and select `Clean Working Directory`
 - don't forget to `Save`
 
-This stage is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two  jars in `target/uberjar` relative to the application root directory. We're only interested in the uberjar (marked as standalone) because with that one we can run the application directly without worrying about boring things like classpath management. This is all good and well, but that uberjar isn't of much use just sitting there. What we really want is to make it available to later stages.
+This stage is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two jars in `target/uberjar` relative to the application root directory. We're only interested in the uberjar (marked as standalone) because with that one we can run the application directly without worrying about boring things like classpath management. This is all good and well, but that uberjar isn't of much use just sitting there. What we really want is to make it available to later stages.
 
 #### Dealing with artifacts
 Typically, you have several stages that need to be executed sequentially in a single pipeline run. If you have multiple Go agents, any agent can be assigned the next stage, you're not guaranteed to have the same agent executing every stage in a single pipeline run. This means that when a stage produces some kind of output, and we require that output as input to some later stage, we need to take that output and throw it over to the Go server, such that it can orchestrate where it will be needed next. These outputs are called artifacts, and you'll see a lot of these going around in the wild.
@@ -249,11 +249,15 @@ In our case it's rather simple:
 So let's do it:
 
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
-- go to the `Stages` tab
+- select the `package` stage
+- then select the `package` job under the `Jobs` tab
+- go to the `Artifacts` tab
+- in `Source` put `part-four/application/target/uberjar/application-*jar`
+- in `Destination` put `packages` 
+- don't forget to `Save`
+- now go to the `PIPELINES` tab and run the pipeline
 
-**TODO** specify the artifacts (mention the use of both)
- 
-**TODO** When the stage is ready, rerun the pipeline and verify that the artifacts were properly produced by navigating to `/var/go-server/pipeline/.../artifacts`. You should see both artifacts.
+When the pipeline has completed successfully, the two jars that were produced by the publish stage on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your ssh connection to the Go server is still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/` where you should then see the corresponding numbers of pipeline runs. If dig down into that directory you should find a `packages` directory which houses the two jars you just produced.
  
 #### Create the publish stage
 You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's publishing. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need it. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
