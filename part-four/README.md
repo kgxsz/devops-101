@@ -148,7 +148,7 @@ There are a few steps involved in pulling the repository onto the CI slave:
 - select `git` as the `Material Type` 
 - go to **your** version of this repository on github, and on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the HTTPS URL, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
 - now, back on the Go web console, put that URL into the relevant field
-- check that the connection is working, and select `next`
+- `Check Connection` and then select `next`
 
 #### Create the test stage
 We're now ready to create the first stage. Fill in the fields as follows:
@@ -162,7 +162,7 @@ We're now ready to create the first stage. Fill in the fields as follows:
 |Arguments| test|
 |Working Directory| part-four/application|
 
-Now press `Finish` and you'll see the beginnings of you pipeline. But we're not quite done. On the left you'll seen a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` - this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
+Now press `Finish` and you'll see the beginnings of you pipeline. But we're not quite done. On the left you'll see a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` label, this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
 
 Let's explore how Go organises the structure of a pipeline:
 
@@ -179,7 +179,7 @@ Play around with Go and try to perceive this pipeline structure. when you're rea
 Before you can run the pipeline, you'll need to make sure that the agent is enabled:
 
 - go to the `AGENTS` tab, you should see the `ci-slave` agent
-- select it and hit `enable`
+- select it and hit `ENABLE`
 
 Now go back to the `PIPELINES` tab and hit the pause button to unpause the pipeline. Within a few moments it should start to run:
 
