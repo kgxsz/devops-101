@@ -235,7 +235,25 @@ Now, let's create the second stage:
 - once again, go to the `Stage Settings` under the `package` stage and select `Clean Working Directory`
 - don't forget to `Save`
 
-This stage is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two jars in `target/uberjar` relative to the application root directory. We're only interested in the uberjar (marked as standalone) because with that one we can run the application directly without worrying about boring things like classpath management. This is all good and well, but that uberjar isn't of much use just sitting there. What we really want is to make it available to later stages.
+This task is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two jars in `target/uberjar` relative to the application root directory. 
+
+#### Renaming the jars
+The names of the jars produced by the above task will be something like `application-0.1.0-SNAPSHOT-standalone.jar` and `application-0.1.0-SNAPSHOT.jar`. We'd like to make sure that the Go pipeline counter is stamped onto those jars so that we always know which pipeline run produced them. Go gives us some environment variables we can use, so let's create a task that changes the jar names to something like `application-0.1.0-$GO_PIPELINE_COUNTER-standalone.jar` and `application-0.1.0-$GO_PIPELINE_COUNTER.jar`:
+
+- go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
+- go to the `package stage` panel and select the `Jobs` tab
+- select the `package` job and then `Add new task`
+- select `more` for the type of task
+- fill in the fiels as follows:
+
+    |Field| Value|
+    |:--|:--|
+    |Command| sh|
+    |Arguments (line 1)| -c|
+    |Arguments (line 2)| rename "s/-SNAPSHOT/-$GO_PIPELINE_COUNTER/" application-*.jar|
+    |Working Directory| part-four/application/target/uberjar|
+
+So there we go, we've got two nicely named jars. But they aren't of much use to us just sitting there on th Go agent. What we really want is to make them available to later stages. We'll achieve that by "artifacterizing" them.
 
 #### Dealing with artifacts
 Typically, you have several stages that need to be executed sequentially in a single pipeline run. If you have multiple Go agents, any agent can be assigned the next stage, you're not guaranteed to have the same agent executing every stage in a single pipeline run. This means that when a stage produces some kind of output, and we require that output as input to some later stage, we need to take that output and throw it over to the Go server, such that it can orchestrate where it will be needed next. These outputs are called artifacts, and you'll see a lot of these going around in the wild.
@@ -260,10 +278,27 @@ So let's do it:
 When the pipeline has completed successfully, the two jars that were produced by the publish stage on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your ssh connection to the Go server is still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/` where you should then see the corresponding numbers of pipeline runs. If dig down into that directory you should find a `packages` directory which houses the two jars you just produced.
  
 #### Create the publish stage
-You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's publishing. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need it. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
+You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's the publish stage. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need it. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
 
+That's were S3 comes in. S3 is AWS' general purpose file storage solution. There are much better tools for hosting our artifacts out there, but for now, S3 will do. We're going to be using it to store every jar that's produced by our pipeline, both the regular jars and the standalone uberjars.
 
-That's were S3 comes in. S3 is AWS' general purpose file storage solution. Normally, there are better tools for hosting our artifacts, but for now, S3 will do. We're going to be using it to store every jar that's produced by our pipeline, both the regular jars and the standalone uberjars.
+You should know how to create a stage by now, here are the fields you need to fill in:
+
+|Field| Value|
+|:--|:--|
+|Stage Name| publish|
+|Job Name| publish|
+|Task Type| more|
+|Command| sh|
+|Arguments (line 1)| -c|
+|Arguments (line 2)| aws s3 cp packages/ s3://devops-part-four/ --recursive --exclude "\*" --include "application-\*-$GO_PIPELINE_COUNTER*jar"|
+
+**Note:** Be very careful to put the `-c` and the `aws` command on separate lines. You'll also need to select `Clean Working Directory` in the stage settings, you should know how to do that by now.
+
+So this task uses the AWS cli's S3 tool to upload our jars to an S3 bucket called "devops-part-four" which was built as part of our infrastructure stack. It should now be clear why we wanted to give our CI slave instance an IAM role that allows it to run AWS S3 commands.
+
+There's one last thing we need to do before we go and rerun this pipeline. We need to pull the jars down from the Go server so as to upload them to S3
+
 
 **TODO**
 - fetching the artifact
