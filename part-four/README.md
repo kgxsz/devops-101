@@ -137,7 +137,7 @@ Now we're ready to get to the meat of this workshop. We're going to build this p
 |Test| Run the tests in the application code with Leiningen|
 |Package| Package the application as a standalone jar with Leiningen|
 |Publish| Publish the jar to S3 where we'll later fetch it to run it|
-|Deploy the application| We'll be creating a new app server and deploying the application to it every time we run the pipeline|
+|Deploy| We'll be creating a new app server and deploying the application to it every time we run the pipeline|
 
 
 #### Pull down the repository
@@ -272,24 +272,29 @@ That's were S3 comes in. S3 is AWS' general purpose file storage solution. Norma
 #### Create the deploy stage
 We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
 
-1. **Provision an EC2 instance:**    
+1. **Provision an EC2 instance:**     
    **TODO** Ensure that it has access to S3 
-2. **Configure the EC2 instance:**
+   
+   
+2. **Configure the EC2 instance:**      
    **TODO** Ensure that it has Java installed
-3. **Get the uberjar onto the Ec2 instance:** 
+   
+3. **Get the uberjar onto the EC2 instance:**     
    **TODO** You need the jar from S3
-4. **Run the application:** 
-   **TODO** Make a user and run the jar
+   
+4. **Run the application:**    
+   **TODO** Make a user and run the jar  
+   
+5. **Delete the old EC2 instance:**   
+   **TODO** The first time you run your pipeline, this won't be a problem, but any time after that, you'll need to blast              away the old one after you build the new one. Why build one every time? We'll discuss that in just a moment. The main point to take away here is that you need to remove the old app server.
+   
+   
+
+The first thing that may strike you as odd is that we're redeploying an entire EC2 instance just for a single little jar. Yes, that's true, it's a pretty big undertaking. But what I'm trying to demonstrate here is the Phoenix Server pattern. In the wild, it's not uncommon to host a single application per Ec2 instance.
 
 **TODO**
 - How IAM roles are being used here to orchestrate this
 - Why use the Phoenix server pattern
 - How Cloudinit is being used here
-
-
-
-
-
-
 
 
