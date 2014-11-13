@@ -325,37 +325,35 @@ This special task goes and grabs the artifact produced by the `package` stage's 
 We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
 
 1. **Provision an EC2 instance:**     
-   **TODO** Ensure that it has access to S3 
-   
+   We need to provision an instance that will host the application. This instance will be known as the app server. We will achieve this by having the CI slave create the `/part-four/infrastructure/provisioning/app-server-template.json` stack with Cloudformation.
    
 2. **Configure the EC2 instance:**      
-   **TODO** Ensure that it has Java installed
+   Since the newly provisioned app server will be bare, it won't be of any use until we configure it the way we want it. If you recall, to configure the CI master and slave we used Ansible, we won't be doing this here, instead we'll be using Cloudinit.
    
-3. **Get the uberjar onto the EC2 instance:**     
-   **TODO** You need the jar from S3
+3. **Get the application jar onto the EC2 instance:**     
+   Once our app server is configured and ready to run our application, we'll need to actually go and get the standalone jar from S3.
    
 4. **Run the application:**    
-   **TODO** Make a user and run the jar  
+   Finally, we'll run the application.  
    
 5. **Delete the old EC2 instance:**   
-   **TODO** The first time you run your pipeline, this won't be a problem, but any time after that, you'll need to blast              away the old one after you build the new one. Why build one every time? We'll discuss that in just a moment. The main point to take away here is that you need to remove the old app server.
-   
+   We'll be creating a brand new app server every time we run the pipeline. So we'll need to retire the old one when the new one is up and running.
+ 
 
-The first thing that may strike you as odd is that we're redeploying an entire EC2 instance just for a single little jar. Yes, that's true, it's a pretty big undertaking. But what I'm trying to demonstrate here is the Phoenix Server pattern. In the wild, it's not uncommon to host a single application per Ec2 instance.
+The first thing that may strike you as odd is that we're redeploying an entire EC2 instance just for a single little jar. Yes, it's true, it's a pretty big undertaking. But what I'm trying to demonstrate here is the [phoenix server philosophy](http://martinfowler.com/bliki/PhoenixServer.html). In the wild, it's a good idea to avoid configuration drift by blasting away the entire app server when we want to deploy a new application.
 
-**TODO**
-- How IAM roles are being used here to orchestrate this
-- Why use the Phoenix server pattern
-- How Cloudinit is being used here
+The second thing worth mentioning is Cloudinit. Cloudinit is a tool that helps us run early initialisations on cloud instances. In our case, we'll specify a simple shell script that will sit on the app server, and Cloudinit will run the script during the server's initialisation.
 
 
-### Clean up:
+## Clean up:
 
 **TODO** How to clean up
 
 **TODO**
 - Fix up commit message
 - Fix part three image
+- Image for part four
+- Styling fix for other parts
 
 
 
