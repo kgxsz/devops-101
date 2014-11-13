@@ -15,6 +15,9 @@ I will discuss each of these when they become relevant.
 #### Disclaimer
 In the interest of building an end to end deployment pipeline in a single workshop, we're going to have to take some pretty serious shortcuts. What you will have built by the end of this workshop will _never_ suffice in the wild. However, it will be enough for you to grasp the essence of CI pipelining and automated deployments.
 
+#### Troubleshooting
+This workshop will be quite involved and it's likely you'll make some mistakes along the way. We'll be verifying our progress incrementally, but if you find yourself in a situation where something is wrong, try to back up a little, try to look at the console logs, and above all, make sure you haven't made typos.
+
 #### Tear down your infrastructure when you're done
 We'll be provisioning three medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
@@ -316,6 +319,7 @@ There's one last thing we need to do before we go and rerun this pipeline. We ne
 - you need to switch the order of the two tasks by clicking the arrow icon in the `order` column, ensure that the `Fetch Artifact` task comes first
 
 This special task goes and grabs the artifact produced by the `package` stage's `package` job. In particular, it goes and grabs the `packages` directory within which we can find the two jars. Now go and run the pipeline. When it's complete, navigate to your S3 browser tab and take a look in the `devops-part-four` bucket. You should see the jars.
+
 
 #### Create the deploy stage
 We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
