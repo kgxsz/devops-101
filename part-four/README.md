@@ -244,7 +244,7 @@ The names of the jars produced by the above task will be something like `applica
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
 - go to the `package` stage's `Stage Settings` panel and select the `Jobs` tab
 - select the `package` job and then `Add new task`
-- select `more` for the type of task
+- select `More` for the type of task
 - fill in the fields as follows:
 
     |Field| Value|
@@ -344,7 +344,48 @@ The first thing that may strike you as odd is that we're redeploying an entire E
 
 The second thing worth mentioning is Cloudinit. Cloudinit is a tool that helps us run early initialisations on cloud instances. In our case, we'll specify a simple shell script that will sit on the app server, and Cloudinit will run the script during the server's initialisation.
 
+Let's get started:
 
+- create a new stage and fill in the fields as follows:
+
+   |Field| Value|
+   |:--|:--|
+   |Stage Name| deploy|
+   |Job Name| deploy|
+   |Task Type| more|
+   |Command| `ruby`|
+   |Arguments| `deploy-new-app-server.rb`|
+   |Working Directory| part-four/ci-utilities|
+
+
+- you'll also need to select `Clean Working Directory` in the stage settings
+- navigate to the `Jobs` tab in `Stage Settings`
+- select the `deploy` job
+- select `Add new task` and select `More` for the type of task
+- fill in the fields as follows:
+
+   |Field| Value|
+   |:--|:--|
+   |Command| `ruby`|
+   |Arguments| `retire-old-app-server.rb`|
+   |Working Directory| part-four/ci-utilities|
+   
+   
+- don't forget to `Save`
+- go to the `PIPELINES` tab and run the pipeline
+
+You'll notice that we're using some ruby script here. This is because the deploy and retire tasks are a little more involved than a shell command that can sit directly in the job definition. While the pipeline runs, take a look at those ruby scripts, and try to figure out whats going on.
+
+1. **deploy-new-app-server.rb:**     
+   The central point to this script is to create the `app-server-template.json` with Cloudformation. If you navigate to your Cloudformation browser tab, you should see (or soon see, depending on your pipeline progress) an additional stack being created (or already created). Take a look at `app-server-template.json`, you'll see that we require `SubnetId`, `SecurityGroupId`, and `BuildNumber` as parameters, much of the script is about getting a hold of those parameteres and feeding them to the Cloudformation command.
+   
+2. **retire-old-app-server.rb:**      
+   This script is a little more straight forward, we try to find any app server stacks other than the one we just built, and we delete it.
+   
+#### Cloudinit
+To understand how we configure our Ec2 instance and launch the application, we need to open `/part-four/infrastructure/provisioning/app-server-template.json`. 
+
+   
 ## Clean up:
 
 **TODO** How to clean up
