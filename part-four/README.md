@@ -271,7 +271,7 @@ So let's do it:
 - then select the `package` job under the `Jobs` tab
 - go to the `Artifacts` tab
 - in `Source` put `part-four/application/target/uberjar/application-*jar`, that wildcard will pick up both the jars
-- in `Destination` put `packages` 
+- in `Destination` put `packages` (be careful to include the trailing 's' here)
 - don't forget to `Save`
 - now go to the `PIPELINES` tab and run the pipeline
 
@@ -343,6 +343,16 @@ The first thing that may strike you as odd is that we're redeploying an entire E
 - How IAM roles are being used here to orchestrate this
 - Why use the Phoenix server pattern
 - How Cloudinit is being used here
+
+
+### Clean up:
+
+**TODO** How to clean up
+
+**TODO**
+- Fix up commit message
+- Fix part three image
+
 
 
 
