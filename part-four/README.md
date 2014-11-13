@@ -383,7 +383,19 @@ You'll notice that we're using some ruby script here. This is because the deploy
    This script is a little more straight forward, we try to find any app server stacks other than the one we just built, and we delete it.
    
 #### Cloudinit
-To understand how we configure our Ec2 instance and launch the application, we need to open `/part-four/infrastructure/provisioning/app-server-template.json`. 
+To understand how we configure our web server and launch the application, we need to open `/part-four/infrastructure/provisioning/app-server-template.json`. Find the `EC2InstanceAppServer` resource, and within it, you should see the `UserData` property. The shell script does the following:
+
+- updates and upgrades apt
+- installs java
+- installs pip and then the AWS cli
+- creates a user called `devops-user` and gives it a home directory
+- uses the AWS cli's S3 tool to copy the latest standalone uberjar from S3 to the newly created home directory
+- changes the ownership on the jar and then runs it
+
+This script will be invoked by Cloudinit on the App server during initialisation.
+
+#### Connecting to the application
+Now, wait for the pipeline to complete, and then open the EC2 tab in your browser. You should see a third instance in place with a name like `App Server - Build X` where X is the number of the pipeline run that deployed it. Take note of the app server's IP address. Unfortunately, it sometimes takes a little while for Cloudinit to carry out the script steps even after the pipeline shows up as green. So wait a little while and then try to hit `http://YOUR_APP_SERVER_IP:8080` in your browser. If you can see the dummy application then take a deep breath and bask in the glory of it all.
 
    
 ## Clean up:
