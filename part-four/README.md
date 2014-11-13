@@ -145,8 +145,8 @@ There are a few steps involved in pulling the repository onto the CI slave:
 
 - firstly, on the Go web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
 - use `dummyApplication` as the pipeline name, then select `Next`
-- select `git` as the `Material Type` 
-- go to **your** version of this repository on github, and on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the HTTPS URL, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
+- select `Git` as the `Material Type` 
+- go to **your** version of this repository on github, and on the right hand pane, you should see `SSH clone URL` or `HTTPS clone URL`, copy the **HTTPS URL**, it should look something like this: `https://github.com/YOUR_GITHUB_NAME/devops-101.git`
 - now, back on the Go web console, put that URL into the relevant field
 - `Check Connection` and then select `next`
 
@@ -158,8 +158,8 @@ We're now ready to create the first stage. Fill in the fields as follows:
 |Stage Name| test|
 |Job Name| test|
 |Task Type| more|
-|Command| lein|
-|Arguments| test|
+|Command| `lein`|
+|Arguments| `test`|
 |Working Directory| part-four/application|
 
 Now press `Finish` and you'll see the beginnings of you pipeline. But we're not quite done. On the left you'll see a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` label, this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
@@ -198,10 +198,10 @@ So what just happened?
 4. the job passed, therefore the stage passed, therefore the pipeline passed
 5. and the world rejoiced
 
-As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy applicationis writen in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
+As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy application is written in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
 
 #### Fail fast
-Let's play waround with our pipeline a little. First, let's confirm that when we commit a change and push it up to github, the pipeline is triggered automatically. Secondly, let's commit a change that makes our tests fail so that we can confirm that the pipeline fails:
+Let's play around with our pipeline a little. First, let's confirm that when we commit a change and push it up to github, the pipeline is triggered automatically. Secondly, let's commit a change that makes our tests fail so that we can confirm that the pipeline fails:
 
 - open `part-four/application/test/application/core_test.clj` in your favourite editor
 - on line 7, change the 1 to a 2, this will make the test fail
@@ -226,29 +226,29 @@ Now, let's create the second stage:
     |Stage Name| package|
     |Job Name| package|
     |Task Type| more|
-    |Command| lein|
-    |Arguments| uberjar|
+    |Command| `lein`|
+    |Arguments| `uberjar`|
     |Working Directory| part-four/application|
 - press `Save`
 - once again, go to the `Stage Settings` under the `package` stage and select `Clean Working Directory`
 - don't forget to `Save`
 
-This task is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two jars in `target/uberjar` relative to the application root directory. 
+This task is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two jars in the `target/uberjar` directory relative to the application's root directory. 
 
 #### Renaming the jars
-The names of the jars produced by the above task will be something like `application-0.1.0-SNAPSHOT-standalone.jar` and `application-0.1.0-SNAPSHOT.jar`. We'd like to make sure that the Go pipeline counter is stamped onto those jars so that we always know which pipeline run produced them. Go gives us some environment variables we can use, so let's create a task that changes the jar names to something like `application-0.1.0-$GO_PIPELINE_COUNTER-standalone.jar` and `application-0.1.0-$GO_PIPELINE_COUNTER.jar`:
+The names of the jars produced by the above task will be something like `application-0.1.0-SNAPSHOT-standalone.jar` and `application-0.1.0-SNAPSHOT.jar`. Every time we run a Go pipeline, it increments the pipeline's counter. Wouldn't it be nice to stamp that counter onto the name of our jars so that we know which pipeline run produced them? Well, Go gives us some environment variables that we can use, including $GO_PIPELINE_COUNTER. Let's create a task that changes the jar names to something like `application-0.1.0-$GO_PIPELINE_COUNTER-standalone.jar` and `application-0.1.0-$GO_PIPELINE_COUNTER.jar`:
 
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
-- go to the `package` stage's panel and select the `Jobs` tab
+- go to the `package` stage's `Stage Settings` panel and select the `Jobs` tab
 - select the `package` job and then `Add new task`
 - select `more` for the type of task
 - fill in the fields as follows:
 
     |Field| Value|
     |:--|:--|
-    |Command| sh|
-    |Arguments (line 1)| -c|
-    |Arguments (line 2)| rename "s/-SNAPSHOT/-$GO_PIPELINE_COUNTER/" application-*.jar|
+    |Command| `sh`|
+    |Arguments (line 1)| `-c`|
+    |Arguments (line 2)| `rename "s/-SNAPSHOT/-$GO_PIPELINE_COUNTER/" application-*.jar`|
     |Working Directory| part-four/application/target/uberjar|
     
     **Note:** be very careful to put the `-c` and the `rename` command on separate lines.
@@ -275,7 +275,7 @@ So let's do it:
 - don't forget to `Save`
 - now go to the `PIPELINES` tab and run the pipeline
 
-When the pipeline has completed successfully, the two jars that were produced on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your ssh connection to the Go server will still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/`. In this directory you should see the corresponding numbers of pipeline runs, if you dig down into that directory you should find a `packages` directory which houses the two jars you just produced and renamed.
+When the pipeline has completed successfully, the two jars that were produced on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your ssh connection to the Go server will still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/`. In this directory you should see the corresponding numbers of pipeline runs, if you dig down into that directory you should find the `packages` directory which houses the two jars you just produced and renamed.
  
 #### Create the publish stage
 You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's the publish stage. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need them. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
@@ -289,9 +289,9 @@ You should know how to create a stage by now, here are the fields you need to fi
 |Stage Name| publish|
 |Job Name| publish|
 |Task Type| more|
-|Command| sh|
-|Arguments (line 1)| -c|
-|Arguments (line 2)| aws s3 cp packages/ s3://devops-part-four/ --recursive --exclude "\*" --include "application-\*-$GO_PIPELINE_COUNTER*jar"|
+|Command| `sh`|
+|Arguments (line 1)| `-c`|
+|Arguments (line 2)| `aws s3 cp packages/ s3://devops-part-four/ --recursive --exclude "*" --include "application-*-$GO_PIPELINE_COUNTER*jar"`|
 
 **Note:** be very careful to put the `-c` and the `aws` command on separate lines. You'll also need to select `Clean Working Directory` in the stage settings, you should know how to do that by now.
 
@@ -303,7 +303,7 @@ There's one last thing we need to do before we go and rerun this pipeline. We ne
 - select the `publish` stage
 - then select the `publish` job under the `Jobs` tab
 - select `Add new task` and select `Fetch Artifact` for the type of task
-- fill in the fields as follows:
+- fill in the fields as follows, but be careful, some fields don't need to be filled:
 
     |Field| Value|
     |:--|:--|
@@ -311,12 +311,11 @@ There's one last thing we need to do before we go and rerun this pipeline. We ne
     |Job| package|
     |Source| packages|
     
-     **Note:** the `Pipeline` field can remain empty, and be careful to include the trailing 's' in 'packages' in the `Source` field.
-     
+     **Note:** be careful to include the trailing 's' in 'packages' in the `Source` field.
 - don't forget to `Save`
-- you need to switch the order of the two tasks by clicking the arrow icon in the `order` column, ensure that the fetch artifact task comes first
+- you need to switch the order of the two tasks by clicking the arrow icon in the `order` column, ensure that the `Fetch Artifact` task comes first
 
-Now go and rerun the pipeline. When it's complete, navigate to your S3 browser tab and take a look in the `devops-part-four` bucket. You should see the jars.
+This special task goes and grabs the artifact produced by the `package` stage's `package` job. In particular, it goes and grabs the `packages` directory within which we can find the two jars. Now go and run the pipeline. When it's complete, navigate to your S3 browser tab and take a look in the `devops-part-four` bucket. You should see the jars.
 
 #### Create the deploy stage
 We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
@@ -337,7 +336,6 @@ We're finally in a position to deploy our application. But first, Let's think ab
 5. **Delete the old EC2 instance:**   
    **TODO** The first time you run your pipeline, this won't be a problem, but any time after that, you'll need to blast              away the old one after you build the new one. Why build one every time? We'll discuss that in just a moment. The main point to take away here is that you need to remove the old app server.
    
-   
 
 The first thing that may strike you as odd is that we're redeploying an entire EC2 instance just for a single little jar. Yes, that's true, it's a pretty big undertaking. But what I'm trying to demonstrate here is the Phoenix Server pattern. In the wild, it's not uncommon to host a single application per Ec2 instance.
 
@@ -345,5 +343,8 @@ The first thing that may strike you as odd is that we're redeploying an entire E
 - How IAM roles are being used here to orchestrate this
 - Why use the Phoenix server pattern
 - How Cloudinit is being used here
+
+
+
 
 
