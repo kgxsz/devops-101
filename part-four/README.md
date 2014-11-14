@@ -395,18 +395,31 @@ To understand how we configure our web server and launch the application, we nee
 This script will be invoked by Cloudinit on the App server during initialisation.
 
 #### Connecting to the application
-Now, wait for the pipeline to complete, and then open the EC2 tab in your browser. You should see a third instance in place with a name like `App Server - Build X` where X is the number of the pipeline run that deployed it. Take note of the app server's IP address. Unfortunately, it sometimes takes a little while for Cloudinit to carry out the script steps even after the pipeline shows up as green. So wait a little while and then try to hit `http://YOUR_APP_SERVER_IP:8080` in your browser. If you can see the dummy application then take a deep breath and bask in the glory of it all.
+Now, wait for the pipeline to complete, and then open the EC2 tab in your browser. You should see a third instance in place with a name like `App Server - Build X` where X is the number of the pipeline run that deployed it. Take note of the app server's IP address (note that this IP will change for each deployment). Unfortunately, it sometimes takes a little while for Cloudinit to carry out the script steps even after the pipeline shows up as green. So wait a little while and then try to hit `http://YOUR_APP_SERVER_IP:8080` in your browser. If you can see the dummy application then take a deep breath and bask in the glory of it all.
 
-   
-## Clean up:
 
-**TODO** How to clean up
+## Putting it all together
+I now encourage you to play around with what you've built, try committing and pushing some changes to your web application, and watch the pipeline run all the way through to deploying a new web server. 
+
+It's been a long journey to get to this point. Despite the severe limitations of this deployment pipeline, I hope that you're starting to see the forest through the trees, and have gained a sense of appreciation for the concepts and tools involved.
+
+## Clean up
+You can clean up in a few simple steps:
+
+- go to your S3 browser tab and go to the `devops-part-four` bucket 
+- delete everything in the bucket
+- go to your Cloudformation browser tab
+- delete the `app-server-build-x` stack first
+- then delete the `infrastructure` stack
+- when both stacks are gone, open the EC2 browser tab to verify that all EC2 instances are no longer running
+
+That's it.
 
 **TODO**
+- Styling fix for other parts
 - Fix up commit message
 - Fix part three image
 - Image for part four
-- Styling fix for other parts
 
 
 
