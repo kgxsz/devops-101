@@ -12,6 +12,10 @@ We'll be buidling upon the last workshop to create a CI pipeline that tests, pac
 
 I will discuss each of these when they become relevant.
 
+The image below gives a rough idea of how our infrastructure will be oriented. The high level things to note here are that Cloudformation is used locally to build out the initial infrastructure, and then once again from the CI slave to build the app server. Also notice that S3 is built by Cloudformation, but it isn't conceptually part of our VPC.
+
+![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-four-goal.png "part-four-goal")
+
 #### Disclaimer
 In the interest of building an end to end deployment pipeline in a single workshop, we're going to have to take some pretty serious shortcuts. What you will have built by the end of this workshop will _never_ suffice in the wild. However, it will be enough for you to grasp the essence of CI pipelining and automated deployments.
 
@@ -416,7 +420,6 @@ You can clean up in a few simple steps:
 That's it.
 
 **TODO**
-- Styling fix for other parts
 - Fix up commit message
 - Fix part three image
 - Image for part four
