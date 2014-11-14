@@ -12,7 +12,7 @@ We'll be buidling upon the last workshop to create a CI pipeline that tests, pac
 
 I will discuss each of these when they become relevant.
 
-The image below gives a rough idea of how our infrastructure will be oriented. The high level things to note here are that Cloudformation is used locally to build out the initial infrastructure, and then once again from the CI slave to build the app server. Also notice that S3 is built by Cloudformation, but it isn't conceptually part of our VPC.
+The image below gives a rough idea of how our infrastructure will be oriented. The high level things to note here are that Cloudformation is used locally to build out the initial infrastructure, and then once again from the CI slave to build the app server. Also notice that S3 resource is created by Cloudformation, but it isn't conceptually part of our VPC.
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-four-goal.png "part-four-goal")
 
