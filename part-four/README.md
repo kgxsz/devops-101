@@ -419,11 +419,6 @@ You can clean up in a few simple steps:
 
 That's it.
 
-**TODO**
-- Fix up commit message
-- Fix part three image
-- Image for part four
-
 
 
 
