@@ -1,6 +1,6 @@
-## Part 1: Provision an EC2 instance in AWS
+# Part 1: Provision an EC2 instance in AWS
 
-####**Goal: deploy a cloud server and ssh to it.**
+###**Goal: deploy a cloud server and ssh to it.**
 
 In order to achieve this goal we'll have to touch on several concepts. Don't worry if you don't completely understand some of the points we'll cover. At this stage it's enough to have a shallow understanding of these concepts, and how they contribute to us achieving our goal.
 
@@ -8,23 +8,23 @@ What you see below is a naive representation of what we'll be building. Notice t
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-one-goal.png "part-one-goal")
 
-### Register for AWS
+## Get set up AWS
 
 In order to do any of this, you'll need an AWS account. So go ahead and register for an AWS account. I'd recommend using your full name for the account name. 
 
 You'll be given root access credentials, sign in to AWS and have a poke around, when you're ready, move on to the next step.
 
-### Create an IAM group and user
+#### Create an IAM group and user
 
 The root access credentials given to you in the previous step provide unrestricted access to the account. AWS recommends that you not use these root credentials for day to day task. So we'll be using AWS' user management tool IAM to create a user for day to day tasks and put them in an administration group.
 
-#####Create a group
+#### Create a group
 - go to IAM in the services tab
 - create a new group
 - call it administrators
 - give it administrator rights
 
-#####Create a user
+#### Create a user
 - create a user
 - give it your first name (to distinguish it from your root account name)
 - download the access key and secret key, you'll use this later for CLI stuff
@@ -33,7 +33,7 @@ The root access credentials given to you in the previous step provide unrestrict
 
 Sign out and go through the link you just took note of to sign in with the IAM user name and password you just created. You should use these credentials instead of the root credentials from this point forward.
 	
-### Create a key pair
+#### Create a key pair
 Before going any further, it's worth mentioning a common point of confusion with AWS' user interface. You'll see a region name in the top right, next to the help tab. Make sure that you're in Ireland or wherever else is closest to you. Whenever you create resources in a certain region, they will only be visible within that region, so make sure you create your keys in the region you intend on creating the rest of your infrastructre in.
 
 Let's move on.
@@ -52,7 +52,7 @@ AWS provides an easy way for generating a public private key pair. When you crea
 	
 		
 		
-### Create a virtual private cloud
+## Create a virtual private cloud
 Now let's start building something. 
 
 The first thing you need is a virtual private cloud (VPC). A VPC is a virtual network dedicated to your AWS account and isolated from all other virtual networks in the AWS cloud. The things we build from here on out will belong to, or be attatched to our VPC. 
@@ -78,7 +78,7 @@ Now you'll see that your new VPC was created, along with a default route table, 
 It's worth understanding a little about what the cidr block is doing. The cidr block defines a set of IP addresses for the VPC. The 16 means that the first 16 bits of the address space are fixed and the last 16 are varying. So the addresses from `10.0.0.0` to `10.0.255.255` refer to our VPC. See [this](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
 article to get a deeper understanding.
 
-### Create a public subnet
+## Create a public subnet
 A VPC can be divided into several subnets. You can think of subnets as as a subdivision of the VPC's IP address space. We're going to use a single subnet, and wire it up so that traffic can get to the outside world.
 
 - go to VPC in the services tab
@@ -91,7 +91,7 @@ A VPC can be divided into several subnets. You can think of subnets as as a subd
 Here you'll notice that the cidr block looks similar to the VPC's cidr block, but with a trailing 24 instead of 16. This means that the first 24 bits of the address space are fixed and the last 8 are varying. So the addresses from `10.0.0.0` to `10.0.0.255` refer to this subnet in our VPC.
 
 
-### Create a route table and association
+## Create a route table and association
 Each subnet you create needs to be told how to route traffic originating from within it. We're going to create a route table and associate it to our subnet.
 
 - go to VPC in the services tab
@@ -104,7 +104,7 @@ Each subnet you create needs to be told how to route traffic originating from wi
 
 You now have a route table associated with your subnet. If you look at the 'Routes' tab you'll see that any traffic originating in our subnet within the range `10.0.0.0/16` will be routed locally, which means that traffic targetting our VPC will be routed back into our VPC.
 
-### Create an internet gateway
+## Create an internet gateway
 So you've got a route table routing trafic from your subnet. But it's still not getting anywhere useful. We want the subnet to be able to talk to the outside world, so let's make an internet gateway and attach it with our VPC.
 
 - go to VPC in the services tab
@@ -123,7 +123,7 @@ Great, you've got an internet gateway! Look at you! But it's still not doing any
 
 The `0.0.0.0/0` here is saying "Hey, absolutely all traffic from our subnet should be routed to our internet gateway" but there's also the `10.0.0.0/16` in there saying "Hey, this rule is a little more specific, so make sure that addresses in this range get routed to our VPC and not to the internet gateway".
 
-### Lock down your VPC
+## Lock down your VPC
 Network Access control lists (network ACLs) are a layer of security that act as a firewall for controlling traffic in and out of a subnet. Each subnet must be associated with a Network ACLs. Let's make one.
 
 - go to VPC in the services tab
@@ -136,7 +136,7 @@ Network Access control lists (network ACLs) are a layer of security that act as 
 
 You'll see in the details panel under inbound and outbound rules that all traffic in and out is being denied. Total lock down!
 
-### Create security groups
+## Create security groups
 Whilst Network ACLs act as the border guards for an entire subnet, you can think of security groups as the security boundary around individual EC2 instances. Let's make one and lock it down completely.
 
 - go to VPC in the services tab
@@ -151,7 +151,7 @@ Now you've got a completely locked down security group.
 
 A note on security: network ACLs and security groups only make up two layers of security. In the wild, you'll be configuring security for the instance itself as well. Security is a deep and complex subject. Keep in mind that just these two layers alone shouldn't make up your entire security check list! [Further reading](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Security.html) for the keen ones.
 
-### Provision an EC2 instance
+## Provision an EC2 instance
 Alright, so we're now at a point where we've set up our environment and are ready to launch an EC2 instance.
 
 
@@ -172,7 +172,7 @@ You're doing so well, don't give up!
 
 Your instance should now be launching. You'll probably have to wait a little bit. 
 
-### Create an Elactic IP to connect to your EC2 instance
+## Create an Elactic IP to connect to your EC2 instance
 So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
 
 **Wrong!**
@@ -184,7 +184,7 @@ When you launch your EC2 instance you'll notice that it only has a private IP ad
 - allocate new address
 - associate address to your new instance
 
-### Allow SSH connections to your EC2 instance
+## Allow SSH connections to your EC2 instance
 Now you can talk to your instance from the outside world. You could now try to ssh to your instance, but it still wouldn't work, because we've completely locked down traffic to and from the instance. A completely locked down instance isn't much use, let's open up what we need:
 
 - go to VPC in the services tab
@@ -223,7 +223,7 @@ Now try to ssh to the instance:
 You're in. Take a moment to bask in the glory of what you've just achieved.
 
 
-### Clean up
+## Clean up
 It's always good to clean up. Infrastructure quickly becomes messy.
 Also, to prepare for part two, you need to clean up after yourself. Delete the following, in the following order:
 

@@ -1,5 +1,5 @@
-## Part 3: Provision and Configure a CI Environment
-####**Goal: create your CI environment in the cloud using Ansible.**
+# Part 3: Provision and Configure a CI Environment
+###**Goal: create your CI environment in the cloud using Ansible.**
 
 So far, you've learnt how to provision a cloud environment with Cloudformation, but it's all for naught if you don't configure your EC2 instances to do as you wish. So in this workshop we're going to use Ansible to configure a CI environment. Specifically, we're going to configure two EC2 instances:
 
@@ -9,18 +9,18 @@ So far, you've learnt how to provision a cloud environment with Cloudformation, 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-three-goal.png "part-three-goal")
 
 
-#####A bit about Ansible
+#### A bit about Ansible
 If you were really keen, you could use Cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
 Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and ge the job done.
 
-#####Disclaimer
+#### Disclaimer
 What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many more considerations and improvements you would need to make in the wild.
 
-#####Tear down your infrastructure when you're done
+#### Tear down your infrastructure when you're done
 We'll be provisioning two medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
-### Get Setup with Ansible
+## Get set up with Ansible
 To get going, you'll need Ansible.
 
 - get it with homebrew (`brew install ansible`)
@@ -28,7 +28,7 @@ To get going, you'll need Ansible.
 
 I'll assume that you've done part one and two so you already have an AWS account and the CLI ready to go.
  
-### Provision the Infrastructure
+## Provision the Infrastructure
 We'll be provisioning the infrastructure with AWS Cloudformation like we did in part two. You will find a template describing our entire infratructure in `part-three/infrastructure/provisioning/`.
 
 Have a look at the template, notice that it's not much different from the template in part two, but we've added an extra EC2 instance and EIP, some additions to the security group and some network ACL entries. The two EC2 instances are:
@@ -61,10 +61,10 @@ Let's get to it.
     ```
     We'll use these outputs in just a second.
     
-### Configure the EC2 Instances  
+## Configure the EC2 Instances  
 You've provisioned your infrastructure. Now it's time to configure the EC2 instaces. By configure, what I really mean is the collection of tasks you need to carry out on your EC2 instances to have the Go Server and agent up and running. We're going to use Ansible to carry out those tasks.
 
-#####The inventory file
+#### The inventory file
 
 Given that Ansible runs from your local machine and configures target instances remotely, we need to tell it where those target instances are. To this end, we use an `inventory` file to list our remote instances that we intend to configure. We won't be setting up DNS in this workshop, so we're going to need an ugly manual step to take the IP addresses we obtained from the Cloudformation outputs, and put them into the `inventory` file.
 
@@ -86,7 +86,7 @@ Given that Ansible runs from your local machine and configures target instances 
     The last two lines are a little different, they are setting up a variable that will be used by one of our Ansible tasks.
     Please take care to ensure that this is correct.
     
-#####The playbook
+#### The playbook
 
 So now we have an inventory file to tell Ansible where to go, so all that's left is a file to tell Ansible what tasks to carry out on our instances.
 
@@ -106,7 +106,7 @@ So in this particular example, we have a task that adds a line to a go agent con
 Finally, recall the `ci_master_private_ip` variable we defined in the inventory file, you'll notice that we've used that variable in the second last task. We referenc ethe variable as `{{ ci_master_private_ip }}`.
 
 
-#####Run Ansible
+#### Run Ansible
 Now that we have a basic understanding of the inventory and playbook, let's use them:
 
 - in the `part-three/infrastructure/configuration/` directory:
@@ -116,10 +116,10 @@ Now that we have a basic understanding of the inventory and playbook, let's use 
   
 That's it. Once Ansible has finished, try running it again, you'll notice that it's a lot faster and the tasks are reporting as `ok` or `skipping`, that's idempotency in action.
 
-#####Organising Ansible
+#### Organising Ansible
 For this workshop it's sufficient to have a single playbook and an inventory file with a variable defined within it. For real world projects, however, you will need to separate tasks out into 'roles', and variables should live in their own files, not in the inventory file.
   
-### Connect to the Go Server   
+## Connect to the Go Server   
 Your Go server and agent should now be up and running. The Go server is listening on port 8153 of the CI master instance, but you won't be able to access it since we've blocked all incoming traffic from the outside world other than ssh. So we're going to use ssh port forwarding, which simply forwards a given address and port to us when we have an ssh connection open.
 
 - connect to the CI master and set up port forwarding with: 
@@ -136,7 +136,7 @@ Your Go server and agent should now be up and running. The Go server is listenin
 
 You now have a Go server running with an agent attached ready to configure a pipeline to do your bidding.
 
-### Clean Up
+## Clean Up
 That's it! You've created your CI environment. You're in a good place now, you can tear down and rebuild this CI environment at the press of a button. The next step is to configure a CI pipeline and deploy a dummy application, but we're not going to do that in this workshop. So, we'll be ending it here. But before you go, do not forget to tear down the infrastructure:
 
         aws cloudformation delete-stack --stack-name infrastructure

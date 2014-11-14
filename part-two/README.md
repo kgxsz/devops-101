@@ -1,12 +1,12 @@
-## Part 2: Your Infrastructure as Code
+# Part 2: Your Infrastructure as Code
 
-####**Goal: build your cloud infrastructure at the press of a button.**
+###**Goal: build your cloud infrastructure at the press of a button.**
 
 This workshop is going to be pretty straight forward. We're going to rebuild the environment you built in part one. But this time, we're going to avoid fiddling about with the AWS web console, and instead, do it using the AWS Cloudformation tool.
 
 Before we dive in, let's talk about what Cloudformation is, and why you would want to use such a tool.
 
-##### Cloudfromation and infrastructure as code
+#### Cloudfromation and infrastructure as code
 
 Cast your mind back to the first workshop. We did a lot of clicking around to get our environment to the state that we wanted. Imagine having to do that all the time, or trying to recall every step needed to get to that final state. 
 It's not ideal, what we really want is to be able to describe the infrastructure we want as code - which is what we mean by 'infrastructure as code'. 
@@ -15,7 +15,7 @@ Cloudformation is an AWS tool that lets us describe a set of resources in a file
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-two-goal.png "part-two-goal")
 
-### Get set up with the AWS command line interface
+## Get set up with the AWS command line interface
 
 We're going to be doing this workshop through the command line rather than through the AWS web console. So you're going to need the AWS cli.
 
@@ -24,7 +24,7 @@ We're going to be doing this workshop through the command line rather than throu
 
 If you're doing this workshop right after the last one, you may have noticed that a file was downloaded by your browser when you created an IAM user. The file is called something like `credentials.csv`. It might still be in your downloads directory. If it is, great! You can skip to the 'configure your AWS cli' section. If not, no biggie - we'll create it now.
 
-#####Create access keys
+#### Create access keys
 - go to your AWS console using the IAM username and password you created in the previous workshop. Recall that your sign-in page url is of the form `https://YOUR_ACCOUNT_NAME.signin.aws.amazon.com/console/`
 - if you can't remember the sign-in page url, or it's not working:
 	- you can access your AWS account with your root credentials
@@ -40,7 +40,7 @@ If you're doing this workshop right after the last one, you may have noticed tha
 - download credentials
 - you should now have a file called `credentials.csv` in your downloads directory
 
-#####Configure your AWS cli
+#### Configure your AWS cli
 In order to use the AWS cli with your account, it needs to know your AWS account credentials.
 
 - open `credentials.csv` and take note of the `access key id` and the `secret access key`
@@ -66,7 +66,7 @@ Now, from your command line, try `aws help`, you should see a manual for using t
 
 You're ready to create your first stack!
 
-### Create your first stack
+## Create your first stack
 We're going to be using the Cloudformation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use Cloudformation.
 
 In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the Cloudformation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
@@ -126,9 +126,9 @@ Once it's deleted, that VPC should no longer exist, the Cloudformation section o
 How easy was that?
 
 
-### Create a bigger stack
+## Create a bigger stack
 
-##### Understand the template
+#### Understand the template
 
 Do you remember all the resources you created in part one? Here's a list to remind you:
 
@@ -166,7 +166,7 @@ You may have noticed that there are some resources declared in the template that
 
 Note that if you are **not** using Ireland as your location, you will need to edit the file to change the `availibilityZone` and `ImageId` values to your specific region.
 
-##### Build the infrastructure
+#### Build the infrastructure
 
 Now let's feed this template to Cloudformation and watch it build our infrastructure!
 
@@ -186,13 +186,13 @@ Now, ssh to your newly created instance once it's finished initializing:
     ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
 
-##### Tear down the infrastructure
+#### Tear down the infrastructure
 
 So you want clean down your infrastracture when you're done:
 
     aws cloudformation delete-stack --stack-name template-two
     
-### Wrap up
+## Wrap up
 
 Let's take a moment to think about what you just did. You were able to build and tear down your infrastructure at the press of a button. You have a file describing your entire infrastructure that you can keep in source control. You're in a good place because you can always rebuild your infrastructure from nothing. Doesn't it feel nice?
 
