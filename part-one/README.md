@@ -29,6 +29,7 @@ The root access credentials given to you in the previous step provide unrestrict
 - give it your first name (to distinguish it from your root account name)
 - download the access key and secret key, you'll use this later for CLI stuff
 - in the user's control panel, set a password and download it
+- add the user to the administrators group
 - go to your IAM dashboard, you can take note of the 'IAM user sign in link'. 
 
 Sign out and go through the link you just took note of to sign in with the IAM user name and password you just created. You should use these credentials instead of the root credentials from this point forward.
