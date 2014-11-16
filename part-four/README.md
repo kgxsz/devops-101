@@ -2,7 +2,7 @@
 
 ### **Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.**
 
-We'll be buidling upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
+We'll be building upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
 
 - IAM Roles
 - S3
@@ -29,7 +29,7 @@ We'll be provisioning three medium EC2 instances which cost around 9 cents an ho
 ## Set yourself up
 I'll assume that you've done the previous workshops and have Ansible and the AWS cli set up on your machine.
 
-You'll want a good overview of what you're doing throughout this workshop, so I would recommend opening the following AWS web concole services in seperate browser tabs so that you can move back and fourth easily:
+You'll want a good overview of what you're doing throughout this workshop, so I would recommend opening the following AWS web console services in separate browser tabs so that you can move back and fourth easily:
 
 - Cloudformation
 - EC2
@@ -46,7 +46,7 @@ We're doing this because you're going to have to be able to push code up to gith
 
 
 ## Build your infrastructure
-We'll be going down a similar route as the last workshop. We'll use Cloudformation to create a stack of resources, and then Ansible to configure a Go server and Go agent on two seperate EC2 instances. The following commands will require some time and patience, so execute them and read on while they complete.
+We'll be going down a similar route as the last workshop. We'll use Cloudformation to create a stack of resources, and then Ansible to configure a Go server and Go agent on two separate EC2 instances. The following commands will require some time and patience, so execute them and read on while they complete.
 
 Let's get to it:
 
@@ -188,7 +188,7 @@ Before you can run the pipeline, you'll need to make sure that the agent is enab
 - go to the `AGENTS` tab, you should see the `ci-slave` agent
 - select it and hit `ENABLE`
 
-Now go back to the `PIPELINES` tab and hit the pause button to unpause the pipeline. Within a few moments it should start to run:
+Now go back to the `PIPELINES` tab and hit the pause button to un-pause the pipeline. Within a few moments it should start to run:
 
 - click the yellow (or green if it's complete) bar
 - on the left hand `JOBS` panel you should see `test`, click on it
@@ -381,7 +381,7 @@ Let's get started:
 You'll notice that we're using some ruby script here. This is because the deploy and retire tasks are a little more involved than a shell command that can sit directly in the job definition. While the pipeline runs, take a look at those ruby scripts, and try to figure out whats going on.
 
 1. **deploy-new-app-server.rb:**     
-   The central point to this script is to create the `app-server-template.json` with Cloudformation. If you navigate to your Cloudformation browser tab, you should see (or soon see, depending on your pipeline progress) an additional stack being created (or already created). Take a look at `app-server-template.json`, you'll see that we require `SubnetId`, `SecurityGroupId`, and `BuildNumber` as parameters, much of the script is about getting a hold of those parameteres and feeding them to the Cloudformation command.
+   The central point to this script is to create the `app-server-template.json` with Cloudformation. If you navigate to your Cloudformation browser tab, you should see (or soon see, depending on your pipeline progress) an additional stack being created (or already created). Take a look at `app-server-template.json`, you'll see that we require `SubnetId`, `SecurityGroupId`, and `BuildNumber` as parameters, much of the script is about getting a hold of those parameters and feeding them to the Cloudformation command.
    
 2. **retire-old-app-server.rb:**      
    This script is a little more straight forward, we try to find any app server stacks other than the one we just built, and we delete it.
