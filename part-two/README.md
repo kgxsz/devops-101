@@ -6,7 +6,7 @@ This workshop is going to be pretty straight forward. We're going to rebuild the
 
 Before we dive in, let's talk about what Cloudformation is, and why you would want to use such a tool.
 
-#### Cloudfromation and infrastructure as code
+#### Cloudformation and infrastructure as code
 
 Cast your mind back to the first workshop. We did a lot of clicking around to get our environment to the state that we wanted. Imagine having to do that all the time, or trying to recall every step needed to get to that final state. 
 It's not ideal, what we really want is to be able to describe the infrastructure we want as code - which is what we mean by 'infrastructure as code'. 
@@ -93,7 +93,7 @@ This is pretty straight forward:
 
 - the first line defines the format of the file, don't change that date
 - the second line let's us describe what the stack is all about
-- the third line is the meat, it opens up the resources section where we desribe our *stack* of resources
+- the third line is the meat, it opens up the resources section where we describe our *stack* of resources
 - here, we only have one resource, it's a VPC, and we've named it "devops-part-two" in the tags
 
 There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/aws-template-resource-type-ref.html) and examples available to help you describe the resources you need in a template file.
@@ -136,7 +136,7 @@ Do you remember all the resources you created in part one? Here's a list to remi
 |Resource|Description|
 |:--|:--|
 |VPC|our virtual network, home to our resources|
-|Subnet|a subdivion of our VPC, home to our EC2 instance|
+|Subnet|a subdivision of our VPC, home to our EC2 instance|
 |Route table|a list of rules on how to route traffic to/from a subnet|
 |Internet gateway|the thing you route traffic to so that you can talk to the internet|
 |Network ACL|security at the subnet level, filters traffic in and out of a subnet|
@@ -161,7 +161,7 @@ You may have noticed that there are some resources declared in the template that
 |SubnetRouteTableAssociation| This is used to associate the subnet resource to the route table resource|
 |VPCGatewayAttachment|This is used to attach the internet gateway resource to the VPC resource|
 |Route|When we declare the route table resource we don't actually describe any routes, this resource describes the routes for that route table|
-|NetworkACLEntry|We describe a netwrok ACL resource, and this resource allocates entries to it|
+|NetworkACLEntry|We describe a network ACL resource, and this resource allocates entries to it|
 |SubnetNetworkAclAssociation|This resource lets you associate the network ACL resource with the subnet resource|
 
 Note that if you are **not** using Ireland as your location, you will need to edit the file to change the `availibilityZone` and `ImageId` values to your specific region.
@@ -181,14 +181,14 @@ check out the stack's status with:
 
 This should take a little while to complete, but when it is, you can have a look through your resources on the AWS web console and you'll see that all is in place.
 
-Now, ssh to your newly created instance once it's finished initializing:
+Now, ssh to your newly created instance once it's finished initialising:
    
     ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
 
 #### Tear down the infrastructure
 
-So you want clean down your infrastracture when you're done:
+So you want clean down your infrastructure when you're done:
 
     aws cloudformation delete-stack --stack-name template-two
     
