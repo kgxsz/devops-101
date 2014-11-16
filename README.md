@@ -3,7 +3,7 @@
 ##Introduction
 
 ##### What is Devops?
-Devops is about collaboration and integeration between development and operations. We do devops so that we can have faster and more reliable development and deployment cycles.
+Devops is about collaboration and integration between development and operations. We do devops so that we can have faster and more reliable development and deployment cycles.
 
 ##### What's it to me?
 As a graduate developer, devops will mostly be a foreign concept to you. Going into your first few projects, you may feel that you don't need to understand the devops side of the project. Perhaps you will find it daunting, or perhaps you will think that devops should be left to the "devopsy people" on the team. 
@@ -15,7 +15,7 @@ The most valuable team members are those who can swing from tweaking the source 
 ## Motivation
 The devops tasks that you'll encounter on your first few projects will most likely be related to the building and management of cloud infrastructure and CI pipelines. These tasks are not trivial, and as a graduate developer, I found it difficult to grasp many of the concepts I was encountering. 
 
-Going home and implementing a simple cloud infrastructure with a simple CI pipeline was immensely beneficial to me, and I think it will be beneficial to you. The motivation behind these workshops is to expose you to these concepts by bulding a simple system. We'll only be scratching the surface, but that will be enough to give you a head start on your first project.
+Going home and implementing a simple cloud infrastructure with a simple CI pipeline was immensely beneficial to me, and I think it will be beneficial to you. The motivation behind these workshops is to expose you to these concepts by building a simple system. We'll only be scratching the surface, but that will be enough to give you a head start on your first project.
 
 ## Structure
 devops 101 is structured as a series of workshops, working toward the goal of building your very own cloud infrastructure and CI pipeline. Each part should take no longer than an hour. 
