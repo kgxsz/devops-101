@@ -34,7 +34,7 @@ The root access credentials given to you in the previous step provide unrestrict
 Sign out and go through the link you just took note of to sign in with the IAM user name and password you just created. You should use these credentials instead of the root credentials from this point forward.
 	
 #### Create a key pair
-Before going any further, it's worth mentioning a common point of confusion with AWS' user interface. You'll see a region name in the top right, next to the help tab. Make sure that you're in Ireland or wherever else is closest to you. Whenever you create resources in a certain region, they will only be visible within that region, so make sure you create your keys in the region you intend on creating the rest of your infrastructre in.
+Before going any further, it's worth mentioning a common point of confusion with AWS' user interface. You'll see a region name in the top right, next to the help tab. Make sure that you're in Ireland or wherever else is closest to you. Whenever you create resources in a certain region, they will only be visible within that region, so make sure you create your keys in the region you intend on creating the rest of your infrastructure in.
 
 Let's move on.
 
@@ -43,7 +43,7 @@ AWS provides an easy way for generating a public private key pair. When you crea
 - go to EC2 in the services tab
 - select key pairs in the side bar
 - create a key pair, call it 'main'
-- your browser should have downloaded a file (or you may be promted to do so), this is the private key.
+- your browser should have downloaded a file (or you may be prompted to do so), this is the private key.
 - place your private key in the `~/.ssh` directory
 - set the correct permissions on the key:
 
@@ -55,14 +55,14 @@ AWS provides an easy way for generating a public private key pair. When you crea
 ## Create a virtual private cloud
 Now let's start building something. 
 
-The first thing you need is a virtual private cloud (VPC). A VPC is a virtual network dedicated to your AWS account and isolated from all other virtual networks in the AWS cloud. The things we build from here on out will belong to, or be attatched to our VPC. 
+The first thing you need is a virtual private cloud (VPC). A VPC is a virtual network dedicated to your AWS account and isolated from all other virtual networks in the AWS cloud. The things we build from here on out will belong to, or be attached to our VPC. 
 
 On some projects I've been on, we've used VPCs to separate resources/environments. A common setup is to use a VPC for CI resources, a VPC for Dev, another for QA, another for Production, and so on.
 
 Once again, ensure that your AWS region is set to Ireland. Then go to VPC in the services tab, this is where you'll be managing your VPCs. You'll notice that on the left hand pane there are several pre-existing default resources.
 There's a default VPC, a couple of subnets, a route table, internet gateway, and so on.
 
-In order to work with a clean slate, and to unclutter your understanding of what is going on, I would recommend removing the default VPC (causing all it's associated resources to also be removed). Don't panic, if you want a default VPC again later down the track, you can contact AWS support. 
+In order to work with a clean slate, and to un-clutter your understanding of what is going on, I would recommend removing the default VPC (causing all it's associated resources to also be removed). Don't panic, if you want a default VPC again later down the track, you can contact AWS support. 
 
 Have a look and ensure that there are no longer any resources lying around (except a DHCP option set).
 Now we'll be creating our VPC and associated resources:
@@ -102,10 +102,10 @@ Each subnet you create needs to be told how to route traffic originating from wi
 - go to the 'Subnet Associations' tab
 - edit it, and associate your devops-part-one subnet
 
-You now have a route table associated with your subnet. If you look at the 'Routes' tab you'll see that any traffic originating in our subnet within the range `10.0.0.0/16` will be routed locally, which means that traffic targetting our VPC will be routed back into our VPC.
+You now have a route table associated with your subnet. If you look at the 'Routes' tab you'll see that any traffic originating in our subnet within the range `10.0.0.0/16` will be routed locally, which means that traffic targeting our VPC will be routed back into our VPC.
 
 ## Create an internet gateway
-So you've got a route table routing trafic from your subnet. But it's still not getting anywhere useful. We want the subnet to be able to talk to the outside world, so let's make an internet gateway and attach it with our VPC.
+So you've got a route table routing traffic from your subnet. But it's still not getting anywhere useful. We want the subnet to be able to talk to the outside world, so let's make an internet gateway and attach it with our VPC.
 
 - go to VPC in the services tab
 - go to the 'Internet Gateway' section in the left hand pane
@@ -172,7 +172,7 @@ You're doing so well, don't give up!
 
 Your instance should now be launching. You'll probably have to wait a little bit. 
 
-## Create an Elactic IP to connect to your EC2 instance
+## Create an Elastic IP to connect to your EC2 instance
 So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
 
 **Wrong!**
@@ -213,7 +213,7 @@ That opens up your subnet, now you need to tweak your security group for the ins
 	|:--:|:--:|:--:|
 	|SSH|0.0.0.0/0|
 
-Why didn't we change the outbound rules for security groups tou ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
+Why didn't we change the outbound rules for security groups you ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
 
 
 Now try to ssh to the instance: 
