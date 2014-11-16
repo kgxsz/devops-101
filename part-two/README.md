@@ -96,7 +96,7 @@ This is pretty straight forward:
 - the third line is the meat, it opens up the resources section where we describe our *stack* of resources
 - here, we only have one resource, it's a VPC, and we've named it "devops-part-two" in the tags
 
-There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/aws-template-resource-type-ref.html) and examples available to help you describe the resources you need in a template file.
+There is really thorough [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) and examples available to help you describe the resources you need in a template file.
 
 Let's create this stack!
 
@@ -150,7 +150,7 @@ What we want now is to describe a stack of these resources in a single template 
 - open `template-two`
 - have a look around and try to identify each of the above resources in the template file, you'll notice that the resources are defined exactly as we did in the first workshop
 
-Once again, check out the [documentation](http://docs.aws.amazon.com/AWSCloudformation/latest/UserGuide/aws-template-resource-type-ref.html) for each resource if you want to know more about the resource properties, or if you are having trouble understanding the syntax.
+Once again, check out the [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) for each resource if you want to know more about the resource properties, or if you are having trouble understanding the syntax.
 
 We've kept the template as simple as possible here, there's a lot more you can do with templates, such as parameters, mappings, and conditions - see the template [documentation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) for more information.
 
