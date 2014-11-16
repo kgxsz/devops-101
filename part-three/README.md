@@ -12,7 +12,7 @@ So far, you've learnt how to provision a cloud environment with Cloudformation, 
 #### A bit about Ansible
 If you were really keen, you could use Cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
-Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and ge the job done.
+Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and get the job done.
 
 #### Disclaimer
 What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many more considerations and improvements you would need to make in the wild.
@@ -29,7 +29,7 @@ To get going, you'll need Ansible.
 I'll assume that you've done part one and two so you already have an AWS account and the CLI ready to go.
  
 ## Provision the Infrastructure
-We'll be provisioning the infrastructure with AWS Cloudformation like we did in part two. You will find a template describing our entire infratructure in `part-three/infrastructure/provisioning/`.
+We'll be provisioning the infrastructure with AWS Cloudformation like we did in part two. You will find a template describing our entire infrastructure in `part-three/infrastructure/provisioning/`.
 
 Have a look at the template, notice that it's not much different from the template in part two, but we've added an extra EC2 instance and EIP, some additions to the security group and some network ACL entries. The two EC2 instances are:
 
@@ -42,7 +42,7 @@ We've also added a new section called outputs. We're using outputs to obtain inf
 Let's get to it.
 
 - go to the `part-three/infrastructure/provisioning/` directory
-- provision the infratructure:
+- provision the infrastructure:
 
         aws cloudformation create-stack --stack-name infrastructure --template-body "file://./infrastructure-template.json"
         
@@ -62,7 +62,7 @@ Let's get to it.
     We'll use these outputs in just a second.
     
 ## Configure the EC2 Instances  
-You've provisioned your infrastructure. Now it's time to configure the EC2 instaces. By configure, what I really mean is the collection of tasks you need to carry out on your EC2 instances to have the Go Server and agent up and running. We're going to use Ansible to carry out those tasks.
+You've provisioned your infrastructure. Now it's time to configure the EC2 instances. By configure, what I really mean is the collection of tasks you need to carry out on your EC2 instances to have the Go Server and agent up and running. We're going to use Ansible to carry out those tasks.
 
 #### The inventory file
 
@@ -103,7 +103,7 @@ Idempotency in Ansible simply means that you can run a playbook over and over ag
 
 So in this particular example, we have a task that adds a line to a go agent configuration file on the CI slave instance. If the line doesn't exist, Ansible adds it, and then notifies the handler to restart the go agent at the end of the playbook. If the line exists, Ansible doesn't do anything and the handler is not notified. All this will make more sense as you start to use Ansible.
 
-Finally, recall the `ci_master_private_ip` variable we defined in the inventory file, you'll notice that we've used that variable in the second last task. We referenc ethe variable as `{{ ci_master_private_ip }}`.
+Finally, recall the `ci_master_private_ip` variable we defined in the inventory file, you'll notice that we've used that variable in the second last task. We reference the variable as `{{ ci_master_private_ip }}`.
 
 
 #### Run Ansible
