@@ -1,6 +1,6 @@
 # Part 1: Provision an EC2 instance in AWS
 
-###**Goal: deploy a cloud server and ssh to it.**
+###Goal: deploy a cloud server and ssh to it.
 
 In order to achieve this goal we'll have to touch on several concepts. Don't worry if you don't completely understand some of the points we'll cover. At this stage it's enough to have a shallow understanding of these concepts, and how they contribute to us achieving our goal.
 
@@ -8,7 +8,7 @@ What you see below is a naive representation of what we'll be building. Notice t
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-one-goal.png "part-one-goal")
 
-## Get set up AWS
+## Get set up with AWS
 
 In order to do any of this, you'll need an AWS account. So go ahead and register for an AWS account. I'd recommend using your full name for the account name. 
 
