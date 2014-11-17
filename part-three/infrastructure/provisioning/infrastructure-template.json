@@ -162,7 +162,7 @@
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
         "InstanceId" : { "Ref" : "EC2InstanceCIMaster" },
-        "Domain" : "VPC"
+        "Domain" : "vpc"
       },
       "DependsOn" : "VPCGatewayAttachment"
     },
@@ -171,7 +171,7 @@
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
         "InstanceId" : { "Ref" : "EC2InstanceCISlave" },
-        "Domain" : "VPC"
+        "Domain" : "vpc"
       },
       "DependsOn" : "VPCGatewayAttachment"
     },
