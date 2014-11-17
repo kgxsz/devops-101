@@ -44,25 +44,18 @@ If you're doing this workshop right after the last one, you may have noticed tha
 In order to use the AWS CLI with your account, it needs to know your AWS account credentials.
 
 - open `credentials.csv` and take note of the `access key id` and the `secret access key`
-- create an aws directory and create a config file in there: 
-
-        mkdir ~/.aws
-        touch ~/.aws/config
-     
-- open the file in your favourite editor and put the following in:
+- run `aws configure` and answer the prompts: 
 
 	```
-	[default]
-	output = text
-	region = eu-west-1
-	aws_access_key_id = YOUR_ACCESS_KEY_ID
-	aws_secret_access_key = YOUR_SECRET_ACCESS_KEY
-	```
+AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID
+AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY
+Default region name [None]: eu-west-1
+Default output format [None]: text
+```
+
 	Note that the region here may not be suitable for you, here we're using Ireland, but you can change it to whatever you want.
 
-
 Now, from your command line, try `aws help`, you should see a manual for using the AWS CLI.
-
 
 You're ready to create your first stack!
 
