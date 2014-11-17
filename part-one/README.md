@@ -1,6 +1,6 @@
 # Part 1: Provision an EC2 instance in AWS
 
-###Goal: deploy a cloud server and ssh to it.
+### Goal: deploy a cloud server and ssh to it.
 
 In order to achieve this goal we'll have to touch on several concepts. Don't worry if you don't completely understand some of the points we'll cover. At this stage it's enough to have a shallow understanding of these concepts, and how they contribute to us achieving our goal.
 

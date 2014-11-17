@@ -1,7 +1,8 @@
 # Part 3: Provision and Configure a CI Environment
-###**Goal: create your CI environment in the cloud using Ansible.**
 
-So far, you've learnt how to provision a cloud environment with Cloudformation, but it's all for naught if you don't configure your EC2 instances to do as you wish. So in this workshop we're going to use Ansible to configure a CI environment. Specifically, we're going to configure two EC2 instances:
+### Goal: create your CI environment in the cloud using Ansible.
+
+So far, you've learnt how to provision a cloud environment with CloudFormation, but it's all for naught if you don't configure your EC2 instances to do as you wish. So in this workshop we're going to use Ansible to configure a CI environment. Specifically, we're going to configure two EC2 instances:
 
 - A CI master running the Go server
 - A CI slave running a Go agent
@@ -10,7 +11,7 @@ So far, you've learnt how to provision a cloud environment with Cloudformation, 
 
 
 #### A bit about Ansible
-If you were really keen, you could use Cloudformation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
+If you were really keen, you could use CloudFormation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
 Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and get the job done.
 
@@ -23,13 +24,13 @@ We'll be provisioning two medium EC2 instances which cost around 9 cents an hour
 ## Get set up with Ansible
 To get going, you'll need Ansible.
 
-- get it with homebrew (`brew install ansible`)
+- get it with Homebrew (`brew install ansible`)
 - or get it [here](http://docs.ansible.com/intro_installation.html)
 
 I'll assume that you've done part one and two so you already have an AWS account and the CLI ready to go.
  
 ## Provision the Infrastructure
-We'll be provisioning the infrastructure with AWS Cloudformation like we did in part two. You will find a template describing our entire infrastructure in `part-three/infrastructure/provisioning/`.
+We'll be provisioning the infrastructure with AWS CloudFormation like we did in part two. You will find a template describing our entire infrastructure in `part-three/infrastructure/provisioning/`.
 
 Have a look at the template, notice that it's not much different from the template in part two, but we've added an extra EC2 instance and EIP, some additions to the security group and some network ACL entries. The two EC2 instances are:
 
@@ -47,11 +48,11 @@ Let's get to it.
         aws cloudformation create-stack --stack-name infrastructure --template-body "file://./infrastructure-template.json"
         
 - take a look at the AWS web console, after a little while you should see two EC2 instances being created
-- check the status on the Cloudformation task with:
+- check the status on the CloudFormation task with:
 
         aws cloudformation describe-stacks
         
-    When Cloudformation has created the infrastructure stack, we can view the outputs with the above command. You should see something like this:
+    When CloudFormation has created the infrastructure stack, we can view the outputs with the above command. You should see something like this:
 
     ```    
     OUTPUTS	CIMasterPublicIp	XX.XX.XX.XX
@@ -66,10 +67,10 @@ You've provisioned your infrastructure. Now it's time to configure the EC2 insta
 
 #### The inventory file
 
-Given that Ansible runs from your local machine and configures target instances remotely, we need to tell it where those target instances are. To this end, we use an `inventory` file to list our remote instances that we intend to configure. We won't be setting up DNS in this workshop, so we're going to need an ugly manual step to take the IP addresses we obtained from the Cloudformation outputs, and put them into the `inventory` file.
+Given that Ansible runs from your local machine and configures target instances remotely, we need to tell it where those target instances are. To this end, we use an `inventory` file to list our remote instances that we intend to configure. We won't be setting up DNS in this workshop, so we're going to need an ugly manual step to take the IP addresses we obtained from the CloudFormation outputs, and put them into the `inventory` file.
 
 - open `part-three/infrastructure/configuration/inventory` in your favourite editor
-- copy the IP addresses you got from the Cloudformation outputs like so:
+- copy the IP addresses you got from the CloudFormation outputs like so:
 
     ```
     [ci-master]

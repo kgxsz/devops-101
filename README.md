@@ -35,7 +35,8 @@ This is a beginners course. It's aimed at graduate developers. You may or may no
 We'll be provisioning AWS EC2 instances. We can take advantage of the free tier, but there will be a point where we'll be paying. It won't be much (no more than a few dozen cents) so long as you **don't forget to tear them down when you're done with the workshop**. Don't worry, I'll be pretty clear about this, but I take no responsibility if you do end up losing your monthly coffee allowance.
 
 #### Your AWS region is important
-Throughout the workshops, I've made the assumption that you're working with the eu-west-1 AWS region, which is in Ireland. There will be configuration that's dependent on this region, for example, AMI ids are region dependent. You can use a region closer to you if you wish, but I strongly recommend using the eu-west-1 for these workshops. Yes, it will be slow if you're in Australia, but if you choose to use a region other than eu-west-1 then things may not work as expected.
+Throughout the workshops, I've made the assumption that you're working with the eu-west-1 AWS region, which is in Ireland. 
+I strongly recommend using this region for these workshops because the templates and scripts are heavily dependent on your region being set to eu-west-1. If you're far away from this region, it'll mean that things will be a little slower. But in the interest of gaining knowledge and insight from these workshops, it's a small price to pay. So you've been warned, if you choose to use a region other than eu-west-1 then be ready for things to go awry.
 
 #### Practice vs theory
 These workshops will lean heavily toward practice rather than theory. We'll cover some basic theory along the way, but I would recommend further reading to gain deeper insight into the concepts we'll be covering.

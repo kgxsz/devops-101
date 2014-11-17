@@ -1,6 +1,6 @@
 # Part 4: A CI Pipeline for Automated Deployments
 
-### **Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.**
+### Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.
 
 We'll be building upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
 
@@ -12,7 +12,7 @@ We'll be building upon the last workshop to create a CI pipeline that tests, pac
 
 I will discuss each of these when they become relevant.
 
-The image below gives a rough idea of how our infrastructure will be oriented. The high level things to note here are that Cloudformation is used locally to build out the initial infrastructure, and then once again from the CI slave to build the app server. Also notice that S3 resource is created by Cloudformation, but it isn't conceptually part of our VPC.
+The image below gives a rough idea of how our infrastructure will be oriented. The high level things to note here are that CloudFormation is used locally to build out the initial infrastructure, and then once again from the CI slave to build the app server. Also notice that S3 resource is created by CloudFormation, but it isn't conceptually part of our VPC.
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-four-goal.png "part-four-goal")
 
@@ -27,11 +27,11 @@ We'll be provisioning three medium EC2 instances which cost around 9 cents an ho
 
 
 ## Set yourself up
-I'll assume that you've done the previous workshops and have Ansible and the AWS cli set up on your machine.
+I'll assume that you've done the previous workshops and have Ansible and the AWS CLI set up on your machine.
 
 You'll want a good overview of what you're doing throughout this workshop, so I would recommend opening the following AWS web console services in separate browser tabs so that you can move back and fourth easily:
 
-- Cloudformation
+- CloudFormation
 - EC2
 - S3
 - IAM
@@ -46,7 +46,7 @@ We're doing this because you're going to have to be able to push code up to gith
 
 
 ## Build your infrastructure
-We'll be going down a similar route as the last workshop. We'll use Cloudformation to create a stack of resources, and then Ansible to configure a Go server and Go agent on two separate EC2 instances. The following commands will require some time and patience, so execute them and read on while they complete.
+We'll be going down a similar route as the last workshop. We'll use CloudFormation to create a stack of resources, and then Ansible to configure a Go server and Go agent on two separate EC2 instances. The following commands will require some time and patience, so execute them and read on while they complete.
 
 Let's get to it:
 
@@ -55,11 +55,11 @@ Let's get to it:
 
         aws cloudformation create-stack --stack-name infrastructure --template-body "file://./infrastructure-template.json" --capabilities CAPABILITY_IAM
   
-- go to your Cloudformation browser tab, you should see your infrastructure stack being created, or equivalently through the AWS cli:
+- go to your CloudFormation browser tab, you should see your infrastructure stack being created, or equivalently through the AWS cli:
 
         aws cloudformation describe-stacks
   
-While Cloudformation creates your infrastructure, let's take a look at the stack template in `infrastructure-template.json`. The template is very similar to what we had in the previous workshop, but I've added a few resources:
+While CloudFormation creates your infrastructure, let's take a look at the stack template in `infrastructure-template.json`. The template is very similar to what we had in the previous workshop, but I've added a few resources:
 
 |Resource|Description|
 |:--|:--|
@@ -71,7 +71,7 @@ While Cloudformation creates your infrastructure, let's take a look at the stack
 We'll get to S3 and buckets a little later, what's most important here is the role resource, and it's supporting resources.
 
 #### Understanding IAM roles
-Remember when we installed the AWS cli? Remember how we had to create that AWS config file with some AWS credentials so that we could access our AWS account from the command line and do fun things like Cloudformation? Well, those credentials - obviously - are what let us do everything we wish to do with AWS. 
+Remember when we installed the AWS cli? Remember how we had to create that AWS config file with some AWS credentials so that we could access our AWS account from the command line and do fun things like CloudFormation? Well, those credentials - obviously - are what let us do everything we wish to do with AWS. 
 
 If you cast your mind way back, you'll recall that we've given ourselves full administration access. If you go to the IAM service tab and look at your user, you'll see that you're a part of the `Administrators` group. If you go to that group, you'll see that it has a policy called something like `AdministratorAccess-XXXXXXXXXX`. If you click `show` you'll see something like this:
 
@@ -90,7 +90,7 @@ If you cast your mind way back, you'll recall that we've given ourselves full ad
 What you're looking at is the policy that allows you to do whatever you want with AWS. Whenever you use the AWS cli, your credentials are used to pull up this policy, and then your desired AWS command is checked against what you can and cannot do.
 
 
-Now, what if we want one of our EC2 instances to be able to do things like launch a Cloudformation stack or access S3? Without it's own credentials, it won't be able to do anything. Well, we could simply create a new user and put the right credentials on the instance, right?
+Now, what if we want one of our EC2 instances to be able to do things like launch a CloudFormation stack or access S3? Without it's own credentials, it won't be able to do anything. Well, we could simply create a new user and put the right credentials on the instance, right?
 
 Wrong.
 
@@ -98,7 +98,7 @@ It's really not a good idea to be throwing credentials around like candy. What w
 
 So you can think of it a bit like this: an IAM role is to a machine what an IAM user is to a human. See [here](http://docs.aws.amazon.com/IAM/latest/UserGuide/WorkingWithRoles.html) for a more in depth discussion on IAM roles and the problems it solves.
 
-Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI slave instance. We're doing this because we want our CI slave to be able to use the AWS cli to carry out tasks that we will discuss soon enough.
+Now that you have a basic understanding of roles, look closely at the template, you'll see that by using the role, policy, and instanceProfile resources, we've given a bunch of permissions to our CI slave instance. We're doing this because we want our CI slave to be able to use the AWS CLI to carry out tasks that we will discuss soon enough.
 
 
 ## Configure your CI environment
@@ -329,7 +329,7 @@ This special task goes and grabs the artifact produced by the `package` stage's 
 We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
 
 1. **Provision an EC2 instance:**     
-   We need to provision an instance that will host the application. This instance will be known as the app server. We will achieve this by having the CI slave create the `/part-four/infrastructure/provisioning/app-server-template.json` stack with Cloudformation.
+   We need to provision an instance that will host the application. This instance will be known as the app server. We will achieve this by having the CI slave create the `/part-four/infrastructure/provisioning/app-server-template.json` stack with CloudFormation.
    
 2. **Configure the EC2 instance:**      
    Since the newly provisioned app server will be bare, it won't be of any use until we configure it the way we want it. If you recall, to configure the CI master and slave we used Ansible, we won't be doing this here, instead we'll be using Cloudinit.
@@ -381,7 +381,7 @@ Let's get started:
 You'll notice that we're using some ruby script here. This is because the deploy and retire tasks are a little more involved than a shell command that can sit directly in the job definition. While the pipeline runs, take a look at those ruby scripts, and try to figure out whats going on.
 
 1. **deploy-new-app-server.rb:**     
-   The central point to this script is to create the `app-server-template.json` with Cloudformation. If you navigate to your Cloudformation browser tab, you should see (or soon see, depending on your pipeline progress) an additional stack being created (or already created). Take a look at `app-server-template.json`, you'll see that we require `SubnetId`, `SecurityGroupId`, and `BuildNumber` as parameters, much of the script is about getting a hold of those parameters and feeding them to the Cloudformation command.
+   The central point to this script is to create the `app-server-template.json` with CloudFormation. If you navigate to your CloudFormation browser tab, you should see (or soon see, depending on your pipeline progress) an additional stack being created (or already created). Take a look at `app-server-template.json`, you'll see that we require `SubnetId`, `SecurityGroupId`, and `BuildNumber` as parameters, much of the script is about getting a hold of those parameters and feeding them to the CloudFormation command.
    
 2. **retire-old-app-server.rb:**      
    This script is a little more straight forward, we try to find any app server stacks other than the one we just built, and we delete it.
@@ -412,7 +412,7 @@ You can clean up in a few simple steps:
 
 - go to your S3 browser tab and go to the `devops-part-four` bucket 
 - delete everything in the bucket
-- go to your Cloudformation browser tab
+- go to your CloudFormation browser tab
 - delete the `app-server-build-x` stack first
 - then delete the `infrastructure` stack
 - when both stacks are gone, open the EC2 browser tab to verify that all EC2 instances are no longer running
