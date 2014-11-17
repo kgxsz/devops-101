@@ -175,15 +175,19 @@
     "EIPCIMaster" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
-        "InstanceId" : { "Ref" : "EC2InstanceCIMaster" }
-      }
+        "InstanceId" : { "Ref" : "EC2InstanceCIMaster" },
+        "Domain" : "VPC"
+      },
+      "DependsOn" : "VPCGatewayAttachment"
     },
 
     "EIPCISlave" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
-        "InstanceId" : { "Ref" : "EC2InstanceCISlave" }
-      }
+        "InstanceId" : { "Ref" : "EC2InstanceCISlave" },
+        "Domain" : "VPC"
+      },
+      "DependsOn" : "VPCGatewayAttachment"
     },
 
     "EC2InstanceCIMaster" : {
