@@ -102,7 +102,7 @@ Let's create this stack!
         aws cloudformation describe-stacks 
   you should see something like `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
 - go to the AWS web console and look at CloudFormation in the services tab, you should see the template-one stack
-- wait for the stack to complete (refresh the page to update it's status)
+- wait for the stack to complete (refresh the page to update its status)
 - go to VPC in the services tab
 - you should now see the 'devops-part-two' VPC
 
@@ -110,8 +110,8 @@ Congratulations! You've just created your first stack with CloudFormation!
 
 Now let's tear that stack down: 
         
-    `aws cloudformation delete-stack --stack-name stack-one`
-Again, you can check the stack status to see how the delete is going, or you can check on the web console.
+    aws cloudformation delete-stack --stack-name stack-one
+Again, you can check the stack status to see how the deletion is going, or you can check on the web console.
 
 Once it's deleted, that VPC should no longer exist, the CloudFormation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
 
