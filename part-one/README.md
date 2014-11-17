@@ -36,7 +36,7 @@ The root access credentials given to you in the previous step provide unrestrict
 Sign out and go through the link you just took note of to sign in with the IAM user name and password you just created. You should use these credentials instead of the root credentials from this point forward.
 	
 #### Create a key pair
-Before going any further, it's worth mentioning a common point of confusion with AWS' user interface. You'll see a region name in the top right, next to the help tab. Make sure that you're in Ireland or wherever else is closest to you. Whenever you create resources in a certain region, they will only be visible within that region, so make sure you create your keys in the region you intend on creating the rest of your infrastructure in.
+Before going any further, it's worth mentioning a common point of confusion with AWS' user interface. You'll see a region name in the top right, next to the help tab. Make sure that you're in Ireland (see "Your AWS region is important" section in the main [readme](https://github.com/kgxsz/devops-101) if you would like to use another region). Whenever you create resources in a certain region, they will only be visible within that region, so make sure you create your keys in the region you intend on creating the rest of your infrastructure in.
 
 Let's move on.
 
@@ -61,7 +61,7 @@ The first thing you need is a virtual private cloud (VPC). A VPC is a virtual ne
 
 On some projects I've been on, we've used VPCs to separate resources/environments. A common setup is to use a VPC for CI resources, a VPC for Dev, another for QA, another for Production, and so on.
 
-Once again, ensure that your AWS region is set to Ireland or wherever is closest to you. Then go to VPC in the services tab, this is where you'll be managing your VPCs. You'll notice that on the left hand pane there are several pre-existing default resources.
+Once again, ensure that your AWS region is set to Ireland. Then go to VPC in the services tab, this is where you'll be managing your VPCs. You'll notice that on the left hand pane there are several pre-existing default resources.
 There's a default VPC, a couple of subnets, a route table, internet gateway, and so on.
 
 In order to work with a clean slate, and to un-clutter your understanding of what is going on, I would recommend removing the default VPC (causing all it's associated resources to also be removed). Don't panic, if you want a default VPC again later down the track, you can contact AWS support. 
