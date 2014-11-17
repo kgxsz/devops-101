@@ -17,12 +17,12 @@ CloudFormation is an AWS tool that lets us describe a set of resources in a file
 
 ## Get set up with the AWS command line interface
 
-We're going to be doing this workshop through the command line rather than through the AWS web console. So you're going to need the AWS cli.
+We're going to be doing this workshop through the command line rather than through the AWS web console. So you're going to need the AWS CLI.
 
-- get it with homebrew (`brew install awscli`)
+- get it with Homebrew (`brew install awscli`)
 - or get it [here](https://aws.amazon.com/cli/)
 
-If you're doing this workshop right after the last one, you may have noticed that a file was downloaded by your browser when you created an IAM user. The file is called something like `credentials.csv`. It might still be in your downloads directory. If it is, great! You can skip to the 'configure your AWS cli' section. If not, no biggie - we'll create it now.
+If you're doing this workshop right after the last one, you may have noticed that a file was downloaded by your browser when you created an IAM user. The file is called something like `credentials.csv`. It might still be in your downloads directory. If it is, great! You can skip to the 'configure your AWS CLI' section. If not, no biggie - we'll create it now.
 
 #### Create access keys
 - go to your AWS console using the IAM username and password you created in the previous workshop. Recall that your sign-in page url is of the form `https://YOUR_ACCOUNT_NAME.signin.aws.amazon.com/console/`
@@ -40,8 +40,8 @@ If you're doing this workshop right after the last one, you may have noticed tha
 - download credentials
 - you should now have a file called `credentials.csv` in your downloads directory
 
-#### Configure your AWS cli
-In order to use the AWS cli with your account, it needs to know your AWS account credentials.
+#### Configure your AWS CLI
+In order to use the AWS CLI with your account, it needs to know your AWS account credentials.
 
 - open `credentials.csv` and take note of the `access key id` and the `secret access key`
 - create an aws directory and create a config file in there: 
@@ -61,13 +61,13 @@ In order to use the AWS cli with your account, it needs to know your AWS account
 	Note that the region here may not be suitable for you, here we're using Ireland, but you can change it to whatever you want.
 
 
-Now, from your command line, try `aws help`, you should see a manual for using the aws cli.
+Now, from your command line, try `aws help`, you should see a manual for using the AWS CLI.
 
 
 You're ready to create your first stack!
 
 ## Create your first stack
-We're going to be using the CloudFormation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use CloudFormation.
+We're going to be using the CloudFormation module within the AWS CLI to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use CloudFormation.
 
 In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the CloudFormation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
 
