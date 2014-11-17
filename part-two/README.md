@@ -53,8 +53,6 @@ Default region name [None]: eu-west-1
 Default output format [None]: text
 ```
 
-	Note that the region here may not be suitable for you, here we're using Ireland, but you can change it to whatever you want.
-
 Now, from your command line, try `aws help`, you should see a manual for using the AWS CLI.
 
 You're ready to create your first stack!

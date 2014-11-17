@@ -175,7 +175,7 @@
     "EC2InstanceCIMaster" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "ImageId" : "ami-25865252",
+        "ImageId" : "ami-20bd1f57",
         "InstanceType" : "m1.medium",
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "Subnet" },
@@ -187,7 +187,7 @@
     "EC2InstanceCISlave" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        "ImageId" : "ami-25865252",
+        "ImageId" : "ami-20bd1f57",
         "InstanceType" : "m1.medium",
         "KeyName" : "main",
         "SubnetId" : { "Ref" : "Subnet" },
