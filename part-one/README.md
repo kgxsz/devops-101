@@ -1,6 +1,6 @@
 # Part 1: Provision an EC2 instance in AWS
 
-###**Goal: deploy a cloud server and ssh to it.**
+###Goal: deploy a cloud server and ssh to it.
 
 In order to achieve this goal we'll have to touch on several concepts. Don't worry if you don't completely understand some of the points we'll cover. At this stage it's enough to have a shallow understanding of these concepts, and how they contribute to us achieving our goal.
 
@@ -8,7 +8,7 @@ What you see below is a naive representation of what we'll be building. Notice t
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-one-goal.png "part-one-goal")
 
-## Get set up AWS
+## Get set up with AWS
 
 In order to do any of this, you'll need an AWS account. So go ahead and register for an AWS account. I'd recommend using your full name for the account name. 
 
@@ -27,6 +27,7 @@ The root access credentials given to you in the previous step provide unrestrict
 #### Create a user
 - create a user
 - give it your first name (to distinguish it from your root account name)
+- leave 'Generate an access key for each user' ticked
 - download the access key and secret key, you'll use this later for CLI stuff
 - in the user's control panel, set a password and download it
 - add the user to the administrators group
@@ -60,7 +61,7 @@ The first thing you need is a virtual private cloud (VPC). A VPC is a virtual ne
 
 On some projects I've been on, we've used VPCs to separate resources/environments. A common setup is to use a VPC for CI resources, a VPC for Dev, another for QA, another for Production, and so on.
 
-Once again, ensure that your AWS region is set to Ireland. Then go to VPC in the services tab, this is where you'll be managing your VPCs. You'll notice that on the left hand pane there are several pre-existing default resources.
+Once again, ensure that your AWS region is set to Ireland or wherever is closest to you. Then go to VPC in the services tab, this is where you'll be managing your VPCs. You'll notice that on the left hand pane there are several pre-existing default resources.
 There's a default VPC, a couple of subnets, a route table, internet gateway, and so on.
 
 In order to work with a clean slate, and to un-clutter your understanding of what is going on, I would recommend removing the default VPC (causing all it's associated resources to also be removed). Don't panic, if you want a default VPC again later down the track, you can contact AWS support. 
@@ -72,11 +73,11 @@ Now we'll be creating our VPC and associated resources:
 - go to the 'your VPCs' section in the left hand pane
 - create VPC
 - name your VPC devops-part-one
-- give it a cidr block of `10.0.0.0/16`
+- give it a CIDR block of `10.0.0.0/16`
 
 Now you'll see that your new VPC was created, along with a default route table, network ACL, and security group. In the interest of learning, we won't be using those default resources, we'll be creating our own.
 
-It's worth understanding a little about what the cidr block is doing. The cidr block defines a set of IP addresses for the VPC. The 16 means that the first 16 bits of the address space are fixed and the last 16 are varying. So the addresses from `10.0.0.0` to `10.0.255.255` refer to our VPC. See [this](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
+It's worth understanding a little about what the CIDR block is doing. The CIDR block defines a set of IP addresses for the VPC. The 16 means that the first 16 bits of the address space are fixed and the last 16 are varying. So the addresses from `10.0.0.0` to `10.0.255.255` refer to our VPC. See [this](http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)
 article to get a deeper understanding.
 
 ## Create a public subnet
@@ -97,9 +98,9 @@ Each subnet you create needs to be told how to route traffic originating from wi
 
 - go to VPC in the services tab
 - go to the 'Route Tables' section in the left hand pane
-- create Route Table
+- create a route table
 - name it devops-part-one
-- click on your newly created route table, and you'll see an information section below
+- click on your newly created route table, and you'll see an information section appear below
 - go to the 'Subnet Associations' tab
 - edit it, and associate your devops-part-one subnet
 
@@ -110,7 +111,7 @@ So you've got a route table routing traffic from your subnet. But it's still not
 
 - go to VPC in the services tab
 - go to the 'Internet Gateway' section in the left hand pane
-- create Internet Gateway
+- create an internet gateway
 - name it devops-part-one
 - now attach it to your VPC
 
@@ -129,7 +130,7 @@ Network Access control lists (network ACLs) are a layer of security that act as 
 
 - go to VPC in the services tab
 - go to the 'Network ACL' section in the left hand pane
-- create Network ACL
+- create a network ACL
 - name it devops-part-one
 - click on your newly created ACL, and you'll see an information section below
 - go to the 'Subnet Associations' tab
@@ -142,8 +143,8 @@ Whilst Network ACLs act as the border guards for an entire subnet, you can think
 
 - go to VPC in the services tab
 - go to the 'Security Group' section in the left hand pane
-- create Security Group
-- make the name-tag, group-name, and description devops-part-one
+- create a security group
+- make the name tag, group name, and description devops-part-one
 - click on your newly created Security Group, and you'll see an information section below
 - go to the 'Outbound Rules' tab
 - remove the default all outbound rule
@@ -155,12 +156,11 @@ A note on security: network ACLs and security groups only make up two layers of 
 ## Provision an EC2 instance
 Alright, so we're now at a point where we've set up our environment and are ready to launch an EC2 instance.
 
-
 You're doing so well, don't give up!
 
 - go to EC2 in the services tab
 - go to the 'Instances' section in the left hand pane
-- launch instance
+- launch an instance
 - go to 'AWS Market Place' in the left hand pane
 - search for 'Ubuntu Server 12.04 LTS' and select it
 - select micro instance
@@ -174,7 +174,7 @@ You're doing so well, don't give up!
 Your instance should now be launching. You'll probably have to wait a little bit. 
 
 ## Create an Elastic IP to connect to your EC2 instance
-So now let's try to ssh to our instance. We have the private key so we should be able to ssh to it right? 
+So now let's try to SSH to our instance. We have the private key so we should be able to SSH to it right? 
 
 **Wrong!**
 
@@ -191,14 +191,14 @@ Now you can talk to your instance from the outside world. You could now try to s
 - go to VPC in the services tab
 - go to the 'Network ACL' section in the left hand pane
 - go to the 'inbound rules' tab
-- add a rule to let ssh traffic into your subnet
+- add a rule to let SSH traffic into your subnet
 
 	|rule|type|source|
 	|:--:|:--:|:--:|
-	|100|ssh|0.0.0.0/0|
+	|100|SSH|0.0.0.0/0|
 
 - go to the 'outbound rules' tab
-- add rule to let traffic out of your subnet to respond to the ssh traffic
+- add rule to let traffic out of your subnet to respond to the SSH traffic
 
 	|rule|type|port range|source|
 	|:--:|:--:|:--:|:--:|
@@ -216,13 +216,11 @@ That opens up your subnet, now you need to tweak your security group for the ins
 
 Why didn't we change the outbound rules for security groups you ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
 
-
 Now try to ssh to the instance: 
 
     ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
 You're in. Take a moment to bask in the glory of what you've just achieved.
-
 
 ## Clean up
 It's always good to clean up. Infrastructure quickly becomes messy.
@@ -233,7 +231,3 @@ Also, to prepare for part two, you need to clean up after yourself. Delete the f
 - delete the VPC
 
 That's it. 
-
-
-
-
