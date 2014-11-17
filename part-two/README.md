@@ -1,17 +1,17 @@
 # Part 2: Your Infrastructure as Code
 
-###**Goal: build your cloud infrastructure at the press of a button.**
+### Goal: build your cloud infrastructure at the press of a button.
 
-This workshop is going to be pretty straight forward. We're going to rebuild the environment you built in part one. But this time, we're going to avoid fiddling about with the AWS web console, and instead, do it using the AWS Cloudformation tool.
+This workshop is going to be pretty straight forward. We're going to rebuild the environment you built in part one. But this time, we're going to avoid fiddling about with the AWS web console, and instead, do it using the AWS CloudFormation tool.
 
-Before we dive in, let's talk about what Cloudformation is, and why you would want to use such a tool.
+Before we dive in, let's talk about what CloudFormation is, and why you would want to use such a tool.
 
-#### Cloudformation and infrastructure as code
+#### CloudFormation and infrastructure as code
 
 Cast your mind back to the first workshop. We did a lot of clicking around to get our environment to the state that we wanted. Imagine having to do that all the time, or trying to recall every step needed to get to that final state. 
 It's not ideal, what we really want is to be able to describe the infrastructure we want as code - which is what we mean by 'infrastructure as code'. 
 
-Cloudformation is an AWS tool that lets us describe a set of resources in a file called a template. Those resources make up our infrastructure. When we feed a template file to Cloudformation, it goes away and builds out the "stack" of resources that you described in that template. That template is simply a file, so it can be kept in source control, so that we can rebuild our infrastructure from scratch if needed.
+CloudFormation is an AWS tool that lets us describe a set of resources in a file called a template. Those resources make up our infrastructure. When we feed a template file to CloudFormation, it goes away and builds out the "stack" of resources that you described in that template. That template is simply a file, so it can be kept in source control, so that we can rebuild our infrastructure from scratch if needed.
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-two-goal.png "part-two-goal")
 
@@ -67,9 +67,9 @@ Now, from your command line, try `aws help`, you should see a manual for using t
 You're ready to create your first stack!
 
 ## Create your first stack
-We're going to be using the Cloudformation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use Cloudformation.
+We're going to be using the CloudFormation module within the AWS cli to create a stack. Try `aws cloudformation help` at any point if you want to know more about how to use CloudFormation.
 
-In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the Cloudformation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
+In order to create a stack, we'll need to create a **template** to describe a set of resources, or a *stack* of resources. We'll feed that template file to the CloudFormation module and it will go and create that stack of resources remotely in your AWS account. Let's start with something simple.
 
 Now, if you haven't already done so, pull down this repository and open `part-two/templates/template-one.json`. You should see the following:
 
@@ -108,19 +108,19 @@ Let's create this stack!
 
         aws cloudformation describe-stacks 
   you should see something like `CREATE_IN_PROGRESS` or `CREATE_COMPLETE`
-- go to the AWS web console and look at Cloudformation in the services tab, you should see the template-one stack
+- go to the AWS web console and look at CloudFormation in the services tab, you should see the template-one stack
 - wait for the stack to complete (refresh the page to update it's status)
 - go to VPC in the services tab
 - you should now see the 'devops-part-two' VPC
 
-Congratulations! You've just created your first stack with Cloudformation!
+Congratulations! You've just created your first stack with CloudFormation!
 
 Now let's tear that stack down: 
         
     `aws cloudformation delete-stack --stack-name stack-one`
 Again, you can check the stack status to see how the delete is going, or you can check on the web console.
 
-Once it's deleted, that VPC should no longer exist, the Cloudformation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
+Once it's deleted, that VPC should no longer exist, the CloudFormation section on the web console should be empty, and the describe stacks command should yield absolutely nothing.
 
 
 How easy was that?
@@ -168,7 +168,7 @@ Note that if you are **not** using Ireland as your location, you will need to ed
 
 #### Build the infrastructure
 
-Now let's feed this template to Cloudformation and watch it build our infrastructure!
+Now let's feed this template to CloudFormation and watch it build our infrastructure!
 
 From the `part-two/templates` directory:
 
