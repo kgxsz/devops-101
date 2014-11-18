@@ -125,7 +125,7 @@
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
         "InstanceId" : { "Ref" : "EC2Instance" },
-        "Domain" : "VPC"
+        "Domain" : "vpc"
       },
       "DependsOn" : "VPCGatewayAttachment"
     },
