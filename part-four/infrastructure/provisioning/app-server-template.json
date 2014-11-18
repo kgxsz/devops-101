@@ -15,9 +15,7 @@
       "Properties" : {
         "InstanceId" : { "Ref" : "EC2InstanceAppServer" },
         "Domain" : "vpc"
-      },
-      "DependsOn" : "VPCGatewayAttachment"
-
+      }
     },
 
     "EC2InstanceAppServer" : {
