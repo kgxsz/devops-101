@@ -13,7 +13,8 @@
     "EIPAppServer" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
-        "InstanceId" : { "Ref" : "EC2InstanceAppServer" }
+        "InstanceId" : { "Ref" : "EC2InstanceAppServer" },
+        "Domain" : "vpc"
       }
     },
 
