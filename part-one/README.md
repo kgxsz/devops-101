@@ -1,10 +1,10 @@
 # Part 1: Provision an EC2 instance in AWS
 
-### Goal: deploy a cloud server and ssh to it.
+### Goal: deploy a cloud server and SSH to it.
 
 In order to achieve this goal we'll have to touch on several concepts. Don't worry if you don't completely understand some of the points we'll cover. At this stage it's enough to have a shallow understanding of these concepts, and how they contribute to us achieving our goal.
 
-What you see below is a naive representation of what we'll be building. Notice that the three main components are the Virtual Private Cloud, the subnet, and the EC2 instance. We'll be wiring things up so as to have an EC2 instance sitting in a subnet, sitting in a VPC. We'll be routing things such that we can ssh to our EC2 instance. We'll also be touching on some security concepts.
+What you see below is a naive representation of what we'll be building. Notice that the three main components are the Virtual Private Cloud, the subnet, and the EC2 instance. We'll be wiring things up so as to have an EC2 instance sitting in a subnet, sitting in a VPC. We'll be routing things such that we can SSH to our EC2 instance. We'll also be touching on some security concepts.
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-one-goal.png "part-one-goal")
 
@@ -40,7 +40,7 @@ Before going any further, it's worth mentioning a common point of confusion with
 
 Let's move on.
 
-AWS provides an easy way for generating a public private key pair. When you create them, AWS holds the public key for future use and gives you the private counterpart. we'll be using these keys to ssh into our EC2 instance later.
+AWS provides an easy way for generating a public private key pair. When you create them, AWS holds the public key for future use and gives you the private counterpart. we'll be using these keys to SSH into our EC2 instance later.
 		
 - go to EC2 in the services tab
 - select key pairs in the side bar
@@ -186,7 +186,7 @@ When you launch your EC2 instance you'll notice that it only has a private IP ad
 - associate address to your new instance
 
 ## Allow SSH connections to your EC2 instance
-Now you can talk to your instance from the outside world. You could now try to ssh to your instance, but it still wouldn't work, because we've completely locked down traffic to and from the instance. A completely locked down instance isn't much use, let's open up what we need:
+Now you can talk to your instance from the outside world. You could now try to SSH to your instance, but it still wouldn't work, because we've completely locked down traffic to and from the instance. A completely locked down instance isn't much use, let's open up what we need:
 
 - go to VPC in the services tab
 - go to the 'Network ACL' section in the left hand pane
@@ -208,7 +208,7 @@ That opens up your subnet, now you need to tweak your security group for the ins
 
 - go to the 'Security Group' section in the left hand pane
 - go to the 'inbound rules' tab
-- add a rule to allow ssh traffic into the instance
+- add a rule to allow SSH traffic into the instance
 
 	|type|source|
 	|:--:|:--:|:--:|
@@ -216,7 +216,7 @@ That opens up your subnet, now you need to tweak your security group for the ins
 
 Why didn't we change the outbound rules for security groups you ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
 
-Now try to ssh to the instance: 
+Now try to SSH to the instance: 
 
     ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
