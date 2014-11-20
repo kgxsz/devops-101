@@ -172,7 +172,7 @@ check out the stack's status with:
 
 This should take a little while to complete, but when it is, you can have a look through your resources on the AWS web console and you'll see that all is in place.
 
-Now, ssh to your newly created instance once it's finished initialising:
+Now, SSH to your newly created instance once it's finished initialising:
    
     ssh ubuntu@YOUR_ELASTIC_IP_ADDRESS -i ~/.ssh/main.pem
 
