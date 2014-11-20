@@ -13,7 +13,7 @@ So far, you've learnt how to provision a cloud environment with CloudFormation, 
 #### A bit about Ansible
 If you were really keen, you could use CloudFormation to provision a couple of EC2 instances, connect to each one and painstakingly configure the instance by hand. But that's not ideal, what we need is a tool that configures our instances for us in a repeatable way, at the press of a button. 
 
-Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will ssh to it and get the job done.
+Enter Ansible. Ansible is a configuration tool that you run locally, you tell it which remote host to configure, and Ansible will SSH to it and get the job done.
 
 #### Disclaimer
 What we're about to build is *very* simple, with the intention being that this is a starting point for gaining a deeper understanding of these concepts and tools. Only use a set up like this for a toy project. There are many more considerations and improvements you would need to make in the wild.
@@ -113,7 +113,7 @@ Now that we have a basic understanding of the inventory and playbook, let's use 
 - in the `part-three/infrastructure/configuration/` directory:
 
         ansible-playbook playbook.yml -u ubuntu -i inventory --private-key="~/.ssh/main.pem"
-  Here, we're telling ansible which playbook and inventory file to use, as well as what user and private key to use for ssh. You will be prompted, say yes to both, and then watch as Ansible configures your instances
+  Here, we're telling ansible which playbook and inventory file to use, as well as what user and private key to use for SSH. You will be prompted, say yes to both, and then watch as Ansible configures your instances
   
 That's it. Once Ansible has finished, try running it again, you'll notice that it's a lot faster and the tasks are reporting as `ok` or `skipping`, that's idempotency in action.
 
@@ -121,7 +121,7 @@ That's it. Once Ansible has finished, try running it again, you'll notice that i
 For this workshop it's sufficient to have a single playbook and an inventory file with a variable defined within it. For real world projects, however, you will need to separate tasks out into 'roles', and variables should live in their own files, not in the inventory file.
   
 ## Connect to the Go Server   
-Your Go server and agent should now be up and running. The Go server is listening on port 8153 of the CI master instance, but you won't be able to access it since we've blocked all incoming traffic from the outside world other than ssh. So we're going to use ssh port forwarding, which simply forwards a given address and port to us when we have an ssh connection open.
+Your Go server and agent should now be up and running. The Go server is listening on port 8153 of the CI master instance, but you won't be able to access it since we've blocked all incoming traffic from the outside world other than SSH. So we're going to use SSH port forwarding, which simply forwards a given address and port to us when we have an SSH connection open.
 
 - connect to the CI master and set up port forwarding with: 
         
@@ -130,7 +130,7 @@ Your Go server and agent should now be up and running. The Go server is listenin
     Here, we've forwarded `localhost:8153`, which is the host and port of the Go server as seen from the CI master instance's perspective, to our local port 8153.
     
 - open `http://localhost:8153/` in your browser to access the Go server web console
-- go to the agents tab and you should be able to see that the go agent has connected, if it hasn't, you may need to ssh to the CI slave instance and restart the go-server manually: 
+- go to the agents tab and you should be able to see that the go agent has connected, if it hasn't, you may need to SSH to the CI slave instance and restart the go-server manually: 
 
         ssh ubuntu@YOUR_CI_SLAVE_PUBLIC_IP -i ~/.ssh/main.pem
         sudo service go-agent start
