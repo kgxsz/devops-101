@@ -87,6 +87,7 @@ If you cast your mind way back, you'll recall that we've given ourselves full ad
   ]
 }
 ```
+
 What you're looking at is the policy that allows you to do whatever you want with AWS. Whenever you use the AWS CLI, your credentials are used to pull up this policy, and then your desired AWS command is checked against what you can and cannot do.
 
 
@@ -169,7 +170,7 @@ We're now ready to create the first stage. Fill in the fields as follows:
 |Arguments| `test`|
 |Working Directory| part-four/application|
 
-Now press `Finish` and you'll see the beginnings of you pipeline. But we're not quite done. On the left you'll see a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` label, this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
+Now press `Finish` and you'll see the beginnings of your pipeline. But we're not quite done. On the left you'll see a pipeline structure with `test` as a sub label under `dummyApplication`, click on the `test` label, this should bring up the `Stage Settings` panel. Select `Clean Working Directory` and press `Save`.
 
 Let's explore how Go organises the structure of a pipeline:
 
@@ -282,7 +283,7 @@ So let's do it:
 - don't forget to `Save`
 - now go to the `PIPELINES` tab and run the pipeline
 
-When the pipeline has completed successfully, the two jars that were produced on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your SSH connection to the Go server will still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/`. In this directory you should see the corresponding numbers of pipeline runs, if you dig down into that directory you should find the `packages` directory which houses the two jars you just produced and renamed.
+When the pipeline has completed successfully, the two jars that were produced on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your SSH connection to the Go server will still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/`. In this directory you should see the corresponding numbers of pipeline runs, if you dig down into the most recent run's directory you should find the `package/1/package/packages` directory which houses the two jars you just produced and renamed (the directories here correspond to the stage name, stage run number, job name and then our directory name respectively).
  
 #### Create the publish stage
 You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's the publish stage. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need them. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
@@ -346,7 +347,7 @@ We're finally in a position to deploy our application. But first, Let's think ab
 
 The first thing that may strike you as odd is that we're redeploying an entire EC2 instance just for a single little jar. Yes, it's true, it's a pretty big undertaking. But what I'm trying to demonstrate here is the [phoenix server philosophy](http://martinfowler.com/bliki/PhoenixServer.html). In the wild, it's a good idea to avoid configuration drift by blasting away the entire app server when we want to deploy a new application.
 
-The second thing worth mentioning is cloud-init. cloud-init is a tool that helps us run early initialisations on cloud instances. In our case, we'll specify a simple shell script that will sit on the app server, and cloud-init will run the script during the server's initialisation.
+The second thing worth mentioning is cloud-init. cloud-init is a tool that helps us run early initialisation steps on cloud instances. In our case, we'll specify a simple shell script that will sit on the app server, and cloud-init will run the script during the server's initialisation.
 
 Let's get started:
 
@@ -390,7 +391,7 @@ You'll notice that we're using some ruby script here. This is because the deploy
 To understand how we configure our web server and launch the application, we need to open `/part-four/infrastructure/provisioning/app-server-template.json`. Find the `EC2InstanceAppServer` resource, and within it, you should see the `UserData` property. The shell script does the following:
 
 - updates and upgrades apt
-- installs java
+- installs Java
 - installs pip and then the AWS CLI
 - creates a user called `devops-user` and gives it a home directory
 - uses the AWS CLI's S3 tool to copy the latest standalone uberjar from S3 to the newly created home directory
