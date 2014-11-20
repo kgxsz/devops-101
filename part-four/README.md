@@ -1,12 +1,12 @@
 # Part 4: A CI Pipeline for Automated Deployments
 
-### Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.
+## Goal: build a CI pipeline to deploy a dummy application in an automated, reliable, and repeatable manner.
 
 We'll be building upon the last workshop to create a CI pipeline that tests, packages, publishes, and deploys a dummy application every time you commit to the application's repository. To this end, we'll be touching on some new concepts and tools:
 
 - IAM Roles
 - S3
-- Cloudinit
+- cloud-init
 - The Phoenix Server philosophy
 - Go CD pipelines
 
@@ -16,13 +16,13 @@ The image below gives a rough idea of how our infrastructure will be oriented. T
 
 ![alt text](https://github.com/kgxsz/DevOps-101/blob/master/images/part-four-goal.png "part-four-goal")
 
-#### Disclaimer
+### Disclaimer
 In the interest of building an end to end deployment pipeline in a single workshop, we're going to have to take some pretty serious shortcuts. What you will have built by the end of this workshop will _never_ suffice in the wild. However, it will be enough for you to grasp the essence of CI pipelining and automated deployments.
 
-#### Troubleshooting
+### Troubleshooting
 This workshop will be quite involved and it's likely you'll make some mistakes along the way. We'll be verifying our progress incrementally, but if you find yourself in a situation where something is wrong, try to back up a little, try to look at the console logs, and above all, make sure you haven't made typos.
 
-#### Tear down your infrastructure when you're done
+### Tear down your infrastructure when you're done
 We'll be provisioning three medium EC2 instances which cost around 9 cents an hour each. So don't forget to tear down your infrastructure when you're done.
 
 
@@ -55,7 +55,7 @@ Let's get to it:
 
         aws cloudformation create-stack --stack-name infrastructure --template-body "file://./infrastructure-template.json" --capabilities CAPABILITY_IAM
   
-- go to your CloudFormation browser tab, you should see your infrastructure stack being created, or equivalently through the AWS cli:
+- go to your CloudFormation browser tab, you should see your infrastructure stack being created, or equivalently through the AWS CLI:
 
         aws cloudformation describe-stacks
   
@@ -70,8 +70,8 @@ While CloudFormation creates your infrastructure, let's take a look at the stack
 
 We'll get to S3 and buckets a little later, what's most important here is the role resource, and it's supporting resources.
 
-#### Understanding IAM roles
-Remember when we installed the AWS cli? Remember how we had to create that AWS config file with some AWS credentials so that we could access our AWS account from the command line and do fun things like CloudFormation? Well, those credentials - obviously - are what let us do everything we wish to do with AWS. 
+### Understanding IAM roles
+Remember when we installed the AWS CLI? Remember how we had to create that AWS config file with some AWS credentials so that we could access our AWS account from the command line and do fun things like CloudFormation? Well, those credentials - obviously - are what let us do everything we wish to do with AWS. 
 
 If you cast your mind way back, you'll recall that we've given ourselves full administration access. If you go to the IAM service tab and look at your user, you'll see that you're a part of the `Administrators` group. If you go to that group, you'll see that it has a policy called something like `AdministratorAccess-XXXXXXXXXX`. If you click `show` you'll see something like this:
 
@@ -87,7 +87,7 @@ If you cast your mind way back, you'll recall that we've given ourselves full ad
   ]
 }
 ```
-What you're looking at is the policy that allows you to do whatever you want with AWS. Whenever you use the AWS cli, your credentials are used to pull up this policy, and then your desired AWS command is checked against what you can and cannot do.
+What you're looking at is the policy that allows you to do whatever you want with AWS. Whenever you use the AWS CLI, your credentials are used to pull up this policy, and then your desired AWS command is checked against what you can and cannot do.
 
 
 Now, what if we want one of our EC2 instances to be able to do things like launch a CloudFormation stack or access S3? Without it's own credentials, it won't be able to do anything. Well, we could simply create a new user and put the right credentials on the instance, right?
@@ -124,9 +124,9 @@ By now, your infrastructure stack should be built. Like we did in the last works
     ansible-playbook playbook.yml -u ubuntu -i inventory --private-key="~/.ssh/main.pem"
     ```
     
-This will take a little while. In the meantime, it's worth looking over `playbook.yml` to refresh your memory on what we're doing to get CI up and running. Not much has changed since the last workshop, with the exception of a few extra packages being installed on the CI slave, like Leiningen, Ruby, and the AWS cli.
+This will take a little while. In the meantime, it's worth looking over `playbook.yml` to refresh your memory on what we're doing to get CI up and running. Not much has changed since the last workshop, with the exception of a few extra packages being installed on the CI slave, like Leiningen, Ruby, and the AWS CLI.
 
-When Ansible has completed, ssh to it with port forwarding such that we can access the Go web console:
+When Ansible has completed, SSH to it with port forwarding such that we can access the Go web console:
 
 ```
 ssh -L 8153:localhost:8153 ubuntu@YOUR_CI_MASTER_PUBLIC_IP -i ~/.ssh/main.pem
@@ -147,7 +147,7 @@ Now we're ready to get to the meat of this workshop. We're going to build this p
 |Deploy| We'll be creating a new app server and deploying the application to it every time we run the pipeline|
 
 
-#### Pull down the repository
+### Pull down the repository
 There are a few steps involved in pulling the repository onto the CI slave:
 
 - firstly, on the Go web console, go to the `PIPELINES` tab, you will be prompted to add a pipeline
@@ -157,7 +157,7 @@ There are a few steps involved in pulling the repository onto the CI slave:
 - now, back on the Go web console, put that URL into the relevant field
 - `Check Connection` and then select `next`
 
-#### Create the test stage
+### Create the test stage
 We're now ready to create the first stage. Fill in the fields as follows:
 
 |Field| Value|
@@ -180,9 +180,9 @@ Let's explore how Go organises the structure of a pipeline:
 |Jobs| Jobs within a stage execute in *parallel*, so be careful with these, each job can have one or more tasks|
 |Tasks| Tasks within a job execute sequentially, these are the bottom level guys|
 
-Play around with Go and try to perceive this pipeline structure. when you're ready, lets run the pipeline for the first time.
+Play around with Go and try to perceive this pipeline structure. When you're ready, let's run the pipeline for the first time.
 
-#### Run the thing
+### Run the thing
 Before you can run the pipeline, you'll need to make sure that the agent is enabled:
 
 - go to the `AGENTS` tab, you should see the `ci-slave` agent
@@ -207,7 +207,7 @@ So what just happened?
 
 As a side note, the `test` job uses Leiningen, which is a project management tool for Clojure (which is what our dummy application is written in). All you need to know about Leiningen is that we can use it to run our tests and build our application. You don't need to know much more, but if you like, you can learn about it [here](http://leiningen.org/).
 
-#### Fail fast
+### Fail fast
 Let's play around with our pipeline a little. First, let's confirm that when we commit a change and push it up to github, the pipeline is triggered automatically. Secondly, let's commit a change that makes our tests fail so that we can confirm that the pipeline fails:
 
 - open `part-four/application/test/application/core_test.clj` in your favourite editor
@@ -219,7 +219,7 @@ In the Go web console, navigate to the `PIPELINES` tab and wait patiently for Go
 
 When it finally gets triggered, you'll see that it fails on test. This is what we wanted to confirm. Now go and fix that failing test, commit it, push it, and watch the pipeline go green again.
 
-#### Create the package stage
+### Create the package stage
 Now, let's create the second stage:
 
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
@@ -242,7 +242,7 @@ Now, let's create the second stage:
 
 This task is straight forward. We're packaging the application with the Leiningen `uberjar` command. This command generates two jars in the `target/uberjar` directory relative to the application's root directory. 
 
-#### Renaming the jars
+### Renaming the jars
 The names of the jars produced by the above task will be something like `application-0.1.0-SNAPSHOT-standalone.jar` and `application-0.1.0-SNAPSHOT.jar`. Every time we run a Go pipeline, it increments the pipeline's counter. Wouldn't it be nice to stamp that counter onto the name of our jars so that we know which pipeline run produced them? Well, Go gives us some environment variables that we can use, including $GO_PIPELINE_COUNTER. Let's create a task that changes the jar names to something like `application-0.1.0-$GO_PIPELINE_COUNTER-standalone.jar` and `application-0.1.0-$GO_PIPELINE_COUNTER.jar`:
 
 - go to the `PIPELINES` tab, hit the cog icon on the top right hand of the pipeline panel
@@ -262,7 +262,7 @@ The names of the jars produced by the above task will be something like `applica
 
 So there we go, we've got two nicely named jars. But they aren't of much use to us just sitting there on the Go agent. What we really want is to make them available to later stages. We'll achieve that by "artifacterizing" them.
 
-#### Dealing with artifacts
+### Dealing with artifacts
 Typically, you have several stages that need to be executed sequentially in a single pipeline run. If you have multiple Go agents, any agent can be assigned the next stage, you're not guaranteed to have the same agent executing every stage in a single pipeline run. This means that when a stage produces some kind of output, and we require that output as input to some later stage, we need to take that output and throw it over to the Go server, such that it can orchestrate where it will be needed next. These outputs are called artifacts, and you'll see a lot of these going around in the wild.
 
 In our case it's rather simple:
@@ -282,9 +282,9 @@ So let's do it:
 - don't forget to `Save`
 - now go to the `PIPELINES` tab and run the pipeline
 
-When the pipeline has completed successfully, the two jars that were produced on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your ssh connection to the Go server will still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/`. In this directory you should see the corresponding numbers of pipeline runs, if you dig down into that directory you should find the `packages` directory which houses the two jars you just produced and renamed.
+When the pipeline has completed successfully, the two jars that were produced on the Go agent will have been transferred up to the Go server. If you want to verify this, go to your terminal where your SSH connection to the Go server will still be open, and navigate to `/var/lib/go-server/artifacts/pipelines/dummyApplication/`. In this directory you should see the corresponding numbers of pipeline runs, if you dig down into that directory you should find the `packages` directory which houses the two jars you just produced and renamed.
  
-#### Create the publish stage
+### Create the publish stage
 You may have assumed that we would be ready to deploy the application at this point. But there is one more stage we need to consider before doing so, and that's the publish stage. It's always a good idea to keep the outputs of our pipelines somewhere safe, because you never know when you'll need them. Now, we're already sending the artifacts to the Go server after the package stage, so why do more? The short answer is that we shouldn't treat the Go server as an artifact repository, that's not what it's made for. We need something a little more suited to the purpose. 
 
 That's were S3 comes in. S3 is AWS' general purpose file storage solution. There are much better tools for hosting our artifacts out there, but for now, S3 will do. We're simply going to be using it to store every jar that's produced by our pipeline.
@@ -302,7 +302,7 @@ You should know how to create a stage by now, here are the fields you need to fi
 
 **Note:** be very careful to put the `-c` and the `aws` command on separate lines. You'll also need to select `Clean Working Directory` in the stage settings, you should know how to do that by now.
 
-So this task uses the AWS cli's S3 tool to upload our jars to an S3 bucket called "devops-part-four" which was provisioned as part of our infrastructure stack. It should now be clear why we wanted to give our CI slave instance an IAM role that allows it to run AWS S3 commands.
+So this task uses the AWS CLI's S3 tool to upload our jars to an S3 bucket called "devops-part-four" which was provisioned as part of our infrastructure stack. It should now be clear why we wanted to give our CI slave instance an IAM role that allows it to run AWS S3 commands.
 
 There's one last thing we need to do before we go and rerun this pipeline. We need to pull the jars down from the Go server so as to upload them to S3:
 
@@ -325,14 +325,14 @@ There's one last thing we need to do before we go and rerun this pipeline. We ne
 This special task goes and grabs the artifact produced by the `package` stage's `package` job. In particular, it goes and grabs the `packages` directory within which we can find the two jars. Now go and run the pipeline. When it's complete, navigate to your S3 browser tab and take a look in the `devops-part-four` bucket. You should see the jars.
 
 
-#### Create the deploy stage
+### Create the deploy stage
 We're finally in a position to deploy our application. But first, Let's think about what steps we need to take.
 
 1. **Provision an EC2 instance:**     
    We need to provision an instance that will host the application. This instance will be known as the app server. We will achieve this by having the CI slave create the `/part-four/infrastructure/provisioning/app-server-template.json` stack with CloudFormation.
    
 2. **Configure the EC2 instance:**      
-   Since the newly provisioned app server will be bare, it won't be of any use until we configure it the way we want it. If you recall, to configure the CI master and slave we used Ansible, we won't be doing this here, instead we'll be using Cloudinit.
+   Since the newly provisioned app server will be bare, it won't be of any use until we configure it the way we want it. If you recall, to configure the CI master and slave we used Ansible, we won't be doing this here, instead we'll be using cloud-init.
    
 3. **Get the application jar onto the EC2 instance:**     
    Once our app server is configured and ready to run our application, we'll need to actually go and get the standalone jar from S3.
@@ -346,7 +346,7 @@ We're finally in a position to deploy our application. But first, Let's think ab
 
 The first thing that may strike you as odd is that we're redeploying an entire EC2 instance just for a single little jar. Yes, it's true, it's a pretty big undertaking. But what I'm trying to demonstrate here is the [phoenix server philosophy](http://martinfowler.com/bliki/PhoenixServer.html). In the wild, it's a good idea to avoid configuration drift by blasting away the entire app server when we want to deploy a new application.
 
-The second thing worth mentioning is Cloudinit. Cloudinit is a tool that helps us run early initialisations on cloud instances. In our case, we'll specify a simple shell script that will sit on the app server, and Cloudinit will run the script during the server's initialisation.
+The second thing worth mentioning is cloud-init. cloud-init is a tool that helps us run early initialisations on cloud instances. In our case, we'll specify a simple shell script that will sit on the app server, and cloud-init will run the script during the server's initialisation.
 
 Let's get started:
 
@@ -386,20 +386,20 @@ You'll notice that we're using some ruby script here. This is because the deploy
 2. **retire-old-app-server.rb:**      
    This script is a little more straight forward, we try to find any app server stacks other than the one we just built, and we delete it.
    
-#### Cloudinit
+### cloud-init
 To understand how we configure our web server and launch the application, we need to open `/part-four/infrastructure/provisioning/app-server-template.json`. Find the `EC2InstanceAppServer` resource, and within it, you should see the `UserData` property. The shell script does the following:
 
 - updates and upgrades apt
 - installs java
-- installs pip and then the AWS cli
+- installs pip and then the AWS CLI
 - creates a user called `devops-user` and gives it a home directory
-- uses the AWS cli's S3 tool to copy the latest standalone uberjar from S3 to the newly created home directory
+- uses the AWS CLI's S3 tool to copy the latest standalone uberjar from S3 to the newly created home directory
 - changes the ownership on the jar and then runs it
 
-This script will be invoked by Cloudinit on the App server during initialisation.
+This script will be invoked by cloud-init on the App server during initialisation.
 
-#### Connecting to the application
-Now, wait for the pipeline to complete, and then open the EC2 tab in your browser. You should see a third instance in place with a name like `App Server - Build X` where X is the number of the pipeline run that deployed it. Take note of the app server's IP address (note that this IP will change for each deployment). Unfortunately, it sometimes takes a little while for Cloudinit to carry out the script steps even after the pipeline shows up as green. So wait a little while and then try to hit `http://YOUR_APP_SERVER_IP:8080` in your browser. If you can see the dummy application then take a deep breath and bask in the glory of it all.
+### Connecting to the application
+Now, wait for the pipeline to complete, and then open the EC2 tab in your browser. You should see a third instance in place with a name like `App Server - Build X` where X is the number of the pipeline run that deployed it. Take note of the app server's IP address (note that this IP will change for each deployment). Unfortunately, it sometimes takes a little while for cloud-init to carry out the script steps even after the pipeline shows up as green. So wait a little while and then try to hit `http://YOUR_APP_SERVER_IP:8080` in your browser. If you can see the dummy application then take a deep breath and bask in the glory of it all.
 
 
 ## Putting it all together
