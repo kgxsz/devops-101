@@ -16,10 +16,10 @@ You'll be given root access credentials, sign in to AWS and have a poke around, 
 
 #### Create an IAM group and user
 
-The root access credentials given to you in the previous step provide unrestricted access to the account. AWS recommends that you not use these root credentials for day to day task. So we'll be using AWS' user management tool IAM to create a user for day to day tasks and put them in an administration group.
+The root access credentials given to you in the previous step provide unrestricted access to the account. AWS recommends that you not use these root credentials for day to day task. So we'll be using AWS' Identity and Access Management tool (IAM) to create a user for day to day tasks and put them in an administration group.
 
 #### Create a group
-- go to IAM in the services tab
+- go to Identity and Access Management (IAM) in the services tab
 - create a new group
 - call it administrators
 - give it administrator rights

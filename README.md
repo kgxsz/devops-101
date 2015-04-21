@@ -18,7 +18,7 @@ The devops tasks that you'll encounter on your first few projects will most like
 Going home and implementing a simple cloud infrastructure with a simple CI pipeline was immensely beneficial to me, and I think it will be beneficial to you. The motivation behind these workshops is to expose you to these concepts by building a simple system. We'll only be scratching the surface, but that will be enough to give you a head start on your first project.
 
 ## Structure
-devops 101 is structured as a series of workshops, working toward the goal of building your very own cloud infrastructure and CI pipeline. Each part should take no longer than an hour. 
+Devops 101 is structured as a series of workshops, working toward the goal of building your very own cloud infrastructure and CI pipeline. Each part should take no longer than an hour. 
 
 We'll be concentrating on two major tools in these workshops:
 
