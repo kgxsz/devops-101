@@ -1,7 +1,7 @@
 # Devops 101
-#####A bunch of workshops around core devops concepts.
+##### A bunch of workshops around core devops concepts.
 
-##Introduction
+## Introduction
 
 #### What is Devops?
 Devops is about collaboration and integration between development and operations. We do devops so that we can have faster and more reliable development and deployment cycles.
