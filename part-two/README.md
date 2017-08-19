@@ -46,7 +46,7 @@ In order to use the AWS CLI with your account, it needs to know your AWS account
 - open `credentials.csv` and take note of the `access key id` and the `secret access key`
 - run `aws configure` and answer the prompts: 
 
-	```
+```
 AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID
 AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY
 Default region name [None]: eu-west-1
