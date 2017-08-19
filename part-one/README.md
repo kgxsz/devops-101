@@ -211,7 +211,7 @@ That opens up your subnet, now you need to tweak your security group for the ins
 - add a rule to allow SSH traffic into the instance
 
 	|type|source|
-	|:--:|:--:|:--:|
+	|:--:|:--:|
 	|SSH|0.0.0.0/0|
 
 Why didn't we change the outbound rules for security groups you ask? Well, security groups are stateful, which means that if the traffic was allowed in, the instance will be allowed to respond back out.
